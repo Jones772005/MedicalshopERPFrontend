@@ -55,30 +55,30 @@ const Cart = ({ items, onUpdateQuantity, onRemove, onUpdateDiscount }) => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-        <thead className="bg-gray-50 dark:bg-slate-900/50">
+      <table className="min-w-full divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
+        <thead className="bg-[#24C9A0] text-white">
           <tr>
-            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Item</th>
-            <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Qty</th>
-            <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Rate</th>
-            <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Disc %</th>
-            <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Amount</th>
+            <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Item</th>
+            <th scope="col" className="px-4 py-3 text-center text-[11px] font-bold uppercase tracking-wider">Qty</th>
+            <th scope="col" className="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Rate</th>
+            <th scope="col" className="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Disc %</th>
+            <th scope="col" className="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Amount</th>
             <th scope="col" className="px-4 py-3 w-10"></th>
           </tr>
         </thead>
-        <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+        <tbody className="bg-white dark:bg-[#102A43] divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
           {items.map((item, index) => (
-            <tr key={`${item.medicine.id}-${item.batch.id}`} className="hover:bg-gray-50 dark:hover:bg-slate-750/50">
+            <tr key={`${item.medicine.id}-${item.batch.id}`} className="hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50">
               <td className="px-4 py-3">
-                <div className="text-sm font-medium text-gray-900 dark:text-white">{item.medicine.name}</div>
-                <div className="text-xs text-gray-500 dark:text-slate-400">Batch: {item.batch.batch || item.batch.batchNumber || '-'}</div>
+                <div className="text-[13px] font-semibold text-[#162033] dark:text-white">{item.medicine.name}</div>
+                <div className="text-[11px] text-[#64748B] dark:text-slate-400">Batch: {item.batch.batch || item.batch.batchNumber || '-'}</div>
               </td>
               <td className="px-4 py-3 text-center">
                 <div className="flex items-center justify-center space-x-2">
                   <button 
                     onClick={() => onUpdateQuantity(index, item.quantity - 1)}
                     disabled={item.quantity <= 1}
-                    className="flex items-center justify-center w-8 h-8 rounded-[4px] bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 disabled:opacity-50 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                    className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#F5F8FC] dark:bg-slate-700 text-[#162033] dark:text-slate-300 disabled:opacity-50 hover:bg-[#DDE6F0] dark:hover:bg-slate-600 transition-colors"
                   >
                     <Minus className="w-3.5 h-3.5" />
                   </button>
@@ -92,20 +92,20 @@ const Cart = ({ items, onUpdateQuantity, onRemove, onUpdateDiscount }) => {
                   <button 
                     onClick={() => onUpdateQuantity(index, item.quantity + 1)}
                     disabled={item.quantity >= item.batch.quantity}
-                    className="flex items-center justify-center w-8 h-8 rounded-[4px] bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 disabled:opacity-50 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                    className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#F5F8FC] dark:bg-slate-700 text-[#162033] dark:text-slate-300 disabled:opacity-50 hover:bg-[#DDE6F0] dark:hover:bg-slate-600 transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </td>
-              <td className="px-4 py-3 text-right text-sm text-gray-900 dark:text-white">
+              <td className="px-4 py-3 text-right text-[13px] text-[#162033] dark:text-white">
                 ₹{item.rate.toFixed(2)}
               </td>
               <td className="px-4 py-3 text-right">
                 {item.discountType ? (
-                  <div className="text-sm font-medium text-green-600 dark:text-green-400">
+                  <div className="text-[13px] font-semibold text-[#24C9A0] dark:text-emerald-400">
                     {item.discountType === 'percentage' ? `${item.discountValue}%` : `₹${item.discountValue}`}
-                    <div className="text-xs text-gray-500">(-₹{calculateItemDiscount(calculateItemSubtotal(item.quantity, item.rate), item).toFixed(2)})</div>
+                    <div className="text-[11px] text-[#64748B] dark:text-slate-400">(-₹{calculateItemDiscount(calculateItemSubtotal(item.quantity, item.rate), item).toFixed(2)})</div>
                   </div>
                 ) : (
                   <input
@@ -114,17 +114,17 @@ const Cart = ({ items, onUpdateQuantity, onRemove, onUpdateDiscount }) => {
                     max="100"
                     value={item.discount}
                     onChange={(e) => onUpdateDiscount(index, Number(e.target.value) || 0)}
-                    className="w-16 p-1 text-right text-sm border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-1 focus:ring-primary-500"
+                    className="w-16 p-1 text-right text-[13px] border border-[#DDE6F0] dark:border-slate-600 rounded bg-white dark:bg-slate-800 text-[#162033] dark:text-slate-100 focus:ring-1 focus:ring-[#2482ED]"
                   />
                 )}
               </td>
-              <td className="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-white">
+              <td className="px-4 py-3 text-right text-[13px] font-bold text-[#162033] dark:text-white">
                 ₹{item.amount.toFixed(2)}
               </td>
               <td className="px-4 py-3 text-center">
                 <button 
                   onClick={() => onRemove(index)}
-                  className="text-red-500 hover:text-red-700 cursor-pointer p-1"
+                  className="text-[#64748B] hover:text-red-500 cursor-pointer p-1 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

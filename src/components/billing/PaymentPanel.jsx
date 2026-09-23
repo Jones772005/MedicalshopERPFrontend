@@ -23,16 +23,16 @@ const PaymentPanel = ({ grandTotal, onPaymentMethodChange, onAmountReceivedChang
   const change = Math.max(0, received - grandTotal);
 
   return (
-    <div className="space-y-4 border-t border-gray-200 dark:border-slate-700 pt-4 mt-4">
-      <h3 className="font-semibold text-gray-900 dark:text-white">Payment</h3>
+    <div className="space-y-4 border-t border-[#DDE6F0] dark:border-slate-700/50 pt-4 mt-4">
+      <h3 className="text-[13px] font-bold text-[#162033] dark:text-white uppercase tracking-wider">Payment</h3>
       
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Method</label>
+          <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Method</label>
           <select 
             value={method}
             onChange={handleMethodChange}
-            className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:ring-primary-500 focus:border-primary-500"
+            className="block w-full rounded-lg border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-3 py-2 text-[13px] font-medium text-[#162033] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2482ED] transition-colors"
           >
             <option value="Cash">Cash</option>
             <option value="UPI">UPI</option>
@@ -43,22 +43,22 @@ const PaymentPanel = ({ grandTotal, onPaymentMethodChange, onAmountReceivedChang
 
         {method === 'Cash' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Received (₹)</label>
+            <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Received (₹)</label>
             <input 
               type="number"
               min={grandTotal}
               step="0.01"
               value={received}
               onChange={handleReceivedChange}
-              className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:ring-primary-500 focus:border-primary-500"
+              className="block w-full rounded-lg border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-3 py-2 text-[13px] font-medium text-[#162033] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2482ED] transition-colors"
             />
           </div>
         )}
       </div>
 
       {method === 'Cash' && (
-        <div className="flex justify-between items-center text-sm p-3 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-md border border-green-200 dark:border-green-800">
-          <span className="font-medium">Change to return:</span>
+        <div className="flex justify-between items-center text-[13px] p-3 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-lg border border-green-200 dark:border-green-800/50">
+          <span className="font-semibold">Change to return:</span>
           <span className="font-bold text-lg">₹{change.toFixed(2)}</span>
         </div>
       )}

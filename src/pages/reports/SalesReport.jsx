@@ -3,6 +3,7 @@ import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
+import StatCard from '../../components/common/StatCard';
 import { getReports } from '../../services/reportApi';
 
 const SalesReport = () => {
@@ -50,7 +51,7 @@ const SalesReport = () => {
   const totalTax = sales.reduce((acc, curr) => acc + (Number(curr.tax) || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full pb-12">
       <PageHeader title="Sales Report" description="Comprehensive sales and revenue data." />
       
       <ReportFilterBar 
@@ -59,26 +60,30 @@ const SalesReport = () => {
         onPrint={handlePrint}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Total Sales (Count)</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{sales.length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Total Revenue</div>
-          <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">₹{totalRevenue.toFixed(2)}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Total Tax Collected</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">₹{totalTax.toFixed(2)}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Avg Bill Value</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">₹{sales.length ? (totalRevenue / sales.length).toFixed(2) : 0}</div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Total Sales (Count)"
+          value={sales.length.toString()}
+          color="info"
+        />
+        <StatCard
+          title="Total Revenue"
+          value={`₹${totalRevenue.toFixed(2)}`}
+          color="success"
+        />
+        <StatCard
+          title="Total Tax Collected"
+          value={`₹${totalTax.toFixed(2)}`}
+          color="warning"
+        />
+        <StatCard
+          title="Avg Bill Value"
+          value={`₹${sales.length ? (totalRevenue / sales.length).toFixed(2) : '0.00'}`}
+          color="primary"
+        />
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
         {loading ? <LoadingSpinner /> : (
           <DataTable columns={columns} data={sales} searchPlaceholder="Search invoices..." />
         )}

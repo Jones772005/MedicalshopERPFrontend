@@ -74,7 +74,7 @@ const MedicineForm = () => {
   };
 
   if (loading) {
-    return <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div></div>;
+    return <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2482ED]"></div></div>;
   }
 
   return (
@@ -85,9 +85,11 @@ const MedicineForm = () => {
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-5xl">
-        <Card>
-          <CardHeader><CardTitle>Basic Information</CardTitle></CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+          <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+            <CardTitle className="text-[15px] text-[#162033] dark:text-white">Basic Information</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-5">
             <Input label="Medicine Name" error={errors.name?.message} {...register('name')} />
             <Input label="Generic Name" error={errors.genericName?.message} {...register('genericName')} />
             <Input label="Brand Name" error={errors.brandName?.message} {...register('brandName')} />
@@ -96,18 +98,22 @@ const MedicineForm = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader><CardTitle>Batch & Dates</CardTitle></CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+          <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+            <CardTitle className="text-[15px] text-[#162033] dark:text-white">Batch & Dates</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5">
             <Input label="Batch Number" error={errors.batchNumber?.message} {...register('batchNumber')} />
             <Input label="Manufacturing Date" type="date" error={errors.manufacturingDate?.message} {...register('manufacturingDate')} />
             <Input label="Expiry Date" type="date" error={errors.expiryDate?.message} {...register('expiryDate')} />
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader><CardTitle>Pricing Information</CardTitle></CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+          <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+            <CardTitle className="text-[15px] text-[#162033] dark:text-white">Pricing Information</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-5">
             <Input label="Purchase Price" type="number" step="0.01" error={errors.purchasePrice?.message} {...register('purchasePrice')} />
             <Input label="Selling Price" type="number" step="0.01" error={errors.sellingPrice?.message} {...register('sellingPrice')} />
             <Input label="MRP" type="number" step="0.01" error={errors.mrp?.message} {...register('mrp')} />
@@ -115,13 +121,15 @@ const MedicineForm = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader><CardTitle>Inventory & Supplier</CardTitle></CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+          <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+            <CardTitle className="text-[15px] text-[#162033] dark:text-white">Inventory & Supplier</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5">
             <Input label="Opening Quantity" type="number" error={errors.quantity?.message} {...register('quantity')} />
             <div>
               <Input label="Low Stock Alert At" type="number" error={errors.minimumStockLevel?.message} {...register('minimumStockLevel')} />
-              <p className="text-xs text-gray-500 mt-1 ml-1">Alert when available stock reaches this quantity or below.</p>
+              <p className="text-[11px] font-medium text-[#94A3B8] dark:text-slate-400 mt-1 ml-1 leading-snug">Alert when available stock reaches this quantity or below.</p>
             </div>
             <Input label="Max Stock Level" type="number" error={errors.maximumStockLevel?.message} {...register('maximumStockLevel')} />
             <Input label="Rack Number" error={errors.rackNumber?.message} {...register('rackNumber')} />
@@ -129,18 +137,20 @@ const MedicineForm = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader><CardTitle>Additional Details</CardTitle></CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center">
-              <input type="checkbox" id="prescription" className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer" {...register('prescriptionRequired')} />
-              <label htmlFor="prescription" className="ml-2 block text-sm text-gray-900 cursor-pointer">Prescription Required</label>
+        <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+          <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+            <CardTitle className="text-[15px] text-[#162033] dark:text-white">Additional Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-5">
+            <div className="flex items-center bg-[#F5F8FC] dark:bg-slate-800/50 p-4 rounded-lg border border-[#DDE6F0] dark:border-slate-700/50">
+              <input type="checkbox" id="prescription" className="h-4 w-4 text-[#2482ED] focus:ring-[#2482ED] border-[#DDE6F0] dark:border-slate-600 rounded cursor-pointer dark:bg-slate-800" {...register('prescriptionRequired')} />
+              <label htmlFor="prescription" className="ml-3 block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] cursor-pointer">Prescription Required</label>
             </div>
             <Input label="Barcode" error={errors.barcode?.message} {...register('barcode')} />
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] mb-1.5">Description</label>
               <textarea 
-                className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                className="flex w-full rounded-lg border border-[#DDE6F0] dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-[13px] text-[#162033] dark:text-white placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:border-transparent transition-shadow" 
                 rows="3"
                 {...register('description')}
               />

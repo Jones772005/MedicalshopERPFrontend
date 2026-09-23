@@ -30,33 +30,34 @@ const QRSettings = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between border-b border-gray-200 dark:border-slate-700 pb-4 mb-6">
+    <Card className="m-6">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-[#DDE6F0] dark:border-[#263B50] pb-4">
         <div>
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-            <QrCode className="w-5 h-5 mr-2 text-primary-500" /> Dynamic QR Code Setup
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Configure UPI payments, review links, and invoice QR generation.</p>
+          <CardTitle className="flex items-center text-[#162033] dark:text-white">
+            <QrCode className="w-5 h-5 mr-2 text-[#2482ED]" /> Dynamic QR Code Setup
+          </CardTitle>
+          <p className="text-sm text-[#64748B] dark:text-slate-400 mt-1">Configure UPI payments, review links, and invoice QR generation.</p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
           <Save className="w-4 h-4 mr-2" /> {saving ? 'Saving...' : 'Save Settings'}
         </Button>
-      </div>
+      </CardHeader>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         <div className="space-y-6">
-          <div className="bg-white dark:bg-slate-800 p-5 border border-gray-200 dark:border-slate-700 rounded-lg">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4">Invoice QR Settings</h3>
+          <div className="bg-white dark:bg-[#132B42] p-5 border border-[#DDE6F0] dark:border-[#263B50] rounded-xl">
+            <h3 className="text-sm font-bold text-[#162033] dark:text-white mb-4">Invoice QR Settings</h3>
             
             <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableInvoiceQr" checked={formData.enableInvoiceQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-primary-600 rounded" />
-              <span className="ml-3 text-sm text-gray-900 dark:text-white">Enable Digital Invoice QR</span>
+              <input type="checkbox" name="enableInvoiceQr" checked={formData.enableInvoiceQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
+              <span className="ml-3 text-sm text-[#162033] dark:text-white">Enable Digital Invoice QR</span>
             </label>
 
             <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableUpiQr" checked={formData.enableUpiQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-primary-600 rounded" />
-              <span className="ml-3 text-sm text-gray-900 dark:text-white">Embed UPI Payment QR on Invoice</span>
+              <input type="checkbox" name="enableUpiQr" checked={formData.enableUpiQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
+              <span className="ml-3 text-sm text-[#162033] dark:text-white">Embed UPI Payment QR on Invoice</span>
             </label>
 
             {formData.enableUpiQr && (
@@ -66,8 +67,8 @@ const QRSettings = () => {
             )}
 
             <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableReviewQr" checked={formData.enableReviewQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-primary-600 rounded" />
-              <span className="ml-3 text-sm text-gray-900 dark:text-white">Include Google Review Link QR</span>
+              <input type="checkbox" name="enableReviewQr" checked={formData.enableReviewQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
+              <span className="ml-3 text-sm text-[#162033] dark:text-white">Include Google Review Link QR</span>
             </label>
 
             {formData.enableReviewQr && (
@@ -79,16 +80,16 @@ const QRSettings = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-slate-800 p-5 border border-gray-200 dark:border-slate-700 rounded-lg">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4">Customer Display QR</h3>
+          <div className="bg-white dark:bg-[#132B42] p-5 border border-[#DDE6F0] dark:border-[#263B50] rounded-xl">
+            <h3 className="text-sm font-bold text-[#162033] dark:text-white mb-4">Customer Display QR</h3>
             
-            <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">
+            <p className="text-sm text-[#64748B] dark:text-slate-400 mb-4">
               If you have a customer-facing display screen, you can show a dynamic QR code for payment.
             </p>
             
             <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableWebsiteQr" checked={formData.enableWebsiteQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-primary-600 rounded" />
-              <span className="ml-3 text-sm text-gray-900 dark:text-white">Show Pharmacy Website/App QR when idle</span>
+              <input type="checkbox" name="enableWebsiteQr" checked={formData.enableWebsiteQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
+              <span className="ml-3 text-sm text-[#162033] dark:text-white">Show Pharmacy Website/App QR when idle</span>
             </label>
             
             {formData.enableWebsiteQr && (
@@ -98,12 +99,12 @@ const QRSettings = () => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">QR Display Size</label>
+              <label className="block text-sm font-bold text-[#64748B] dark:text-slate-300 mb-1">QR Display Size</label>
               <select 
                 name="displaySize" 
                 value={formData.displaySize} 
                 onChange={handleChange}
-                className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100"
+                className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-1 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100"
               >
                 <option value="Small">Small (150x150)</option>
                 <option value="Medium">Medium (300x300)</option>
@@ -114,7 +115,8 @@ const QRSettings = () => {
         </div>
 
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

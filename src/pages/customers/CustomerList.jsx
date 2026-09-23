@@ -44,7 +44,7 @@ const CustomerList = () => {
   };
 
   const columns = [
-    { header: 'Name', accessor: 'name', cell: (row) => <span className="font-medium text-gray-900">{row.name}</span> },
+    { header: 'Name', accessor: 'name', cell: (row) => <span className="font-medium text-[#162033] dark:text-white">{row.name}</span> },
     { header: 'Phone Number', accessor: 'phoneNumber' },
     { header: 'Email', accessor: 'email' },
     { header: 'Total Purchases', accessor: 'totalPurchaseAmount', cell: (row) => `₹${(Number(row.totalPurchaseAmount) || 0).toFixed(2)}` },

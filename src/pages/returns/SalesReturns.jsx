@@ -7,6 +7,8 @@ import StatusBadge from '../../components/common/StatusBadge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
+import StatCard from '../../components/common/StatCard';
+import { Card, CardHeader, CardTitle } from '../../components/common/Card';
 import { getSalesReturns, createSalesReturn } from '../../services/returnApi';
 import { getSaleById } from '../../services/salesApi';
 import { calculateItemAmount } from '../../utils/billingCalculations';
@@ -137,11 +139,11 @@ const SalesReturns = () => {
 
   const columns = [
     // localDb generates id as "SR-000001" (prefix already included) — do not add another "SR-" prefix
-    { header: 'Return ID', accessor: 'id', cell: (row) => <span className="font-medium text-primary-600 dark:text-primary-400">{row.id}</span> },
-    { header: 'Date', accessor: 'date', cell: (row) => new Date(row.date).toLocaleDateString() },
+    { header: 'Return ID', accessor: 'id', cell: (row) => <span className="font-bold text-[#2482ED]">{row.id}</span> },
+    { header: 'Date', accessor: 'date', cell: (row) => <span className="text-[#162033] dark:text-white">{new Date(row.date).toLocaleDateString()}</span> },
     { header: 'Invoice No', accessor: 'invoiceNumber', cell: (row) => row.invoiceNumber || '-' },
     { header: 'Customer', accessor: 'customerName', cell: (row) => row.customerName || 'Walk-in' },
-    { header: 'Amount', accessor: 'amount', cell: (row) => `₹${(row.amount || row.refundAmount || 0).toFixed(2)}` },
+    { header: 'Amount', accessor: 'amount', cell: (row) => <span className="font-bold text-[#162033] dark:text-white">₹{(row.amount || row.refundAmount || 0).toFixed(2)}</span> },
     { header: 'Status', accessor: 'status', cell: (row) => <StatusBadge status={row.status} /> },
     {
       header: 'Actions',
@@ -162,7 +164,7 @@ const SalesReturns = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full pb-12">
       <div className="flex justify-between items-center">
         <PageHeader title="Sales Returns" description="Manage customer returns and refunds." />
         <Button onClick={() => { setShowReturnForm(true); setOriginalSale(null); setReturnItems([]); setSearchInvoiceId(''); setFormError(''); }}>
@@ -170,12 +172,37 @@ const SalesReturns = () => {
         </Button>
       </div>
 
+      {!showReturnForm && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Returns"
+            value={returns.length.toString()}
+            color="primary"
+          />
+          <StatCard
+            title="Total Refund Amount"
+            value={`₹${returns.reduce((acc, curr) => acc + (curr.amount || curr.refundAmount || 0), 0).toFixed(2)}`}
+            color="danger"
+          />
+          <StatCard
+            title="Pending Refunds"
+            value={returns.filter(r => r.status === 'Pending').length.toString()}
+            color="warning"
+          />
+          <StatCard
+            title="Refunded"
+            value={returns.filter(r => r.status === 'Completed' || r.status === 'Refunded').length.toString()}
+            color="success"
+          />
+        </div>
+      )}
+
       {showReturnForm && (
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm p-6 space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Create Sales Return</h2>
+        <Card className="p-6">
+          <CardHeader className="px-0 pt-0 flex flex-row justify-between items-center">
+            <CardTitle>Create Sales Return</CardTitle>
             <Button variant="secondary" size="sm" onClick={() => { setShowReturnForm(false); setOriginalSale(null); setReturnItems([]); }}>Cancel</Button>
-          </div>
+          </CardHeader>
 
           <div className="flex gap-3 items-end">
             <div className="flex-1">
@@ -210,16 +237,16 @@ const SalesReturns = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Return Reason</label>
+                  <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">Return Reason</label>
                   <select value={globalReason} onChange={e => setGlobalReason(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm text-[#162033] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#2482ED]">
                     {RETURN_REASONS.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Refund Method</label>
+                  <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">Refund Method</label>
                   <select value={refundMethod} onChange={e => setRefundMethod(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm text-[#162033] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#2482ED]">
                     <option value="Cash">Cash</option>
                     <option value="UPI">UPI</option>
                     <option value="Bank Transfer">Bank Transfer</option>
@@ -228,41 +255,41 @@ const SalesReturns = () => {
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-                  <thead className="bg-gray-50 dark:bg-slate-900/50">
+              <div className="overflow-x-auto border border-[#DDE6F0] dark:border-[#263B50] rounded-lg">
+                <table className="min-w-full divide-y divide-[#DDE6F0] dark:divide-[#263B50]">
+                  <thead className="bg-[#24C9A0] dark:bg-[#1A9F7E]">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Medicine</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Batch</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Sold</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-28">Return Qty</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Price</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Discount</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Refund</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Restock?</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Medicine</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Batch</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Sold</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider w-28">Return Qty</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Price</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Discount</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Refund</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Restock?</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+                  <tbody className="bg-white dark:bg-[#132B42] divide-y divide-[#DDE6F0] dark:divide-[#263B50]">
                     {returnItems.map((item, idx) => (
-                      <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-slate-750/50">
-                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">{item.medicineName || item.name}</td>
-                        <td className="px-4 py-3 text-sm text-gray-500 dark:text-slate-400">{item.batchNumber || item.batch || '-'}</td>
-                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">{item.quantity}</td>
+                      <tr key={idx} className="hover:bg-[#F5F8FC] dark:hover:bg-[#0B1A2A]">
+                        <td className="px-4 py-3 text-sm font-medium text-[#162033] dark:text-white">{item.medicineName || item.name}</td>
+                        <td className="px-4 py-3 text-sm text-[#64748B] dark:text-slate-400">{item.batchNumber || item.batch || '-'}</td>
+                        <td className="px-4 py-3 text-sm text-[#162033] dark:text-white">{item.quantity}</td>
                         <td className="px-4 py-3">
                           <input type="number" min="0" max={item.quantity} value={item.returnQty}
                             onChange={e => {
                               const val = Math.min(Math.max(0, Number(e.target.value)), item.quantity);
                               setReturnItems(prev => prev.map((it, i) => i === idx ? { ...it, returnQty: val } : it));
                             }}
-                            className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100" />
+                            className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-2 py-1 text-sm text-[#162033] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#2482ED]" />
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">₹{(Number(item.rate) || Number(item.sellingPrice) || Number(item.mrp) || 0).toFixed(2)}</td>
-                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">{getDiscountDisplay(item)}</td>
-                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">₹{getRefundableAmount(item).toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm text-[#162033] dark:text-white">₹{(Number(item.rate) || Number(item.sellingPrice) || Number(item.mrp) || 0).toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm text-[#162033] dark:text-white">{getDiscountDisplay(item)}</td>
+                        <td className="px-4 py-3 text-sm font-bold text-[#162033] dark:text-white">₹{getRefundableAmount(item).toFixed(2)}</td>
                         <td className="px-4 py-3">
                           <input type="checkbox" checked={item.restockable}
                             onChange={e => setReturnItems(prev => prev.map((it, i) => i === idx ? { ...it, restockable: e.target.checked } : it))}
-                            className="h-4 w-4 text-primary-600 rounded border-gray-300" />
+                            className="h-4 w-4 text-[#2482ED] rounded border-[#DDE6F0]" />
                         </td>
                       </tr>
                     ))}
@@ -270,8 +297,8 @@ const SalesReturns = () => {
                 </table>
               </div>
 
-              <div className="flex justify-between items-center bg-gray-50 dark:bg-slate-900/50 rounded-md p-4">
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              <div className="flex justify-between items-center bg-[#F5F8FC] dark:bg-[#0B1A2A] rounded-md p-4 border border-[#DDE6F0] dark:border-[#263B50]">
+                <span className="text-lg font-bold text-[#162033] dark:text-white">
                   Estimated Refund: ₹{returnItems.reduce((s, i) => s + getRefundableAmount(i), 0).toFixed(2)}
                 </span>
                 <Button onClick={handleSubmitReturn} disabled={submitting}>
@@ -280,10 +307,12 @@ const SalesReturns = () => {
               </div>
             </div>
           )}
-        </div>
+        </Card>
       )}
 
-      <DataTable columns={columns} data={returns} searchPlaceholder="Search returns..." />
+      <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
+        <DataTable columns={columns} data={returns} searchPlaceholder="Search returns..." />
+      </div>
     </div>
   );
 };

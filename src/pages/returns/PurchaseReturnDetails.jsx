@@ -71,127 +71,127 @@ const PurchaseReturnDetails = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Return Information */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Return Information</h2>
-          <div className="space-y-3 text-sm">
+        <div className="bg-white dark:bg-[#132B42] p-6 rounded-xl border border-[#DDE6F0] dark:border-[#263B50] shadow-sm">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white mb-4">Return Information</h2>
+          <div className="space-y-3 text-[13px]">
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Return ID:</span>
-              <span className="font-medium text-primary-600 dark:text-primary-400">{ret.id}</span>
+              <span className="text-[#64748B] dark:text-slate-400">Return ID:</span>
+              <span className="font-semibold text-[#2482ED] dark:text-blue-400">{ret.id}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Original Purchase / PO:</span>
-              <span className="font-medium text-gray-900 dark:text-white">
+              <span className="text-[#64748B] dark:text-slate-400">Original Purchase / PO:</span>
+              <span className="font-semibold text-[#162033] dark:text-white">
                 {ret.purchaseId ? (
-                  <Link to={`/purchases/${ret.purchaseId}`} className="text-primary-600 dark:text-primary-400 hover:underline">
+                  <Link to={`/purchases/${ret.purchaseId}`} className="text-[#2482ED] dark:text-blue-400 hover:underline">
                     {ret.purchaseOrderNumber || ret.purchaseId}
                   </Link>
                 ) : (ret.purchaseOrderNumber || '-')}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Supplier:</span>
-              <span className="font-medium text-gray-900 dark:text-white">
+              <span className="text-[#64748B] dark:text-slate-400">Supplier:</span>
+              <span className="font-semibold text-[#162033] dark:text-white">
                 {ret.supplierId ? (
-                  <Link to={`/suppliers/${ret.supplierId}`} className="text-primary-600 dark:text-primary-400 hover:underline">
+                  <Link to={`/suppliers/${ret.supplierId}`} className="text-[#2482ED] dark:text-blue-400 hover:underline">
                     {ret.supplierName || 'Supplier'}
                   </Link>
                 ) : (ret.supplierName || 'Supplier')}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Return Date:</span>
-              <span className="font-medium text-gray-900 dark:text-white">
+              <span className="text-[#64748B] dark:text-slate-400">Return Date:</span>
+              <span className="font-semibold text-[#162033] dark:text-white">
                 {ret.date ? new Date(ret.date).toLocaleString() : '-'}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Status:</span>
+              <span className="text-[#64748B] dark:text-slate-400">Status:</span>
               <StatusBadge status={ret.status || 'Processed'} />
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Return Amount:</span>
-              <span className="font-bold text-gray-900 dark:text-white">₹{refundAmount.toFixed(2)}</span>
+              <span className="text-[#64748B] dark:text-slate-400">Return Amount:</span>
+              <span className="font-bold text-[#162033] dark:text-white">₹{refundAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Return Reason:</span>
-              <span className="font-medium text-gray-900 dark:text-white">{ret.reason || ret.globalReason || '-'}</span>
+              <span className="text-[#64748B] dark:text-slate-400">Return Reason:</span>
+              <span className="font-semibold text-[#162033] dark:text-white">{ret.reason || ret.globalReason || '-'}</span>
             </div>
           </div>
         </div>
 
         {/* Refund / Payment Information */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Refund / Payment</h2>
+        <div className="bg-white dark:bg-[#132B42] p-6 rounded-xl border border-[#DDE6F0] dark:border-[#263B50] shadow-sm">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white mb-4">Refund / Payment</h2>
           {refundPayment ? (
-            <div className="space-y-3 text-sm">
+            <div className="space-y-3 text-[13px]">
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Payment ID:</span>
-                <span className="font-medium text-primary-600 dark:text-primary-400">#{refundPayment.id}</span>
+                <span className="text-[#64748B] dark:text-slate-400">Payment ID:</span>
+                <span className="font-semibold text-[#2482ED] dark:text-blue-400">#{refundPayment.id}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Reference:</span>
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="text-[#64748B] dark:text-slate-400">Reference:</span>
+                <span className="font-semibold text-[#162033] dark:text-white">
                   {refundPayment.reference 
                     ? refundPayment.reference.replace(/^PR-PR-/, 'PR-')
                     : refundPayment.referenceId || '-'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Amount:</span>
-                <span className="font-bold text-gray-900 dark:text-white">₹{Number(refundPayment.amount || 0).toFixed(2)}</span>
+                <span className="text-[#64748B] dark:text-slate-400">Amount:</span>
+                <span className="font-bold text-[#162033] dark:text-white">₹{Number(refundPayment.amount || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Method:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{refundPayment.paymentMethod || refundPayment.method || '-'}</span>
+                <span className="text-[#64748B] dark:text-slate-400">Method:</span>
+                <span className="font-semibold text-[#162033] dark:text-white">{refundPayment.paymentMethod || refundPayment.method || '-'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Status:</span>
+                <span className="text-[#64748B] dark:text-slate-400">Status:</span>
                 <StatusBadge status={refundPayment.status || 'Completed'} />
               </div>
               {refundPayment.date && (
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-slate-400">Date:</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{new Date(refundPayment.date).toLocaleString()}</span>
+                  <span className="text-[#64748B] dark:text-slate-400">Date:</span>
+                  <span className="font-semibold text-[#162033] dark:text-white">{new Date(refundPayment.date).toLocaleString()}</span>
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-sm text-gray-400 dark:text-slate-500">No refund payment record linked.</p>
+            <p className="text-[13px] text-[#64748B]">No refund payment record linked.</p>
           )}
         </div>
       </div>
 
       {/* Returned Items */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Returned Items</h2>
+      <div className="bg-white dark:bg-[#132B42] rounded-xl border border-[#DDE6F0] dark:border-[#263B50] shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#DDE6F0] dark:border-[#263B50]">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white">Returned Items</h2>
         </div>
         {items.length === 0 ? (
-          <p className="px-6 py-4 text-sm text-gray-400 dark:text-slate-500">No item details stored.</p>
+          <p className="px-6 py-4 text-[13px] text-[#64748B]">No item details stored.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-              <thead className="bg-gray-50 dark:bg-slate-900/50">
+            <table className="min-w-full divide-y divide-[#DDE6F0] dark:divide-[#263B50]">
+              <thead className="bg-[#24C9A0] dark:bg-[#1A9F7E] text-white">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Medicine Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Batch Number</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Qty Returned</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Purchase Price</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Reason</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Return Amount</th>
+                  <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Medicine Name</th>
+                  <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Batch Number</th>
+                  <th className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Qty Returned</th>
+                  <th className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Purchase Price</th>
+                  <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Reason</th>
+                  <th className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Return Amount</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+              <tbody className="bg-white dark:bg-[#132B42] divide-y divide-[#DDE6F0] dark:divide-[#263B50]">
                 {items.map((item, idx) => (
-                  <tr key={idx}>
-                    <td className="px-6 py-3 text-sm text-gray-900 dark:text-slate-100">{item.medicineName || item.name || '-'}</td>
-                    <td className="px-6 py-3 text-sm text-gray-500 dark:text-slate-400">{item.batchNumber || item.batch || '-'}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-slate-100 font-medium">{item.quantity ?? item.returnQty ?? '-'}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-slate-100">
+                  <tr key={idx} className="hover:bg-[#F5F8FC] dark:hover:bg-[#0B1A2A]">
+                    <td className="px-6 py-3 text-[13px] font-semibold text-[#162033] dark:text-white">{item.medicineName || item.name || '-'}</td>
+                    <td className="px-6 py-3 text-[13px] text-[#64748B] dark:text-slate-400">{item.batchNumber || item.batch || '-'}</td>
+                    <td className="px-6 py-3 text-[13px] text-right text-[#162033] dark:text-white font-semibold">{item.quantity ?? item.returnQty ?? '-'}</td>
+                    <td className="px-6 py-3 text-[13px] text-right text-[#162033] dark:text-white">
                       {item.purchasePrice != null ? `₹${Number(item.purchasePrice).toFixed(2)}` : (item.rate != null ? `₹${Number(item.rate).toFixed(2)}` : '-')}
                     </td>
-                    <td className="px-6 py-3 text-sm text-gray-500 dark:text-slate-400">{item.reason || ret.reason || '-'}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-slate-100 font-medium">
+                    <td className="px-6 py-3 text-[13px] text-[#64748B] dark:text-slate-400">{item.reason || ret.reason || '-'}</td>
+                    <td className="px-6 py-3 text-[13px] text-right text-[#162033] dark:text-white font-bold">
                       {item.purchasePrice != null && (item.quantity ?? item.returnQty) != null 
                         ? `₹${(Number(item.purchasePrice) * Number(item.quantity ?? item.returnQty)).toFixed(2)}`
                         : '-'}
@@ -199,12 +199,12 @@ const PurchaseReturnDetails = () => {
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="bg-gray-50 dark:bg-slate-900/50">
+              <tfoot className="bg-[#F5F8FC] dark:bg-[#0B1A2A]">
                 <tr>
-                  <td colSpan={5} className="px-6 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">
+                  <td colSpan={5} className="px-6 py-3 text-[13px] font-semibold text-[#162033] dark:text-white text-right">
                     Total Amount:
                   </td>
-                  <td className="px-6 py-3 text-sm font-bold text-gray-900 dark:text-white text-right">
+                  <td className="px-6 py-3 text-[13px] font-bold text-[#162033] dark:text-white text-right">
                     ₹{refundAmount.toFixed(2)}
                   </td>
                 </tr>

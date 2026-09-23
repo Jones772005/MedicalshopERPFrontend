@@ -114,7 +114,7 @@ const ExpiryManagement = () => {
             });
           }}
           disabled={row.quantity === 0}
-          className={`text-sm font-medium ${row.quantity === 0 ? 'text-gray-400 cursor-not-allowed' : 'text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 cursor-pointer'}`}
+          className={`text-[13px] font-semibold transition-colors ${row.quantity === 0 ? 'text-[#94A3B8] dark:text-slate-500 cursor-not-allowed' : 'text-[#2482ED] dark:text-blue-400 hover:text-[#1A6BC7] dark:hover:text-blue-300 cursor-pointer'}`}
         >
           {row.quantity === 0 ? 'No Stock' : 'Return to Supplier'}
         </button>
@@ -142,25 +142,25 @@ const ExpiryManagement = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 text-center">
-          <div className="text-sm font-medium text-red-600 dark:text-red-400 flex items-center justify-center mb-2"><ShieldAlert className="w-4 h-4 mr-1" /> Expired</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{counts['Expired']}</div>
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-red-600 dark:text-red-400 flex items-center mb-1.5"><ShieldAlert className="w-4 h-4 mr-1.5" /> Expired</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">{counts['Expired']}</div>
         </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 text-center">
-          <div className="text-sm font-medium text-orange-600 dark:text-orange-400 flex items-center justify-center mb-2"><AlertTriangle className="w-4 h-4 mr-1" /> &lt; 7 Days</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{counts['Within 7 Days']}</div>
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-orange-600 dark:text-orange-400 flex items-center mb-1.5"><AlertTriangle className="w-4 h-4 mr-1.5" /> &lt; 7 Days</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">{counts['Within 7 Days']}</div>
         </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 text-center">
-          <div className="text-sm font-medium text-yellow-600 dark:text-yellow-400 flex items-center justify-center mb-2"><AlertTriangle className="w-4 h-4 mr-1" /> &lt; 30 Days</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{counts['Within 30 Days']}</div>
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-amber-600 dark:text-amber-400 flex items-center mb-1.5"><AlertTriangle className="w-4 h-4 mr-1.5" /> &lt; 30 Days</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">{counts['Within 30 Days']}</div>
         </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 text-center">
-          <div className="text-sm font-medium text-blue-600 dark:text-blue-400 flex items-center justify-center mb-2"><Info className="w-4 h-4 mr-1" /> &lt; 60 Days</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{counts['Within 60 Days']}</div>
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-[#2482ED] dark:text-blue-400 flex items-center mb-1.5"><Info className="w-4 h-4 mr-1.5" /> &lt; 60 Days</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">{counts['Within 60 Days']}</div>
         </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 text-center">
-          <div className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center justify-center mb-2"><CheckCircle2 className="w-4 h-4 mr-1" /> &lt; 90 Days</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{counts['Within 90 Days']}</div>
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 flex items-center mb-1.5"><CheckCircle2 className="w-4 h-4 mr-1.5" /> &lt; 90 Days</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">{counts['Within 90 Days']}</div>
         </div>
       </div>
       
@@ -171,10 +171,10 @@ const ExpiryManagement = () => {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`
-                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm cursor-pointer
+                whitespace-nowrap py-3 px-4 border-b-2 font-semibold text-[13px] cursor-pointer transition-colors
                 ${activeTab === tab 
-                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-slate-400 dark:hover:text-slate-200'
+                  ? 'border-[#2482ED] text-[#2482ED]'
+                  : 'border-transparent text-[#64748B] dark:text-slate-400 hover:text-[#162033] dark:hover:text-white hover:border-[#DDE6F0] dark:hover:border-slate-600'
                 }
               `}
             >

@@ -50,7 +50,7 @@ const OutOfStockList = () => {
   };
 
   const columns = [
-    { header: 'Medicine', accessor: 'medicineName', cell: (row) => <span className="font-medium text-gray-900">{row.medicineName}</span> },
+    { header: 'Medicine', accessor: 'medicineName', cell: (row) => <span className="font-medium text-[#162033] dark:text-white">{row.medicineName}</span> },
     { header: 'Generic Name', accessor: 'medicineName' }, // Simplified for mock
     { 
       header: 'Batch', 

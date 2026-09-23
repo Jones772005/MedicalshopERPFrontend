@@ -157,27 +157,27 @@ const GoodsReceiving = () => {
           </CardHeader>
           <CardContent className="p-0 overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-              <thead className="bg-gray-50 dark:bg-slate-900/50">
+              <thead className="bg-[#24C9A0] text-white">
                 <tr>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Medicine</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-24">Ordered</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-28">Received</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Batch *</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-28">Rack No.</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-40">Mfg Date</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-40">Expiry Date *</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Medicine</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-24">Ordered</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-28">Received</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Batch *</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-28">Rack No.</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-40">Mfg Date</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-40">Expiry Date *</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+              <tbody className="bg-white dark:bg-[#102A43] divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
                 {fields.map((field, index) => (
-                  <tr key={field.id} className="hover:bg-gray-50 dark:hover:bg-slate-750/50">
-                    <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-slate-100">
+                  <tr key={field.id} className="hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50">
+                    <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-[#162033] dark:text-white">
                       <input type="hidden" {...register(`items.${index}.id`, { valueAsNumber: true })} />
                       <input type="hidden" {...register(`items.${index}.medicineId`, { valueAsNumber: true })} />
                       <input type="hidden" {...register(`items.${index}.orderedQuantity`, { valueAsNumber: true })} />
                       {getMedicineName(field.medicineId)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
+                    <td className="px-4 py-4 whitespace-nowrap text-[13px] font-semibold text-[#64748B] dark:text-slate-400">
                       {field.orderedQuantity}
                     </td>
                     <td className="px-4 py-2">
@@ -185,7 +185,7 @@ const GoodsReceiving = () => {
                         type="number" 
                         min="0"
                         {...register(`items.${index}.receivedQuantity`, { valueAsNumber: true })} 
-                        className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1.5 text-sm text-gray-900 dark:text-slate-100"
+                        className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -193,32 +193,32 @@ const GoodsReceiving = () => {
                         type="text" 
                         placeholder="Batch Number"
                         {...register(`items.${index}.batchNumber`)} 
-                        className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1.5 text-sm text-gray-900 dark:text-slate-100 ${errors.items?.[index]?.batchNumber ? 'border-red-500' : ''}`}
+                        className={`block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white ${errors.items?.[index]?.batchNumber ? 'border-red-500' : ''}`}
                       />
-                      {errors.items?.[index]?.batchNumber && <span className="text-xs text-red-500">{errors.items[index].batchNumber.message}</span>}
+                      {errors.items?.[index]?.batchNumber && <span className="text-[12px] text-red-500">{errors.items[index].batchNumber.message}</span>}
                     </td>
                     <td className="px-4 py-2">
                       <input 
                         type="text" 
                         placeholder="Rack (e.g. R-03)"
                         {...register(`items.${index}.rackNumber`)} 
-                        className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1.5 text-sm text-gray-900 dark:text-slate-100`}
+                        className={`block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white`}
                       />
                     </td>
                     <td className="px-4 py-2">
                       <input 
                         type="date" 
                         {...register(`items.${index}.manufacturingDate`)} 
-                        className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1.5 text-sm text-gray-900 dark:text-slate-100"
+                        className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
                       />
                     </td>
                     <td className="px-4 py-2">
                       <input 
                         type="date" 
                         {...register(`items.${index}.expiryDate`)} 
-                        className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1.5 text-sm text-gray-900 dark:text-slate-100 ${errors.items?.[index]?.expiryDate ? 'border-red-500' : ''}`}
+                        className={`block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white ${errors.items?.[index]?.expiryDate ? 'border-red-500' : ''}`}
                       />
-                      {errors.items?.[index]?.expiryDate && <span className="text-xs text-red-500">{errors.items[index].expiryDate.message}</span>}
+                      {errors.items?.[index]?.expiryDate && <span className="text-[12px] text-red-500">{errors.items[index].expiryDate.message}</span>}
                     </td>
                   </tr>
                 ))}

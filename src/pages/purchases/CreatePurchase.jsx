@@ -193,14 +193,14 @@ const CreatePurchase = () => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Supplier *</label>
                 <select 
                   {...register('supplierId')} 
-                  className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${errors.supplierId ? 'border-red-500 focus:ring-red-500' : ''}`}
+                  className={`block w-full rounded-lg border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-3 py-2 text-[13px] text-[#162033] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2482ED] transition-colors ${errors.supplierId ? 'border-red-500 focus:ring-red-500' : ''}`}
                 >
                   <option value="">Select a supplier...</option>
                   {suppliers.map(s => (
                     <option key={s.id} value={s.id}>{s.supplierName}</option>
                   ))}
                 </select>
-                {errors.supplierId && <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.supplierId.message}</p>}
+                {errors.supplierId && <p className="mt-1 text-[12px] text-red-500 dark:text-red-400">{errors.supplierId.message}</p>}
               </div>
               <Input 
                 label="Order Date *" 
@@ -232,20 +232,20 @@ const CreatePurchase = () => {
           </CardHeader>
           <CardContent className="p-0 overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-              <thead className="bg-gray-50 dark:bg-slate-900/50">
+              <thead className="bg-[#24C9A0] text-white">
                 <tr>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Medicine</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-24">Qty</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-28">Buy (₹)</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-28">Sell (₹)</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-28">MRP (₹)</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-24">Disc %</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-24">GST %</th>
-                  <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase w-28">Total</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Medicine</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-24">Qty</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-28">Buy (₹)</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-28">Sell (₹)</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-28">MRP (₹)</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-24">Disc %</th>
+                  <th scope="col" className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider w-24">GST %</th>
+                  <th scope="col" className="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider w-28">Total</th>
                   <th scope="col" className="px-4 py-3 w-10"></th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+              <tbody className="bg-white dark:bg-[#102A43] divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
                 {fields.map((field, index) => {
                   const q = Number(watchItems[index]?.quantity) || 0;
                   const p = Number(watchItems[index]?.purchasePrice) || 0;
@@ -254,7 +254,7 @@ const CreatePurchase = () => {
                   const itemTotal = calculateItemAmount(q, p, d, g);
 
                   return (
-                    <tr key={field.id} className="hover:bg-gray-50 dark:hover:bg-slate-750/50">
+                    <tr key={field.id} className="hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50">
                       <td className="px-4 py-2">
                         <select 
                           {...register(`items.${index}.medicineId`)} 
@@ -262,7 +262,7 @@ const CreatePurchase = () => {
                             register(`items.${index}.medicineId`).onChange(e);
                             handleMedicineChange(index, e.target.value);
                           }}
-                          className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100 ${errors.items?.[index]?.medicineId ? 'border-red-500' : ''}`}
+                          className={`block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white ${errors.items?.[index]?.medicineId ? 'border-red-500' : ''}`}
                         >
                           <option value="">Select...</option>
                           {medicines.map(m => (
@@ -275,7 +275,7 @@ const CreatePurchase = () => {
                           type="number" 
                           min="1"
                           {...register(`items.${index}.quantity`, { valueAsNumber: true })} 
-                          className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100 ${errors.items?.[index]?.quantity ? 'border-red-500' : ''}`}
+                          className={`block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white ${errors.items?.[index]?.quantity ? 'border-red-500' : ''}`}
                         />
                       </td>
                       <td className="px-4 py-2">
@@ -284,7 +284,7 @@ const CreatePurchase = () => {
                           step="0.01"
                           min="0"
                           {...register(`items.${index}.purchasePrice`, { valueAsNumber: true })} 
-                          className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100"
+                          className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
                         />
                       </td>
                       <td className="px-4 py-2">
@@ -294,7 +294,7 @@ const CreatePurchase = () => {
                           min="0"
                           placeholder="Sell"
                           {...register(`items.${index}.sellingPrice`, { valueAsNumber: true })} 
-                          className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100"
+                          className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
                         />
                       </td>
                       <td className="px-4 py-2">
@@ -303,7 +303,7 @@ const CreatePurchase = () => {
                           step="0.01"
                           min="0"
                           {...register(`items.${index}.mrp`, { valueAsNumber: true })} 
-                          className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100"
+                          className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
                         />
                       </td>
                       <td className="px-4 py-2">
@@ -312,7 +312,7 @@ const CreatePurchase = () => {
                           min="0"
                           max="100"
                           {...register(`items.${index}.discount`, { valueAsNumber: true })} 
-                          className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100"
+                          className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
                         />
                       </td>
                       <td className="px-4 py-2">
@@ -321,10 +321,10 @@ const CreatePurchase = () => {
                           min="0"
                           max="100"
                           {...register(`items.${index}.gst`, { valueAsNumber: true })} 
-                          className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-gray-900 dark:text-slate-100"
+                          className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
                         />
                       </td>
-                      <td className="px-4 py-2 text-right font-medium text-gray-900 dark:text-slate-100">
+                      <td className="px-4 py-2 text-right font-bold text-[#162033] dark:text-white">
                         ₹{itemTotal.toFixed(2)}
                       </td>
                       <td className="px-4 py-2">

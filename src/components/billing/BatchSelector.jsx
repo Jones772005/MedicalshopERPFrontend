@@ -46,10 +46,10 @@ const BatchSelector = ({ medicine, onSelect, onCancel }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 flex justify-between items-center">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Select Batch for {medicine.name}</h3>
-        <button onClick={onCancel} className="text-gray-400 hover:text-gray-500"><X className="w-5 h-5" /></button>
+    <div className="bg-white dark:bg-[#102A43] border border-[#DDE6F0] dark:border-slate-700/50 rounded-xl shadow-lg overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-800/50 flex justify-between items-center">
+        <h3 className="text-[13px] font-bold text-[#162033] dark:text-white">Select Batch for {medicine.name}</h3>
+        <button onClick={onCancel} className="text-[#64748B] hover:text-[#162033] dark:hover:text-white transition-colors"><X className="w-5 h-5" /></button>
       </div>
       
       <div className="p-2 max-h-60 overflow-y-auto">
@@ -61,29 +61,29 @@ const BatchSelector = ({ medicine, onSelect, onCancel }) => {
               <div 
                 key={batch.id} 
                 onClick={() => onSelect(batch)}
-                className={`p-3 rounded-md border cursor-pointer transition-colors ${
+                className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                   isRecommended 
-                    ? 'border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/40' 
-                    : 'border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-750'
+                    ? 'border-[#24C9A0] dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40' 
+                    : 'border-[#DDE6F0] dark:border-slate-700/50 hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50'
                 }`}
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <div className="font-medium text-gray-900 dark:text-white flex items-center">
+                    <div className="text-[13px] font-bold text-[#162033] dark:text-white flex items-center">
                       {batch.batch || batch.batchNumber}
                       {isRecommended && (
-                        <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400">
+                        <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-bold bg-[#24C9A0]/20 text-[#1BA885] dark:bg-emerald-900/40 dark:text-emerald-400">
                           <Check className="w-3 h-3 mr-1" /> FEFO Recommended
                         </span>
                       )}
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                    <div className="text-[11px] font-medium text-[#64748B] dark:text-slate-400 mt-1">
                       Expiry: {batch.expiryDate ? new Date(batch.expiryDate).toLocaleDateString() : 'N/A'}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold text-gray-900 dark:text-white">₹{(batch.sellingPrice || batch.mrp || 0).toFixed(2)}</div>
-                    <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">Stock: {batch.quantity}</div>
+                    <div className="text-[13px] font-bold text-[#162033] dark:text-white">₹{(batch.sellingPrice || batch.mrp || 0).toFixed(2)}</div>
+                    <div className="text-[11px] font-medium text-[#64748B] dark:text-slate-400 mt-1">Stock: {batch.quantity}</div>
                   </div>
                 </div>
               </div>

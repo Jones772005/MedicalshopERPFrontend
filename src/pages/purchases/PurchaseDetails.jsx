@@ -115,82 +115,82 @@ const PurchaseDetails = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Order Details</h2>
-          <div className="space-y-3 text-sm">
+        <div className="bg-white dark:bg-[#102A43] p-6 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white mb-4">Order Details</h2>
+          <div className="space-y-3 text-[13px]">
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Order Date:</span>
-              <span className="font-medium text-gray-900 dark:text-white">{new Date(purchase.orderDate).toLocaleDateString()}</span>
+              <span className="text-[#64748B] dark:text-slate-400">Order Date:</span>
+              <span className="font-semibold text-[#162033] dark:text-white">{new Date(purchase.orderDate).toLocaleDateString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Expected Delivery:</span>
-              <span className="font-medium text-gray-900 dark:text-white">{new Date(purchase.expectedDeliveryDate).toLocaleDateString()}</span>
+              <span className="text-[#64748B] dark:text-slate-400">Expected Delivery:</span>
+              <span className="font-semibold text-[#162033] dark:text-white">{new Date(purchase.expectedDeliveryDate).toLocaleDateString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Status:</span>
+              <span className="text-[#64748B] dark:text-slate-400">Status:</span>
               <StatusBadge status={purchase.status} />
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Payment Status:</span>
+              <span className="text-[#64748B] dark:text-slate-400">Payment Status:</span>
               <StatusBadge status={purchase.paymentStatus} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Supplier Information</h2>
+        <div className="bg-white dark:bg-[#102A43] p-6 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white mb-4">Supplier Information</h2>
           {supplier ? (
-            <div className="space-y-3 text-sm">
+            <div className="space-y-3 text-[13px]">
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Name:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{supplier.supplierName}</span>
+                <span className="text-[#64748B] dark:text-slate-400">Name:</span>
+                <span className="font-semibold text-[#162033] dark:text-white">{supplier.supplierName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Contact:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{supplier.contactPerson} ({supplier.phoneNumber})</span>
+                <span className="text-[#64748B] dark:text-slate-400">Contact:</span>
+                <span className="font-semibold text-[#162033] dark:text-white">{supplier.contactPerson} ({supplier.phoneNumber})</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Email:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{supplier.email}</span>
+                <span className="text-[#64748B] dark:text-slate-400">Email:</span>
+                <span className="font-semibold text-[#162033] dark:text-white">{supplier.email}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">GST:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{supplier.gstNumber}</span>
+                <span className="text-[#64748B] dark:text-slate-400">GST:</span>
+                <span className="font-semibold text-[#162033] dark:text-white">{supplier.gstNumber}</span>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-gray-500">Supplier information unavailable.</p>
+            <p className="text-[13px] text-[#64748B]">Supplier information unavailable.</p>
           )}
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Medicine Items</h2>
+      <div className="bg-white dark:bg-[#102A43] rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-800/50">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white">Medicine Items</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-            <thead className="bg-white dark:bg-slate-800">
+          <table className="min-w-full divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
+            <thead className="bg-[#24C9A0] text-white">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Medicine</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Qty</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Price (₹)</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">MRP (₹)</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Disc %</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">GST %</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Total (₹)</th>
+                <th scope="col" className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Medicine</th>
+                <th scope="col" className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Qty</th>
+                <th scope="col" className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Price (₹)</th>
+                <th scope="col" className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">MRP (₹)</th>
+                <th scope="col" className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Disc %</th>
+                <th scope="col" className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">GST %</th>
+                <th scope="col" className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-wider">Total (₹)</th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+            <tbody className="bg-white dark:bg-[#102A43] divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
               {purchase.items.map((item, idx) => (
-                <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-slate-750/50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100">{getMedicineName(item.medicineId)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100 text-right">{item.quantity}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100 text-right">{item.purchasePrice.toFixed(2)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100 text-right">{item.mrp.toFixed(2)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100 text-right">{item.discount}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100 text-right">{item.gst}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white text-right">{item.total.toFixed(2)}</td>
+                <tr key={idx} className="hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50">
+                  <td className="px-6 py-4 whitespace-nowrap text-[13px] font-semibold text-[#162033] dark:text-white">{getMedicineName(item.medicineId)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-[13px] text-[#64748B] dark:text-slate-300 text-right">{item.quantity}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-[13px] text-[#64748B] dark:text-slate-300 text-right">{item.purchasePrice.toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-[13px] text-[#64748B] dark:text-slate-300 text-right">{item.mrp.toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-[13px] text-[#64748B] dark:text-slate-300 text-right">{item.discount}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-[13px] text-[#64748B] dark:text-slate-300 text-right">{item.gst}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-[13px] font-bold text-[#162033] dark:text-white text-right">{item.total.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>

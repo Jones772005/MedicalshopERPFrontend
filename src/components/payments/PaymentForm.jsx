@@ -8,6 +8,7 @@ import Input from '../common/Input';
 import { getSuppliers } from '../../services/supplierApi';
 import { getCustomers } from '../../services/customerApi';
 import { createPayment } from '../../services/paymentApi';
+import { Card, CardContent, CardHeader, CardTitle } from '../common/Card';
 
 const paymentSchema = z.object({
   type: z.enum(['Purchase', 'Sale']),
@@ -91,23 +92,26 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow border border-gray-200 dark:border-slate-700">
-      <div className="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-slate-700 pb-4">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Record Payment</h2>
-        {onCancel && (
-          <button onClick={onCancel} className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200">
-            <X className="w-5 h-5" />
-          </button>
-        )}
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="w-full">
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center w-full">
+            <CardTitle>Record Payment</CardTitle>
+            {onCancel && (
+              <button onClick={onCancel} className="text-[#64748B] hover:text-[#162033] dark:text-slate-400 dark:hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Payment For</label>
+            <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Payment For</label>
             <select 
               {...register('type')}
-              className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100"
+              className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
             >
               <option value="Purchase">Purchase Payment (Outgoing to Supplier)</option>
               <option value="Sale">Sales Payment (Incoming from Customer)</option>
@@ -116,10 +120,10 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
 
           {paymentType === 'Purchase' ? (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Supplier *</label>
+              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Supplier *</label>
               <select 
                 {...register('supplierId')}
-                className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 ${errors.supplierId ? 'border-red-500' : ''}`}
+                className={`block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED] ${errors.supplierId ? 'border-red-500' : ''}`}
               >
                 <option value="">Select a supplier...</option>
                 {suppliers.map(s => <option key={s.id} value={s.id}>{s.supplierName}</option>)}
@@ -128,10 +132,10 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer *</label>
+              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Customer *</label>
               <select 
                 {...register('customerId')}
-                className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 ${errors.customerId ? 'border-red-500' : ''}`}
+                className={`block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED] ${errors.customerId ? 'border-red-500' : ''}`}
               >
                 <option value="">Select a customer...</option>
                 {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -163,10 +167,10 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Payment Method</label>
+            <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Payment Method</label>
             <select 
               {...register('method')}
-              className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100"
+              className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
             >
               <option value="Cash">Cash</option>
               <option value="UPI">UPI</option>
@@ -190,7 +194,7 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
           {...register('notes')} 
         />
 
-        <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-slate-700">
+        <div className="flex justify-end space-x-3 mt-8">
           {onCancel && (
             <Button type="button" variant="secondary" onClick={onCancel} disabled={submitting}>
               Cancel
@@ -201,7 +205,9 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
             {submitting ? 'Saving...' : 'Record Payment'}
           </Button>
         </div>
-      </form>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

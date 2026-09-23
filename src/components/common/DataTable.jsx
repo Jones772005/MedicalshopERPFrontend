@@ -99,7 +99,7 @@ const DataTable = ({
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 placeholder-[#829AB1] dark:placeholder-[#8FA9BF] text-[#102A43] dark:text-[#F8FAFC] focus:outline-none focus:ring-1 focus:ring-[#1677FF] focus:border-[#1677FF] sm:text-sm transition duration-150 ease-in-out"
+                className="block w-full pl-10 pr-3 py-2 rounded-lg leading-5 placeholder-[#94A3B8] dark:placeholder-[#8FA9BF] text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-1 focus:ring-[#2482ED] focus:border-[#2482ED] sm:text-sm transition duration-150 ease-in-out"
                 style={{ backgroundColor: 'var(--input-bg)', border: '1px solid var(--border-color)' }}
                 placeholder={searchPlaceholder}
                 value={searchTerm}
@@ -128,7 +128,7 @@ const DataTable = ({
                   key={idx} 
                   scope="col" 
                   className={`px-6 py-3 text-left uppercase tracking-[0.04em] ${col.sortable !== false && col.accessor ? 'cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/5' : ''}`}
-                  style={{ fontSize: '12px', fontWeight: 600, color: '#496A85' }}
+                  style={{ fontSize: '12px', fontWeight: 600, color: '#FFFFFF' }}
                   onClick={() => col.sortable !== false && handleSort(col.accessor)}
                 >
                   <div className="flex items-center">
@@ -167,7 +167,7 @@ const DataTable = ({
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
                 >
                   {columns.map((col, colIndex) => (
-                    <td key={colIndex} className="px-6 py-3 whitespace-nowrap text-sm text-[#102A43] dark:text-[#D9E6F2]">
+                    <td key={colIndex} className="px-6 py-3 whitespace-nowrap text-sm text-[#162033] dark:text-[#D9E6F2]">
                       {col.cell ? col.cell(row) : row[col.accessor]}
                     </td>
                   ))}

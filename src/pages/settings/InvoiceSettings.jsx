@@ -3,6 +3,7 @@ import { Save, FileText } from 'lucide-react';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 
 const InvoiceSettings = () => {
   const { settings, updateCategorySettings } = useSettings();
@@ -30,50 +31,51 @@ const InvoiceSettings = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between border-b border-gray-200 dark:border-slate-700 pb-4 mb-6">
+    <Card className="m-6">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-[#DDE6F0] dark:border-[#263B50] pb-4">
         <div>
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-            <FileText className="w-5 h-5 mr-2 text-primary-500" /> Invoice Settings
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Configure invoice numbering and display preferences.</p>
+          <CardTitle className="flex items-center text-[#162033] dark:text-white">
+            <FileText className="w-5 h-5 mr-2 text-[#2482ED]" /> Invoice Settings
+          </CardTitle>
+          <p className="text-sm text-[#64748B] dark:text-slate-400 mt-1">Configure invoice numbering and display preferences.</p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
           <Save className="w-4 h-4 mr-2" /> {saving ? 'Saving...' : 'Save Settings'}
         </Button>
-      </div>
+      </CardHeader>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         <div className="space-y-6">
-          <h3 className="text-sm font-medium text-gray-900 dark:text-white">Numbering System</h3>
+          <h3 className="text-sm font-bold text-[#162033] dark:text-white">Numbering System</h3>
           <div className="grid grid-cols-2 gap-4">
             <Input label="Invoice Prefix" name="prefix" value={formData.prefix} onChange={handleChange} required />
             <Input label="Starting Number" type="number" name="startingNumber" value={formData.startingNumber} onChange={handleChange} required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Number Format</label>
-            <select name="format" value={formData.format} onChange={handleChange} className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100">
+            <label className="block text-sm font-bold text-[#64748B] dark:text-slate-300 mb-1">Number Format</label>
+            <select name="format" value={formData.format} onChange={handleChange} className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-1 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100">
               <option value="PREFIX-NUMBER">PREFIX-NUMBER (e.g. INV-1001)</option>
               <option value="PREFIX-YEAR-NUMBER">PREFIX-YEAR-NUMBER (e.g. INV-2024-1001)</option>
               <option value="NUMBER">NUMBER (e.g. 1001)</option>
             </select>
           </div>
           
-          <div className="pt-4 border-t border-gray-200 dark:border-slate-700">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Footer / Terms & Conditions</label>
+          <div className="pt-4 border-t border-[#DDE6F0] dark:border-[#263B50]">
+            <label className="block text-sm font-bold text-[#64748B] dark:text-slate-300 mb-2">Footer / Terms & Conditions</label>
             <textarea 
               name="footerText" 
               rows={4} 
               value={formData.footerText} 
               onChange={handleChange}
-              className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100"
+              className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-1 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100"
             ></textarea>
           </div>
         </div>
 
         <div className="space-y-6">
-          <h3 className="text-sm font-medium text-gray-900 dark:text-white">Display Preferences</h3>
+          <h3 className="text-sm font-bold text-[#162033] dark:text-white">Display Preferences</h3>
           
           <div className="space-y-3">
             {[
@@ -90,9 +92,9 @@ const InvoiceSettings = () => {
                   name={toggle.id}
                   checked={formData[toggle.id]}
                   onChange={handleChange}
-                  className="form-checkbox h-4 w-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 dark:border-slate-600 dark:bg-slate-700"
+                  className="form-checkbox h-4 w-4 text-[#2482ED] border-[#DDE6F0] rounded focus:ring-[#2482ED] dark:border-[#263B50] dark:bg-[#0B1A2A]"
                 />
-                <span className="ml-3 text-sm text-gray-700 dark:text-gray-300">{toggle.label}</span>
+                <span className="ml-3 text-sm text-[#162033] dark:text-gray-300">{toggle.label}</span>
               </label>
             ))}
           </div>
@@ -106,7 +108,8 @@ const InvoiceSettings = () => {
         </div>
 
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

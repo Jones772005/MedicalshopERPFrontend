@@ -114,7 +114,7 @@ const NotificationDropdown = () => {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="relative flex items-center justify-center w-9 h-9 rounded-full text-[#627D98] dark:text-[#B8CCE0] hover:bg-[#EAF4FF] dark:hover:bg-[#163A59] hover:text-[#1677FF] dark:hover:text-[#38BDF8] focus:outline-none focus:ring-2 focus:ring-[#1677FF] transition-colors cursor-pointer"
+        className="relative flex items-center justify-center w-9 h-9 rounded-full text-[#64748B] dark:text-[#B8CCE0] hover:bg-[#EAF3FE] dark:hover:bg-[#163A59] hover:text-[#2482ED] dark:hover:text-[#38BDF8] focus:outline-none focus:ring-2 focus:ring-[#2482ED] transition-colors cursor-pointer"
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
@@ -125,21 +125,21 @@ const NotificationDropdown = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[360px] sm:w-[400px] bg-white dark:bg-[#102A43] rounded-xl shadow-xl py-0 border border-[#D9E6F2] dark:border-[#23415C] z-50 overflow-hidden max-h-[85vh] sm:max-h-[480px] flex flex-col">
-          <div className="px-4 py-3 border-b border-[#D9E6F2] dark:border-[#23415C] flex justify-between items-center bg-[#F8FAFC] dark:bg-[#0F2A43]">
-            <h3 className="text-sm font-semibold text-[#102A43] dark:text-[#F8FAFC]">
+        <div className="absolute right-0 mt-2 w-[360px] sm:w-[400px] bg-white dark:bg-[#102A43] rounded-xl shadow-xl py-0 border border-[#DDE6F0] dark:border-[#23415C] z-50 overflow-hidden max-h-[85vh] sm:max-h-[480px] flex flex-col">
+          <div className="px-4 py-3 border-b border-[#DDE6F0] dark:border-[#23415C] flex justify-between items-center bg-[#F8FAFC] dark:bg-[#0F2A43]">
+            <h3 className="text-sm font-semibold text-[#162033] dark:text-[#F8FAFC]">
               Notifications 
-              {unreadCount > 0 && <span className="ml-1.5 text-[#627D98] dark:text-[#8FA9BF] font-normal">({unreadCount})</span>}
+              {unreadCount > 0 && <span className="ml-1.5 text-[#64748B] dark:text-[#8FA9BF] font-normal">({unreadCount})</span>}
             </h3>
           </div>
           
           <div className="overflow-y-auto flex-1">
             {notifications.length === 0 ? (
-              <div className="px-4 py-8 text-center text-sm text-[#627D98] dark:text-[#8FA9BF]">
+              <div className="px-4 py-8 text-center text-sm text-[#64748B] dark:text-[#8FA9BF]">
                 No recent notifications
               </div>
             ) : (
-              <ul className="divide-y divide-[#D9E6F2] dark:divide-[#23415C]">
+              <ul className="divide-y divide-[#DDE6F0] dark:divide-[#23415C]">
                 {notifications.map(notification => {
                   const recent = isRecent(notification.createdAt);
                   const unread = !notification.read;
@@ -147,7 +147,7 @@ const NotificationDropdown = () => {
                     <li 
                       key={notification.id} 
                       onClick={() => handleNotificationClick(notification)}
-                      className={`px-4 py-3 hover:bg-[#EAF4FF] dark:hover:bg-[#163A59] cursor-pointer transition-colors ${unread ? 'bg-[#F0F7FF] dark:bg-[#132B42]' : 'bg-white dark:bg-[#102A43]'}`}
+                      className={`px-4 py-3 hover:bg-[#EAF3FE] dark:hover:bg-[#163A59] cursor-pointer transition-colors ${unread ? 'bg-[#F0F6FE] dark:bg-[#132B42]' : 'bg-white dark:bg-[#102A43]'}`}
                     >
                       <div className="flex items-start">
                         <div className="flex-shrink-0 mt-0.5">
@@ -155,7 +155,7 @@ const NotificationDropdown = () => {
                         </div>
                         <div className="ml-3 w-0 flex-1">
                           <div className="flex justify-between items-start">
-                            <p className={`text-sm ${unread ? 'font-semibold text-[#102A43] dark:text-[#F8FAFC]' : 'font-medium text-[#334E68] dark:text-[#B8CCE0]'}`}>
+                            <p className={`text-sm ${unread ? 'font-semibold text-[#162033] dark:text-[#F8FAFC]' : 'font-medium text-[#334155] dark:text-[#B8CCE0]'}`}>
                               {notification.title}
                             </p>
                             {recent && unread && (
@@ -164,16 +164,16 @@ const NotificationDropdown = () => {
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-[#627D98] dark:text-[#9FB3C8] mt-1 line-clamp-2">
+                          <p className="text-xs text-[#64748B] dark:text-[#9FB3C8] mt-1 line-clamp-2">
                             {notification.message}
                           </p>
-                          <p className="text-[11px] text-[#829AB1] dark:text-[#768C9E] mt-1.5" title={new Date(notification.createdAt).toLocaleString()}>
+                          <p className="text-[11px] text-[#94A3B8] dark:text-[#768C9E] mt-1.5" title={new Date(notification.createdAt).toLocaleString()}>
                             {getRelativeTime(notification.createdAt)}
                           </p>
                         </div>
                         {unread && !recent && (
                           <div className="ml-2 flex-shrink-0 mt-1.5">
-                            <span className="block h-2 w-2 rounded-full bg-[#1677FF] dark:bg-[#38BDF8]"></span>
+                            <span className="block h-2 w-2 rounded-full bg-[#2482ED] dark:bg-[#38BDF8]"></span>
                           </div>
                         )}
                       </div>
@@ -184,11 +184,11 @@ const NotificationDropdown = () => {
             )}
           </div>
           
-          <div className="px-4 py-2.5 border-t border-[#D9E6F2] dark:border-[#23415C] bg-[#F8FAFC] dark:bg-[#0F2A43] flex justify-between items-center">
+          <div className="px-4 py-2.5 border-t border-[#DDE6F0] dark:border-[#23415C] bg-[#F8FAFC] dark:bg-[#0F2A43] flex justify-between items-center">
             <button 
               onClick={handleMarkAllRead}
               disabled={unreadCount === 0}
-              className="text-xs font-medium text-[#627D98] dark:text-[#8FA9BF] hover:text-[#102A43] dark:hover:text-[#F8FAFC] disabled:opacity-50 transition-colors cursor-pointer"
+              className="text-xs font-medium text-[#64748B] dark:text-[#8FA9BF] hover:text-[#162033] dark:hover:text-[#F8FAFC] disabled:opacity-50 transition-colors cursor-pointer"
             >
               Mark all as read
             </button>
@@ -197,7 +197,7 @@ const NotificationDropdown = () => {
                 setIsOpen(false);
                 navigate('/notifications');
               }}
-              className="text-xs font-medium text-[#1677FF] hover:text-[#0052CC] dark:text-[#38BDF8] transition-colors cursor-pointer"
+              className="text-xs font-medium text-[#2482ED] hover:text-[#1A6BC7] dark:text-[#38BDF8] transition-colors cursor-pointer"
             >
               View all notifications
             </button>

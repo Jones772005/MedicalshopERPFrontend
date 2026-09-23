@@ -175,12 +175,12 @@ const POS = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col md:flex-row gap-6">
+    <div className="h-[calc(100vh-6rem)] flex flex-col xl:flex-row gap-4">
       
-      {/* LEFT COLUMN: Search & Batch Selection */}
-      <div className="w-full md:w-1/3 flex flex-col space-y-4">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 flex flex-col h-full">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Product Search</h2>
+      {/* LEFT COLUMN: Search & Batch Selection (30%) */}
+      <div className="w-full xl:w-[30%] flex flex-col space-y-4">
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col h-full">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white mb-4">Product Search</h2>
           
           <div className="space-y-4">
             <BarcodeInput onBarcodeDetected={(code) => console.log('Barcode scanned:', code)} />
@@ -189,7 +189,7 @@ const POS = () => {
             </div>
           </div>
 
-          <div className="mt-6 flex-grow border-t border-gray-200 dark:border-slate-700 pt-4 relative z-10">
+          <div className="mt-6 flex-grow border-t border-[#DDE6F0] dark:border-slate-700/50 pt-4 relative z-10">
             {activeMedicine ? (
               <BatchSelector 
                 medicine={activeMedicine} 
@@ -197,29 +197,27 @@ const POS = () => {
                 onCancel={() => setActiveMedicine(null)} 
               />
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-gray-400">
+              <div className="h-full flex flex-col items-center justify-center text-[#64748B] dark:text-slate-500">
                 <ShoppingCart className="w-12 h-12 mb-2 opacity-20" />
-                <p className="text-sm">Search for a product to begin billing</p>
+                <p className="text-[13px] font-medium">Search for a product to begin billing</p>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* RIGHT COLUMN: Cart & Checkout */}
-      <div className="w-full md:w-2/3 flex flex-col">
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 flex flex-col h-full overflow-hidden">
+      {/* CENTER COLUMN: Cart (40%) */}
+      <div className="w-full xl:w-[40%] flex flex-col">
+        <div className="bg-white dark:bg-[#102A43] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col h-full overflow-hidden">
           
           {/* Header */}
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 flex justify-between items-center">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Current Bill</h2>
-            <div className="space-x-2">
-              <Button variant="ghost" size="sm" onClick={handleClearBill}>Clear Bill</Button>
-            </div>
+          <div className="px-5 py-3 border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-800/50 flex justify-between items-center">
+            <h2 className="text-[15px] font-bold text-[#162033] dark:text-white">Current Bill</h2>
+            <Button variant="ghost" size="sm" onClick={handleClearBill} className="text-[#64748B] hover:text-red-500">Clear Bill</Button>
           </div>
 
           {/* Cart Area */}
-          <div className="flex-grow overflow-y-auto">
+          <div className="flex-grow overflow-y-auto bg-white dark:bg-[#102A43]">
             <Cart 
               items={cartItems} 
               onUpdateQuantity={handleUpdateQuantity}
@@ -227,66 +225,64 @@ const POS = () => {
               onUpdateDiscount={handleUpdateDiscount}
             />
           </div>
+        </div>
+      </div>
 
-          {/* Footer Area / Payment */}
-          <div className="border-t border-gray-200 dark:border-slate-700 p-6 bg-gray-50 dark:bg-slate-900/30">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              
-              {/* Payment Settings */}
-              <div>
-                <CustomerSelector onSelect={setCustomer} />
-                <PaymentPanel 
-                  grandTotal={grandTotal} 
-                  onPaymentMethodChange={setPaymentMethod} 
-                  onAmountReceivedChange={setAmountReceived} 
+      {/* RIGHT COLUMN: Customer, Payment & Checkout (30%) */}
+      <div className="w-full xl:w-[30%] flex flex-col">
+        <div className="bg-white dark:bg-[#102A43] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700/50 flex flex-col h-full overflow-hidden">
+          
+          <div className="flex-grow overflow-y-auto p-5 space-y-6">
+            <CustomerSelector onSelect={setCustomer} />
+            <PaymentPanel 
+              grandTotal={grandTotal} 
+              onPaymentMethodChange={setPaymentMethod} 
+              onAmountReceivedChange={setAmountReceived} 
+            />
+          </div>
+
+          {/* Totals & Submit */}
+          <div className="border-t border-[#DDE6F0] dark:border-slate-700/50 p-5 bg-[#F5F8FC] dark:bg-slate-800/50 flex flex-col justify-end space-y-3">
+            <div className="flex justify-between text-[13px] font-semibold text-[#64748B] dark:text-slate-400">
+              <span>Subtotal</span>
+              <span>₹{subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-[13px] font-semibold text-red-500 dark:text-red-400">
+              <span>Discount</span>
+              <span>-₹{totalDiscount.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-[13px] font-semibold text-[#64748B] dark:text-slate-400">
+              <span>GST</span>
+              <span>+₹{totalTax.toFixed(2)}</span>
+            </div>
+            <div className="pt-3 border-t border-[#DDE6F0] dark:border-slate-700/50 flex justify-between font-bold text-xl text-[#162033] dark:text-white">
+              <span>Grand Total</span>
+              <span>₹{grandTotal.toFixed(2)}</span>
+            </div>
+
+            {cartRequiresPrescription && (
+              <div className="pt-2 flex items-center space-x-2">
+                <input 
+                  type="checkbox" 
+                  id="prescriptionVerified" 
+                  checked={prescriptionVerified}
+                  onChange={(e) => setPrescriptionVerified(e.target.checked)}
+                  className="h-4 w-4 text-[#2482ED] focus:ring-[#2482ED] border-[#DDE6F0] rounded"
                 />
+                <label htmlFor="prescriptionVerified" className="text-[13px] font-bold text-orange-600 dark:text-orange-400">
+                  Prescription Verified (Required)
+                </label>
               </div>
+            )}
 
-              {/* Totals & Submit */}
-              <div className="flex flex-col justify-end space-y-3">
-                <div className="flex justify-between text-sm text-gray-500 dark:text-slate-400">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-red-500 dark:text-red-400">
-                  <span>Discount</span>
-                  <span>-₹{totalDiscount.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-500 dark:text-slate-400">
-                  <span>GST</span>
-                  <span>+₹{totalTax.toFixed(2)}</span>
-                </div>
-                <div className="pt-3 border-t border-gray-300 dark:border-slate-600 flex justify-between font-bold text-2xl text-gray-900 dark:text-white">
-                  <span>Grand Total</span>
-                  <span>₹{grandTotal.toFixed(2)}</span>
-                </div>
-
-                {cartRequiresPrescription && (
-                  <div className="pt-2 flex items-center space-x-2">
-                    <input 
-                      type="checkbox" 
-                      id="prescriptionVerified" 
-                      checked={prescriptionVerified}
-                      onChange={(e) => setPrescriptionVerified(e.target.checked)}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="prescriptionVerified" className="text-sm font-medium text-orange-600 dark:text-orange-400">
-                      Prescription Verified (Required)
-                    </label>
-                  </div>
-                )}
-
-                <div className="pt-2">
-                  <Button 
-                    className="w-full text-lg h-14" 
-                    onClick={handleGenerateBill}
-                    disabled={isGenerateDisabled}
-                  >
-                    {isSubmitting ? 'Generating...' : 'GENERATE BILL'}
-                  </Button>
-                </div>
-              </div>
-
+            <div className="pt-2">
+              <Button 
+                className="w-full text-[15px] font-bold h-12 bg-[#24C9A0] hover:bg-[#1BA885] text-white" 
+                onClick={handleGenerateBill}
+                disabled={isGenerateDisabled}
+              >
+                {isSubmitting ? 'GENERATING...' : 'GENERATE BILL'}
+              </Button>
             </div>
           </div>
 

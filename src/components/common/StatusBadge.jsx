@@ -25,7 +25,7 @@ const StatusBadge = ({ status, className }) => {
   };
 
   return (
-    <span className={cn("px-2.5 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full", getStatusStyles(), className)}>
+    <span className={cn("px-2.5 py-0.5 inline-flex text-[11px] leading-4 font-bold uppercase tracking-wider rounded-full shadow-sm", getStatusStyles(), className)}>
       {status}
     </span>
   );

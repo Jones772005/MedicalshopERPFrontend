@@ -34,17 +34,17 @@ const StockTransactions = () => {
 
   const columns = [
     { header: 'Date', accessor: 'date', cell: (row) => formatDate(row.date) },
-    { header: 'Medicine', accessor: 'medicine', cell: (row) => <span className="font-medium text-gray-900">{row.medicine}</span> },
+    { header: 'Medicine', accessor: 'medicine', cell: (row) => <span className="font-medium text-[#162033] dark:text-white">{row.medicine}</span> },
     { header: 'Batch', accessor: 'batch' },
     { 
       header: 'Type', 
       accessor: 'type',
       cell: (row) => (
-        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-          row.type === 'Purchase' ? 'bg-blue-100 text-blue-800' :
-          row.type === 'Sale' ? 'bg-green-100 text-green-800' :
-          row.type === 'Damage' ? 'bg-red-100 text-red-800' :
-          'bg-gray-100 text-gray-800'
+        <span className={`px-2.5 py-0.5 inline-flex text-[11px] font-bold uppercase tracking-wider rounded-full ${
+          row.type === 'Purchase' ? 'bg-[#F5F8FC] text-[#2482ED] dark:bg-[#2482ED]/10 dark:text-[#2482ED] border border-[#2482ED]/20' :
+          row.type === 'Sale' ? 'bg-[#E5F9F4] text-[#24C9A0] dark:bg-[#24C9A0]/10 dark:text-[#24C9A0] border border-[#24C9A0]/20' :
+          row.type === 'Damage' ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border border-red-200 dark:border-red-800/30' :
+          'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
         }`}>
           {row.type}
         </span>

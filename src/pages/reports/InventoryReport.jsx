@@ -4,6 +4,7 @@ import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
 import StatusBadge from '../../components/common/StatusBadge';
+import StatCard from '../../components/common/StatCard';
 import { getReports } from '../../services/reportApi';
 
 const InventoryReport = () => {
@@ -45,13 +46,13 @@ const InventoryReport = () => {
   };
 
   const columns = [
-    { header: 'Medicine', accessor: 'medicineName', cell: (row) => <span className="font-medium text-gray-900 dark:text-white">{row.medicineName || '-'}</span> },
+    { header: 'Medicine', accessor: 'medicineName', cell: (row) => <span className="font-bold text-[#162033] dark:text-white">{row.medicineName || '-'}</span> },
     { header: 'Batch', accessor: 'batch' },
-    { header: 'Quantity', accessor: 'quantity', cell: (row) => <span className="font-bold text-gray-900 dark:text-white">{Number(row.quantity) || 0}</span> },
+    { header: 'Quantity', accessor: 'quantity', cell: (row) => <span className="font-bold text-[#162033] dark:text-white">{Number(row.quantity) || 0}</span> },
     { header: 'Buy Price', accessor: 'purchasePrice', cell: (row) => `₹${(Number(row.purchasePrice) || 0).toFixed(2)}` },
     { header: 'Sell Price', accessor: 'sellingPrice', cell: (row) => `₹${(Number(row.sellingPrice) || 0).toFixed(2)}` },
     { header: 'MRP', accessor: 'mrp', cell: (row) => `₹${(Number(row.mrp) || 0).toFixed(2)}` },
-    { header: 'Stock Value (Sell)', accessor: 'value', cell: (row) => <span className="font-medium text-gray-900 dark:text-white">₹{((Number(row.sellingPrice) || Number(row.mrp) || 0) * (Number(row.quantity) || 0)).toFixed(2)}</span> },
+    { header: 'Stock Value (Sell)', accessor: 'value', cell: (row) => <span className="font-bold text-[#162033] dark:text-white">₹{((Number(row.sellingPrice) || Number(row.mrp) || 0) * (Number(row.quantity) || 0)).toFixed(2)}</span> },
     { header: 'Expiry', accessor: 'expiryDate', cell: (row) => row.expiryDate ? new Date(row.expiryDate).toLocaleDateString() : '-' },
     { header: 'Status', accessor: 'status', cell: (row) => <StatusBadge status={getEffectiveStatus(row)} /> }
   ];
@@ -59,7 +60,7 @@ const InventoryReport = () => {
   const totalValue = inventory.reduce((acc, curr) => acc + ((Number(curr.sellingPrice) || Number(curr.mrp) || 0) * (Number(curr.quantity) || 0)), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full pb-12">
       <PageHeader title="Inventory Report" description="Current stock levels and valuation." />
       
       <ReportFilterBar 
@@ -70,26 +71,30 @@ const InventoryReport = () => {
         onPrint={() => window.print()}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Total Stock Value (Sell Price)</div>
-          <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">₹{totalValue.toFixed(2)}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Available Stock (Batches)</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventory.length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Low Stock Items</div>
-          <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{inventory.filter(i => getEffectiveStatus(i) === 'Low Stock').length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Near Expiry</div>
-          <div className="text-2xl font-bold text-red-600 dark:text-red-400">{inventory.filter(i => getEffectiveStatus(i) === 'Near Expiry').length}</div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Total Stock Value (Sell Price)"
+          value={`₹${totalValue.toFixed(2)}`}
+          color="primary"
+        />
+        <StatCard
+          title="Available Stock (Batches)"
+          value={inventory.length.toString()}
+          color="info"
+        />
+        <StatCard
+          title="Low Stock Items"
+          value={inventory.filter(i => getEffectiveStatus(i) === 'Low Stock').length.toString()}
+          color="warning"
+        />
+        <StatCard
+          title="Near Expiry"
+          value={inventory.filter(i => getEffectiveStatus(i) === 'Near Expiry').length.toString()}
+          color="danger"
+        />
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
         {loading ? <LoadingSpinner /> : (
           <DataTable columns={columns} data={inventory} searchPlaceholder="Search inventory..." />
         )}

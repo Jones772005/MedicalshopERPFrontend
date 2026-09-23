@@ -3,6 +3,7 @@ import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
+import StatCard from '../../components/common/StatCard';
 import { getSuppliers } from '../../services/supplierApi';
 import { getPurchases } from '../../services/purchaseApi';
 import { getPayments } from '../../services/paymentApi';
@@ -61,7 +62,7 @@ const SuppliersReport = () => {
   }, []);
 
   const columns = [
-    { header: 'Supplier', accessor: 'supplierName', cell: (row) => <span className="font-medium text-gray-900 dark:text-white">{row.supplierName || row.name}</span> },
+    { header: 'Supplier', accessor: 'supplierName', cell: (row) => <span className="font-bold text-[#162033] dark:text-white">{row.supplierName || row.name}</span> },
     { header: 'Contact', accessor: 'contactPerson', cell: (row) => row.contactPerson || row.contact || '-' },
     { header: 'Orders', accessor: 'purchaseCount' },
     { header: 'Total Value', accessor: 'purchaseValue', cell: (row) => `₹${row.purchaseValue.toFixed(2)}` },
@@ -75,7 +76,7 @@ const SuppliersReport = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full pb-12">
       <PageHeader title="Suppliers Report" description="Supplier procurement and payment metrics." />
       
       <ReportFilterBar 
@@ -85,7 +86,30 @@ const SuppliersReport = () => {
         onPrint={() => window.print()}
       />
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Total Suppliers"
+          value={data.length.toString()}
+          color="info"
+        />
+        <StatCard
+          title="Total Purchase Value"
+          value={`₹${data.reduce((acc, curr) => acc + curr.purchaseValue, 0).toFixed(2)}`}
+          color="primary"
+        />
+        <StatCard
+          title="Total Paid"
+          value={`₹${data.reduce((acc, curr) => acc + curr.paid, 0).toFixed(2)}`}
+          color="success"
+        />
+        <StatCard
+          title="Total Outstanding"
+          value={`₹${data.reduce((acc, curr) => acc + curr.outstanding, 0).toFixed(2)}`}
+          color="warning"
+        />
+      </div>
+
+      <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
         {loading ? <LoadingSpinner /> : (
           <DataTable columns={columns} data={data} searchPlaceholder="Search suppliers..." />
         )}

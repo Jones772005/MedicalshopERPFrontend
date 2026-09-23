@@ -5,14 +5,14 @@ const Input = forwardRef(({ className, label, error, ...props }, ref) => {
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-[#102A43] dark:text-[#D9E6F2] mb-1">
+        <label className="block text-sm font-medium text-[#162033] dark:text-[#D9E6F2] mb-1">
           {label}
         </label>
       )}
       <input
         ref={ref}
         className={cn(
-          "flex h-10 w-full rounded-md border border-[#D9E6F2] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#102A43] dark:text-[#F8FAFC] placeholder:text-[#829AB1] dark:placeholder:text-[#8FA9BF] focus:outline-none focus:ring-2 focus:ring-[#1677FF] focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
+          "flex h-10 w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] placeholder:text-[#94A3B8] dark:placeholder:text-[#8FA9BF] focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
           error && "border-red-500 focus:ring-red-500 dark:border-red-500 dark:focus:ring-red-500",
           className
         )}

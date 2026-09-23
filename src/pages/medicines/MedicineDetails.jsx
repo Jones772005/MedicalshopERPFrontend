@@ -47,7 +47,7 @@ const MedicineDetails = () => {
   }, [id, navigate]);
 
   if (loading) {
-    return <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div></div>;
+    return <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2482ED]"></div></div>;
   }
 
   if (!medicine) return null;
@@ -66,45 +66,50 @@ const MedicineDetails = () => {
       />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
-          <Card>
-            <CardHeader><CardTitle>Basic Information</CardTitle></CardHeader>
-            <CardContent>
+          <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+            <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+              <CardTitle className="text-[15px] text-[#162033] dark:text-white">Basic Information</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-5">
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
-                <div><dt className="text-sm font-medium text-gray-500">Generic Name</dt><dd className="mt-1 text-sm text-gray-900">{medicine.genericName}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Brand Name</dt><dd className="mt-1 text-sm text-gray-900">{medicine.brandName || '-'}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Category</dt><dd className="mt-1 text-sm text-gray-900">{medicine.category}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Manufacturer</dt><dd className="mt-1 text-sm text-gray-900">{medicine.manufacturer}</dd></div>
-                <div className="sm:col-span-2"><dt className="text-sm font-medium text-gray-500">Description</dt><dd className="mt-1 text-sm text-gray-900">{medicine.description || 'No description available.'}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Generic Name</dt><dd className="mt-1.5 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.genericName}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Brand Name</dt><dd className="mt-1.5 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.brandName || '-'}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Category</dt><dd className="mt-1.5 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.category}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Manufacturer</dt><dd className="mt-1.5 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.manufacturer}</dd></div>
+                <div className="sm:col-span-2"><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Description</dt><dd className="mt-1.5 text-[13px] text-[#162033] dark:text-slate-300 leading-relaxed">{medicine.description || 'No description available.'}</dd></div>
               </dl>
             </CardContent>
           </Card>
-          
-          <Card>
-            <CardHeader><CardTitle>Pricing Information</CardTitle></CardHeader>
-            <CardContent>
+          <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+            <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+              <CardTitle className="text-[15px] text-[#162033] dark:text-white">Pricing Information</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-5">
               <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div><dt className="text-sm font-medium text-gray-500">Purchase Price</dt><dd className="mt-1 text-lg font-semibold text-gray-900">₹{medicine.purchasePrice.toFixed(2)}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Selling Price</dt><dd className="mt-1 text-lg font-semibold text-gray-900">₹{medicine.sellingPrice.toFixed(2)}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">MRP</dt><dd className="mt-1 text-lg font-semibold text-gray-900">₹{medicine.mrp.toFixed(2)}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">GST</dt><dd className="mt-1 text-lg font-semibold text-gray-900">{medicine.gst}%</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Purchase</dt><dd className="mt-1 text-[16px] font-bold text-[#2482ED] dark:text-[#38BDF8]">₹{medicine.purchasePrice.toFixed(2)}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Selling</dt><dd className="mt-1 text-[16px] font-bold text-[#2482ED] dark:text-[#38BDF8]">₹{medicine.sellingPrice.toFixed(2)}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">MRP</dt><dd className="mt-1 text-[16px] font-bold text-[#162033] dark:text-white">₹{medicine.mrp.toFixed(2)}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">GST</dt><dd className="mt-1 text-[16px] font-bold text-[#162033] dark:text-slate-200">{medicine.gst}%</dd></div>
               </dl>
             </CardContent>
           </Card>
         </div>
 
         <div className="space-y-6">
-          <Card>
-            <CardHeader><CardTitle>Stock Status</CardTitle></CardHeader>
-            <CardContent>
-              <div className="mb-4">
+          <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
+            <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
+              <CardTitle className="text-[15px] text-[#162033] dark:text-white">Stock Status</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-5">
+              <div className="mb-5">
                 <StatusBadge status={medicine.status} />
               </div>
-              <dl className="space-y-4">
-                <div><dt className="text-sm font-medium text-gray-500">Current Quantity</dt><dd className="mt-1 text-2xl font-bold text-gray-900">{medicine.quantity}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Low Stock Alert At</dt><dd className="mt-1 text-sm font-semibold text-gray-900">{medicine.minimumStockLevel !== undefined ? medicine.minimumStockLevel : 0}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Batch Number</dt><dd className="mt-1 text-sm text-gray-900">{medicine.batchNumber}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Expiry Date</dt><dd className="mt-1 text-sm text-gray-900">{medicine.expiryDate}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500">Rack Number</dt><dd className="mt-1 text-sm text-gray-900">{medicine.rackNumber || 'Not assigned'}</dd></div>
+              <dl className="space-y-5">
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Current Quantity</dt><dd className="mt-1 text-[22px] font-black text-[#162033] dark:text-white">{medicine.quantity}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Low Stock Alert At</dt><dd className="mt-1 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.minimumStockLevel !== undefined ? medicine.minimumStockLevel : 0}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Batch Number</dt><dd className="mt-1 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.batchNumber}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Expiry Date</dt><dd className="mt-1 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.expiryDate}</dd></div>
+                <div><dt className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Rack Number</dt><dd className="mt-1 text-[14px] font-semibold text-[#162033] dark:text-slate-200">{medicine.rackNumber || 'Not assigned'}</dd></div>
               </dl>
             </CardContent>
           </Card>

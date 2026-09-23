@@ -41,7 +41,7 @@ const InventoryList = () => {
   }, []);
 
   const columns = [
-    { header: 'Medicine', accessor: 'medicineName', cell: (row) => <span className="font-medium text-gray-900">{row.medicineName}</span> },
+    { header: 'Medicine', accessor: 'medicineName', cell: (row) => <span className="font-medium text-[#162033] dark:text-white">{row.medicineName}</span> },
     { header: 'Batch', accessor: 'batch' },
     { header: 'Quantity', accessor: 'quantity' },
     { header: 'Purchase Price', accessor: 'purchasePrice', cell: (row) => `\u20b9${(Number(row.purchasePrice) || 0).toFixed(2)}` },
@@ -85,15 +85,15 @@ const InventoryList = () => {
       <div className="flex mb-4 space-x-2">
         <button 
           onClick={() => setFilterMode('ALL')}
-          className={`px-4 py-2 text-sm font-medium rounded-md border cursor-pointer ${filterMode === 'ALL' ? 'bg-gray-100 text-gray-900 border-gray-400' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+          className={`px-4 py-2 text-[13px] font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'ALL' ? 'bg-[#F5F8FC] dark:bg-slate-800 text-[#2482ED] border-[#2482ED]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#162033] dark:hover:text-white hover:bg-[#F5F8FC] dark:hover:bg-slate-800'}`}
         >All Stock</button>
         <button 
           onClick={() => setFilterMode('LOW')}
-          className={`px-4 py-2 text-sm font-medium rounded-md border cursor-pointer ${filterMode === 'LOW' ? 'bg-red-100 text-red-800 border-red-300' : 'bg-white border-gray-300 text-red-600 hover:bg-red-50'}`}
+          className={`px-4 py-2 text-[13px] font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'LOW' ? 'bg-[#FFFBEB] dark:bg-amber-900/20 text-[#D97706] border-[#D97706]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#D97706] hover:bg-[#FFFBEB] dark:hover:bg-amber-900/20'}`}
         >Low Stock</button>
         <button 
           onClick={() => setFilterMode('EXPIRY')}
-          className={`px-4 py-2 text-sm font-medium rounded-md border cursor-pointer ${filterMode === 'EXPIRY' ? 'bg-orange-100 text-orange-800 border-orange-300' : 'bg-white border-gray-300 text-orange-600 hover:bg-orange-50'}`}
+          className={`px-4 py-2 text-[13px] font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'EXPIRY' ? 'bg-[#FFFBEB] dark:bg-amber-900/20 text-[#D97706] border-[#D97706]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#D97706] hover:bg-[#FFFBEB] dark:hover:bg-amber-900/20'}`}
         >Near Expiry</button>
       </div>
       <DataTable 

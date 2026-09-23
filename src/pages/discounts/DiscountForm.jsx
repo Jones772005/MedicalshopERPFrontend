@@ -8,6 +8,7 @@ import { getDiscountById, createDiscount, updateDiscount } from '../../services/
 import { getMedicines } from '../../services/medicineApi';
 import { getInventory } from '../../services/inventoryApi';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 
 const DiscountForm = () => {
   const { id } = useParams();
@@ -171,16 +172,18 @@ const DiscountForm = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="max-w-5xl bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <form onSubmit={handleSubmit} className="w-full space-y-6">
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 m-6 mb-0 text-red-700 dark:text-red-400">
+          <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 text-red-700 dark:text-red-400">
             {error}
           </div>
         )}
         
-        <div className="p-6 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="col-span-2 md:col-span-1">
+        <Card>
+          <CardHeader><CardTitle>Discount Information</CardTitle></CardHeader>
+          <CardContent className="space-y-6">
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input 
                 label="Discount Name" 
                 name="name" 
@@ -189,103 +192,101 @@ const DiscountForm = () => {
                 placeholder="e.g. October Health Offer" 
                 required 
               />
-            </div>
-            <div className="col-span-2 md:col-span-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Status
-              </label>
-              <select 
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-            
-            <div className="col-span-2 md:col-span-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Medicine
-              </label>
-              <select 
-                name="medicineId"
-                value={formData.medicineId}
-                onChange={handleChange}
-                required
-                className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="">Select Medicine</option>
-                {medicines.map(m => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="col-span-2 md:col-span-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Batch
-              </label>
-              <select 
-                name="batchNumber"
-                value={formData.batchNumber}
-                onChange={handleChange}
-                disabled={!formData.medicineId}
-                className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
-              >
-                <option value="All Batches">All Batches</option>
-                {uniqueBatchNumbers.map(b => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-span-2 md:col-span-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Discount Type
-              </label>
-              <select 
-                name="discountType"
-                value={formData.discountType}
-                onChange={handleChange}
-                className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="percentage">Percentage</option>
-                <option value="fixed">Fixed Amount</option>
-              </select>
-            </div>
-            
-            <div className="col-span-2 md:col-span-1 flex space-x-4">
-              <div className="flex-1">
-                <Input 
-                  label={`Value ${formData.discountType === 'percentage' ? '(%)' : '(₹)'}`}
-                  type="number" 
-                  step="0.01" 
-                  min="0"
-                  max={formData.discountType === 'percentage' ? "100" : undefined}
-                  name="discountValue" 
-                  value={formData.discountValue} 
-                  onChange={handleChange} 
-                  required 
-                />
+              <div>
+                <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+                  Status
+                </label>
+                <select 
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
               </div>
-              <div className="flex-1">
-                <Input 
-                  label="Max Discount (₹)" 
-                  type="number" 
-                  step="0.01"
-                  min="0"
-                  name="maxDiscountAmount" 
-                  value={formData.maxDiscountAmount} 
-                  onChange={handleChange} 
-                  disabled={formData.discountType === 'fixed'}
-                  placeholder="Optional"
-                />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+                  Medicine
+                </label>
+                <select 
+                  name="medicineId"
+                  value={formData.medicineId}
+                  onChange={handleChange}
+                  required
+                  className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
+                >
+                  <option value="">Select Medicine</option>
+                  {medicines.map(m => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+                  Batch
+                </label>
+                <select 
+                  name="batchNumber"
+                  value={formData.batchNumber}
+                  onChange={handleChange}
+                  disabled={!formData.medicineId}
+                  className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED] disabled:opacity-50"
+                >
+                  <option value="All Batches">All Batches</option>
+                  {uniqueBatchNumbers.map(b => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            <div className="col-span-2 md:col-span-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+                  Discount Type
+                </label>
+                <select 
+                  name="discountType"
+                  value={formData.discountType}
+                  onChange={handleChange}
+                  className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
+                >
+                  <option value="percentage">Percentage</option>
+                  <option value="fixed">Fixed Amount</option>
+                </select>
+              </div>
+              
+              <Input 
+                label={`Value ${formData.discountType === 'percentage' ? '(%)' : '(₹)'}`}
+                type="number" 
+                step="0.01" 
+                min="0"
+                max={formData.discountType === 'percentage' ? "100" : undefined}
+                name="discountValue" 
+                value={formData.discountValue} 
+                onChange={handleChange} 
+                required 
+              />
+              <Input 
+                label="Max Discount (₹)" 
+                type="number" 
+                step="0.01"
+                min="0"
+                name="maxDiscountAmount" 
+                value={formData.maxDiscountAmount} 
+                onChange={handleChange} 
+                disabled={formData.discountType === 'fixed'}
+                placeholder="Optional"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input 
                 label="Valid From" 
                 type="date" 
@@ -294,9 +295,6 @@ const DiscountForm = () => {
                 onChange={handleChange} 
                 required 
               />
-            </div>
-            
-            <div className="col-span-2 md:col-span-1">
               <Input 
                 label="Valid Until" 
                 type="date" 
@@ -307,8 +305,8 @@ const DiscountForm = () => {
               />
             </div>
 
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <div className="w-full">
+              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
                 Description (Optional)
               </label>
               <textarea
@@ -316,14 +314,14 @@ const DiscountForm = () => {
                 value={formData.description}
                 onChange={handleChange}
                 rows={3}
-                className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="flex w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm placeholder:text-[#94A3B8] dark:placeholder:text-[#8FA9BF] text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
               />
             </div>
 
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 flex justify-end space-x-3">
+        <div className="flex justify-end space-x-4">
           <Button variant="secondary" type="button" onClick={() => navigate('/discounts')} disabled={submitting}>
             Cancel
           </Button>

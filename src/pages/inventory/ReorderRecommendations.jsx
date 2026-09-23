@@ -88,11 +88,11 @@ const ReorderRecommendations = () => {
     { header: 'Recommended Qty', accessor: 'recommendedQty', cell: (row) => <span className="font-bold text-primary-600 dark:text-primary-400 text-lg">{row.recommendedQty}</span> },
     { header: 'Lead Time', accessor: 'leadTime', cell: (row) => <span className="text-gray-600 dark:text-slate-300">{row.leadTime} days</span> },
     { header: 'Status', accessor: 'recStatus', cell: (row) => (
-      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium 
-        ${row.recStatus === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-          row.recStatus === 'Rejected' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-          row.recStatus === 'Under Review' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
-          'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'}`}>
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide border
+        ${row.recStatus === 'Approved' ? 'bg-[#E5F9F4] text-[#24C9A0] dark:bg-[#24C9A0]/10 dark:text-[#24C9A0] border-[#24C9A0]/20' :
+          row.recStatus === 'Rejected' ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border-red-200 dark:border-red-800/30' :
+          row.recStatus === 'Under Review' ? 'bg-[#FFFBEB] text-[#D97706] dark:bg-amber-900/20 dark:text-amber-400 border-amber-200 dark:border-amber-800/30' :
+          'bg-[#F5F8FC] text-[#2482ED] dark:bg-slate-800 dark:text-blue-400 border-[#2482ED]/20 dark:border-[#2482ED]/30'}`}>
         {row.recStatus}
       </span>
     ) },
@@ -134,14 +134,12 @@ const ReorderRecommendations = () => {
         title="Reorder Recommendations" 
         description="Smart purchase recommendations based on stock levels, historical demand, and lead times."
       />
-      <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-500 p-4 rounded shadow-sm">
-        <div className="flex">
-          <Info className="w-5 h-5 text-blue-400 dark:text-blue-500" />
-          <div className="ml-3">
-            <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">
-              These are predictive recommendations based on recent sales trends. Approving a recommendation stages it for a Purchase Order.
-            </p>
-          </div>
+      <div className="bg-[#F5F8FC] dark:bg-[#102A43] border border-[#2482ED]/30 dark:border-[#2482ED]/50 p-4 rounded-xl shadow-sm flex items-start">
+        <Info className="w-5 h-5 text-[#2482ED] mt-0.5" />
+        <div className="ml-3">
+          <p className="text-[13px] text-[#162033] dark:text-slate-300 font-semibold leading-relaxed">
+            These are predictive recommendations based on recent sales trends. Approving a recommendation stages it for a Purchase Order.
+          </p>
         </div>
       </div>
       <DataTable 

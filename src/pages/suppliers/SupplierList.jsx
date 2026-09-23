@@ -45,7 +45,7 @@ const SupplierList = () => {
   };
 
   const columns = [
-    { header: 'Supplier Name', accessor: 'supplierName', cell: (row) => <span className="font-medium text-gray-900">{row.supplierName}</span> },
+    { header: 'Supplier Name', accessor: 'supplierName', cell: (row) => <span className="font-medium text-[#162033] dark:text-white">{row.supplierName}</span> },
     { header: 'Contact Person', accessor: 'contactPerson' },
     { header: 'Phone', accessor: 'phoneNumber' },
     { header: 'Email', accessor: 'email' },

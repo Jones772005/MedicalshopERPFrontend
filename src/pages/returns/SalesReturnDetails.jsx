@@ -109,12 +109,12 @@ const SalesReturnDetails = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Return Information */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Return Information</h2>
+        <div className="bg-white dark:bg-[#132B42] p-6 rounded-xl border border-[#DDE6F0] dark:border-[#263B50] shadow-sm">
+          <h2 className="text-lg font-bold text-[#162033] dark:text-white mb-4">Return Information</h2>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Return ID:</span>
-              <span className="font-medium text-primary-600 dark:text-primary-400">{ret.id}</span>
+              <span className="text-[#64748B] dark:text-slate-400">Return ID:</span>
+              <span className="font-bold text-[#2482ED]">{ret.id}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500 dark:text-slate-400">Original Invoice:</span>
@@ -151,20 +151,20 @@ const SalesReturnDetails = () => {
               <span className="font-bold text-gray-900 dark:text-white">₹{refundAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-slate-400">Reason:</span>
-              <span className="font-medium text-gray-900 dark:text-white">{ret.reason || ret.globalReason || '-'}</span>
+              <span className="text-[#64748B] dark:text-slate-400">Reason:</span>
+              <span className="font-medium text-[#162033] dark:text-white">{ret.reason || ret.globalReason || '-'}</span>
             </div>
           </div>
         </div>
 
         {/* Refund Payment */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Refund Payment</h2>
+        <div className="bg-white dark:bg-[#132B42] p-6 rounded-xl border border-[#DDE6F0] dark:border-[#263B50] shadow-sm">
+          <h2 className="text-lg font-bold text-[#162033] dark:text-white mb-4">Refund Payment</h2>
           {refundPayment ? (
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500 dark:text-slate-400">Payment ID:</span>
-                <span className="font-medium text-primary-600 dark:text-primary-400">#{refundPayment.id}</span>
+                <span className="text-[#64748B] dark:text-slate-400">Payment ID:</span>
+                <span className="font-bold text-[#2482ED]">#{refundPayment.id}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500 dark:text-slate-400">Reference:</span>
@@ -214,11 +214,11 @@ const SalesReturnDetails = () => {
                   <p className="text-xs text-gray-500 mt-1">Max: ₹{refundAmount.toFixed(2)}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Refund Method</label>
+                  <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">Refund Method</label>
                   <select 
                     value={refundFormMethod} 
                     onChange={e => setRefundFormMethod(e.target.value)}
-                    className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 dark:text-slate-100"
+                    className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100"
                   >
                     <option value="Cash">Cash</option>
                     <option value="UPI">UPI</option>
@@ -260,59 +260,59 @@ const SalesReturnDetails = () => {
       </div>
 
       {/* Returned Items */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Returned Items</h2>
+      <div className="bg-white dark:bg-[#132B42] rounded-xl border border-[#DDE6F0] dark:border-[#263B50] shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#DDE6F0] dark:border-[#263B50]">
+          <h2 className="text-lg font-bold text-[#162033] dark:text-white">Returned Items</h2>
         </div>
         {items.length === 0 ? (
           <p className="px-6 py-4 text-sm text-gray-400 dark:text-slate-500">No item details stored.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-              <thead className="bg-gray-50 dark:bg-slate-900/50">
+            <table className="min-w-full divide-y divide-[#DDE6F0] dark:divide-[#263B50]">
+              <thead className="bg-[#24C9A0] dark:bg-[#1A9F7E]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Medicine</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Batch</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Qty Returned</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Rate</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Medicine</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Batch</th>
+                  <th className="px-6 py-3 text-right text-xs font-bold text-white uppercase">Qty Returned</th>
+                  <th className="px-6 py-3 text-right text-xs font-bold text-white uppercase">Rate</th>
                   {items.some(i => i.discount) && (
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Discount</th>
+                    <th className="px-6 py-3 text-right text-xs font-bold text-white uppercase">Discount</th>
                   )}
                   {items.some(i => i.gst) && (
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">GST</th>
+                    <th className="px-6 py-3 text-right text-xs font-bold text-white uppercase">GST</th>
                   )}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Reason</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase">Reason</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+              <tbody className="bg-white dark:bg-[#132B42] divide-y divide-[#DDE6F0] dark:divide-[#263B50]">
                 {items.map((item, idx) => (
-                  <tr key={idx}>
-                    <td className="px-6 py-3 text-sm text-gray-900 dark:text-slate-100">{item.medicineName || item.name || '-'}</td>
-                    <td className="px-6 py-3 text-sm text-gray-500 dark:text-slate-400">{item.batchNumber || item.batch || '-'}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-slate-100 font-medium">{item.quantity ?? item.returnQty ?? '-'}</td>
-                    <td className="px-6 py-3 text-sm text-right text-gray-900 dark:text-slate-100">
+                  <tr key={idx} className="hover:bg-[#F5F8FC] dark:hover:bg-[#0B1A2A]">
+                    <td className="px-6 py-3 text-sm font-medium text-[#162033] dark:text-white">{item.medicineName || item.name || '-'}</td>
+                    <td className="px-6 py-3 text-sm text-[#64748B] dark:text-slate-400">{item.batchNumber || item.batch || '-'}</td>
+                    <td className="px-6 py-3 text-sm text-right text-[#162033] dark:text-white font-medium">{item.quantity ?? item.returnQty ?? '-'}</td>
+                    <td className="px-6 py-3 text-sm text-right text-[#162033] dark:text-white">
                       {item.sellingPrice != null ? `₹${Number(item.sellingPrice).toFixed(2)}` : (item.rate != null ? `₹${Number(item.rate).toFixed(2)}` : '-')}
                     </td>
                     {items.some(i => i.discount) && (
-                      <td className="px-6 py-3 text-sm text-right text-gray-500 dark:text-slate-400">
+                      <td className="px-6 py-3 text-sm text-right text-[#64748B] dark:text-slate-400">
                         {item.discount != null ? `${item.discount}%` : '-'}
                       </td>
                     )}
                     {items.some(i => i.gst) && (
-                      <td className="px-6 py-3 text-sm text-right text-gray-500 dark:text-slate-400">
+                      <td className="px-6 py-3 text-sm text-right text-[#64748B] dark:text-slate-400">
                         {item.gst != null ? `${item.gst}%` : '-'}
                       </td>
                     )}
-                    <td className="px-6 py-3 text-sm text-gray-500 dark:text-slate-400">{item.reason || ret.reason || '-'}</td>
+                    <td className="px-6 py-3 text-sm text-[#64748B] dark:text-slate-400">{item.reason || ret.reason || '-'}</td>
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="bg-gray-50 dark:bg-slate-900/50">
+              <tfoot className="bg-[#F5F8FC] dark:bg-[#0B1A2A]">
                 <tr>
-                  <td colSpan={3 + (items.some(i => i.discount) ? 1 : 0) + (items.some(i => i.gst) ? 1 : 0)} className="px-6 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">
+                  <td colSpan={3 + (items.some(i => i.discount) ? 1 : 0) + (items.some(i => i.gst) ? 1 : 0)} className="px-6 py-4 text-sm font-bold text-[#162033] dark:text-white text-right">
                     Total Refund:
                   </td>
-                  <td className="px-6 py-3 text-sm font-bold text-gray-900 dark:text-white text-right" colSpan="2">
+                  <td className="px-6 py-4 text-lg font-bold text-[#162033] dark:text-white text-right" colSpan="2">
                     ₹{refundAmount.toFixed(2)}
                   </td>
                 </tr>

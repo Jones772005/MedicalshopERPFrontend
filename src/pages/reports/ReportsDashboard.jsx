@@ -16,7 +16,7 @@ const ReportsDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
       <PageHeader 
         title="Reports Dashboard" 
         description="Access comprehensive reports for all modules."
@@ -27,13 +27,13 @@ const ReportsDashboard = () => {
           <div 
             key={module.id}
             onClick={() => navigate(`/reports/${module.id}`)}
-            className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md cursor-pointer transition-all hover:border-primary-300 dark:hover:border-primary-700 group"
+            className="bg-white dark:bg-[#132B42] p-6 rounded-xl border border-[#DDE6F0] dark:border-[#263B50] shadow-sm hover:shadow-md cursor-pointer transition-all hover:border-[#2482ED] dark:hover:border-[#2482ED] group"
           >
-            <div className="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-[#F5F8FC] dark:bg-[#0B1A2A] text-[#2482ED] rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               {module.icon}
             </div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{module.title}</h3>
-            <p className="text-sm text-gray-500 dark:text-slate-400">{module.desc}</p>
+            <h3 className="text-lg font-bold text-[#162033] dark:text-white mb-2">{module.title}</h3>
+            <p className="text-[13px] text-[#64748B] dark:text-slate-400">{module.desc}</p>
           </div>
         ))}
       </div>

@@ -62,8 +62,8 @@ const NavItem = ({ to, icon: Icon, label, exact = false }) => {
               /* Expanded: left-aligned with text */
               : 'px-3 py-2 gap-3 mx-1.5 my-0.5',
             isActive
-              ? 'bg-[#1677FF] text-white shadow-sm'
-              : 'text-[#D9E6F2] hover:bg-[#163A59]/70 hover:text-white'
+              ? 'bg-white/20 text-white shadow-sm'
+              : 'text-[#D0E4FC] hover:bg-white/10 hover:text-white'
           )
         }
       >
@@ -119,8 +119,8 @@ const NavGroup = ({ icon: Icon, label, paths = [], children }) => {
             'flex items-center justify-center w-full h-11 my-0.5 rounded-[7px] transition-colors duration-150 cursor-pointer',
             'w-[calc(100%-14px)]',
             isAnyChildActive
-              ? 'bg-[#1677FF] text-white shadow-sm'
-              : 'text-[#7DD3FC] hover:bg-[#163A59]/70 hover:text-white'
+              ? 'bg-white/20 text-white shadow-sm'
+              : 'text-[#D0E4FC] hover:bg-white/10 hover:text-white'
           )}
         >
           <Icon className="h-5 w-5" />
@@ -137,15 +137,15 @@ const NavGroup = ({ icon: Icon, label, paths = [], children }) => {
         className={cn(
           'w-full flex items-center justify-between px-3 py-2 text-[13.5px] font-medium rounded-[7px] transition-colors duration-150 cursor-pointer',
           isAnyChildActive
-            ? 'text-white bg-[#163A59]/60'
-            : 'text-[#D9E6F2] hover:bg-[#163A59]/70 hover:text-white'
+            ? 'text-white bg-white/10'
+            : 'text-[#D0E4FC] hover:bg-white/10 hover:text-white'
         )}
       >
         <div className="flex items-center gap-3">
           <Icon
             className={cn(
               'h-[17px] w-[17px] flex-shrink-0',
-              isAnyChildActive ? 'text-white' : 'text-[#7DD3FC]'
+              isAnyChildActive ? 'text-white' : 'text-[#A1CAFA]'
             )}
           />
           <span>{label}</span>
@@ -179,8 +179,8 @@ const SubItem = ({ to, label, exact = false }) => {
         cn(
           'flex items-center gap-2.5 pl-8 pr-3 py-1.5 text-[12.5px] rounded-[6px] transition-colors duration-150',
           isActive
-            ? 'bg-[#1677FF]/20 text-[#7DD3FC] font-semibold'
-            : 'text-[#8FB3D1] hover:bg-[#163A59]/50 hover:text-[#D9E6F2]'
+            ? 'bg-white/15 text-white font-semibold'
+            : 'text-[#A1CAFA] hover:bg-white/10 hover:text-white'
         )
       }
     >
@@ -198,7 +198,7 @@ const SectionLabel = ({ label }) => {
   if (isCollapsed) return <div className="h-2" />;
   return (
     <div className="px-4 pt-4 pb-1.5">
-      <p className="text-[10.5px] uppercase tracking-[0.1em] font-bold text-[#6B90AD] select-none">
+      <p className="text-[10.5px] uppercase tracking-[0.1em] font-bold text-[#A1CAFA] select-none">
         {label}
       </p>
     </div>
@@ -209,7 +209,7 @@ const SectionLabel = ({ label }) => {
    SIDEBAR SEPARATOR
 ───────────────────────────────────────────────────────────── */
 const SidebarSep = () => (
-  <div className="mx-4 my-2 border-t border-white/[0.08]" />
+  <div className="mx-4 my-2 border-t border-white/10" />
 );
 
 /* ─────────────────────────────────────────────────────────────
@@ -232,8 +232,8 @@ const Sidebar = () => {
       {/* ── Sidebar panel ───────────────────────────────────── */}
       <aside
         style={{
-          backgroundColor: 'var(--sidebar-bg)',
-          width: isCollapsed ? '68px' : '256px',
+          background: 'var(--sidebar-bg)',
+          width: isCollapsed ? '68px' : '220px',
           transition: 'width 220ms ease-in-out',
           borderRight: '1px solid var(--sidebar-border)',
         }}
@@ -251,11 +251,11 @@ const Sidebar = () => {
           {/* Logo icon — always visible, centered when collapsed */}
           <div
             className={cn(
-              'flex items-center justify-center w-9 h-9 rounded-[9px] bg-[#1677FF] flex-shrink-0 shadow-md',
+              'flex items-center justify-center w-9 h-9 rounded-[9px] bg-white flex-shrink-0 shadow-md',
               isCollapsed && 'mx-auto'
             )}
           >
-            <Activity className="h-5 w-5 text-white" />
+            <Activity className="h-5 w-5 text-[#2482ED]" />
           </div>
 
           {/* Brand text — fades out when collapsed */}
@@ -264,7 +264,7 @@ const Sidebar = () => {
               <span className="text-[15px] font-bold text-white leading-tight block whitespace-nowrap">
                 MediShop
               </span>
-              <span className="text-[10px] font-semibold text-[#7DD3FC] tracking-widest whitespace-nowrap uppercase">
+              <span className="text-[10px] font-semibold text-[#D0E4FC] tracking-widest whitespace-nowrap uppercase">
                 ERP Platform
               </span>
             </div>
@@ -274,7 +274,7 @@ const Sidebar = () => {
           {!isCollapsed && (
             <button
               onClick={closeMobile}
-              className="lg:hidden ml-auto flex items-center justify-center w-7 h-7 rounded-md text-[#7DD3FC] hover:bg-[#163A59] transition-colors cursor-pointer"
+              className="lg:hidden ml-auto flex items-center justify-center w-7 h-7 rounded-md text-[#D0E4FC] hover:bg-white/10 transition-colors cursor-pointer"
               aria-label="Close sidebar"
             >
               <X className="h-4 w-4" />
@@ -342,7 +342,7 @@ const Sidebar = () => {
               <SubItem to="/inventory/low-stock" label="Low Stock" />
               <SubItem to="/inventory/out-of-stock" label="Out of Stock" />
               <SubItem to="/inventory/expiry" label="Expiry Management" />
-              <SubItem to="/inventory/fefo" label="FEFO Recommendations" />
+              {/* <SubItem to="/inventory/fefo" label="FEFO Recommendations" /> */}
               <SubItem to="/inventory/transactions" label="Transactions" />
               <SubItem to="/inventory/reorder" label="Reorder Recommendations" />
             </NavGroup>
@@ -375,7 +375,7 @@ const Sidebar = () => {
           </PermissionGuard>
 
           {/* ── MARKETING ────────────────────────────────────── */}
-          <PermissionGuard permission="marketing.campaigns">
+          {/* <PermissionGuard permission="marketing.campaigns">
             <NavGroup
               icon={Megaphone}
               label="Marketing"
@@ -385,7 +385,7 @@ const Sidebar = () => {
               <SubItem to="/marketing/qr" label="QR Management" />
               <SubItem to="/marketing/analytics" label="Marketing Analytics" />
             </NavGroup>
-          </PermissionGuard>
+          </PermissionGuard> */}
 
           {/* ── SYSTEM ───────────────────────────────────────── */}
           <SidebarSep />

@@ -74,29 +74,29 @@ const CustomerForm = () => {
   };
 
   if (loading) {
-    return <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div></div>;
+    return <div className="p-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2482ED]"></div></div>;
   }
 
   return (
-    <div>
+    <div className="w-full">
       <PageHeader 
         title={isEdit ? "Edit Customer" : "Add New Customer"} 
         description="Enter customer contact information and details."
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-3xl">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
         <Card>
           <CardHeader><CardTitle>Customer Information</CardTitle></CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Input label="Full Name" error={errors.name?.message} {...register('name')} />
               <Input label="Phone Number" error={errors.phoneNumber?.message} {...register('phoneNumber')} />
               <Input label="Email Address" type="email" error={errors.email?.message} {...register('email')} />
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer Type</label>
+              <div className="lg:col-span-1">
+                <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Customer Type</label>
                 <select
                   {...register('type')}
-                  className="block w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
                 >
                   <option value="New">New</option>
                   <option value="Regular">Regular</option>
@@ -105,9 +105,9 @@ const CustomerForm = () => {
               </div>
             </div>
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
+              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Address</label>
               <textarea
-                className="flex w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="flex w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm placeholder:text-[#94A3B8] dark:placeholder:text-[#8FA9BF] text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
                 rows="3"
                 {...register('address')}
               />

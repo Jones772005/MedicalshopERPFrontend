@@ -4,6 +4,7 @@ import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
 import StatusBadge from '../../components/common/StatusBadge';
+import StatCard from '../../components/common/StatCard';
 import { getReports } from '../../services/reportApi';
 
 const PurchasesReport = () => {
@@ -43,7 +44,7 @@ const PurchasesReport = () => {
   const totalPurchases = purchases.reduce((acc, curr) => acc + (Number(curr.totalAmount) || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full pb-12">
       <PageHeader title="Purchases Report" description="Procurement and purchase order history." />
       
       <ReportFilterBar 
@@ -52,26 +53,30 @@ const PurchasesReport = () => {
         onPrint={() => window.print()}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Total Purchase Orders</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{purchases.length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Total Purchase Value</div>
-          <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">₹{totalPurchases.toFixed(2)}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Received</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{purchases.filter(p => p.status === 'Received').length}</div>
-        </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Pending</div>
-          <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{purchases.filter(p => p.status === 'Ordered').length}</div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Total Purchase Orders"
+          value={purchases.length.toString()}
+          color="info"
+        />
+        <StatCard
+          title="Total Purchase Value"
+          value={`₹${totalPurchases.toFixed(2)}`}
+          color="primary"
+        />
+        <StatCard
+          title="Received"
+          value={purchases.filter(p => p.status === 'Received').length.toString()}
+          color="success"
+        />
+        <StatCard
+          title="Pending"
+          value={purchases.filter(p => p.status === 'Ordered').length.toString()}
+          color="warning"
+        />
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
         {loading ? <LoadingSpinner /> : (
           <DataTable columns={columns} data={purchases} searchPlaceholder="Search purchases..." />
         )}

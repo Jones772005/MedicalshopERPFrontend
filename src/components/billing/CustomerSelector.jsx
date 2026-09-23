@@ -80,7 +80,7 @@ const CustomerSelector = ({ onSelect }) => {
 
   return (
     <div className="relative mb-4" ref={wrapperRef}>
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer</label>
+      <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Customer</label>
       <div className="flex space-x-2">
         <div className="relative flex-grow">
           <Input
@@ -123,11 +123,11 @@ const CustomerSelector = ({ onSelect }) => {
 
       {showModal && (
         <div className="fixed inset-0 z-[100] overflow-y-auto flex items-center justify-center">
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity" onClick={() => setShowModal(false)}></div>
-          <div className="relative bg-white dark:bg-slate-800 rounded-lg max-w-sm w-full p-6 shadow-xl border border-gray-200 dark:border-slate-700">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={() => setShowModal(false)}></div>
+          <div className="relative bg-white dark:bg-[#102A43] rounded-xl max-w-sm w-full p-6 shadow-2xl border border-[#DDE6F0] dark:border-slate-700/50">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Add New Customer</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700">
+              <h3 className="text-[15px] font-bold text-[#162033] dark:text-white">Add New Customer</h3>
+              <button onClick={() => setShowModal(false)} className="text-[#64748B] hover:text-[#162033] dark:hover:text-white transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>

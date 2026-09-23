@@ -3,24 +3,24 @@ import { cn } from '../../utils/cn';
 
 const Button = forwardRef(({ className, variant = 'primary', size = 'md', isLoading, children, ...props }, ref) => {
   const variants = {
-    primary: 'bg-[#1677FF] text-white hover:bg-[#1254A6] shadow-sm',
-    secondary: 'bg-white dark:bg-[#163A59] text-[#1677FF] dark:text-[#7DD3FC] border border-[#1677FF] dark:border-[#23415C] hover:bg-[#EAF4FF] dark:hover:bg-[#1A4262] focus:ring-[#1677FF]',
-    outline: 'border border-[#D9E6F2] dark:border-[#23415C] text-[#102A43] dark:text-[#D9E6F2] bg-transparent hover:bg-[#EAF4FF] dark:hover:bg-[#163A59] focus:ring-[#1677FF]',
+    primary: 'bg-[#2482ED] text-white hover:bg-[#1A6BC7] shadow-sm',
+    secondary: 'bg-white dark:bg-[#163A59] text-[#2482ED] dark:text-[#7DD3FC] border border-[#2482ED] dark:border-[#23415C] hover:bg-[#EAF3FE] dark:hover:bg-[#1A4262] focus:ring-[#2482ED]',
+    outline: 'border border-[#DDE6F0] dark:border-[#23415C] text-[#162033] dark:text-[#D9E6F2] bg-transparent hover:bg-[#EAF3FE] dark:hover:bg-[#163A59] focus:ring-[#2482ED]',
     danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
-    ghost: 'bg-transparent text-[#627D98] dark:text-[#B8CCE0] hover:bg-[#EAF4FF] dark:hover:bg-[#163A59] hover:text-[#1677FF]',
+    ghost: 'bg-transparent text-[#64748B] dark:text-[#B8CCE0] hover:bg-[#EAF3FE] dark:hover:bg-[#163A59] hover:text-[#2482ED]',
   };
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base',
+    sm: 'h-8 px-3 py-1.5 text-sm',
+    md: 'h-10 px-4 py-2 text-sm',
+    lg: 'h-12 px-6 py-3 text-base',
   };
 
   return (
     <button
       ref={ref}
       className={cn(
-        'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer',
+        'inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer',
         variants[variant],
         sizes[size],
         className

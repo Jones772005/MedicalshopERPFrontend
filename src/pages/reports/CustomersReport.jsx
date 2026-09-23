@@ -3,6 +3,7 @@ import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
+import StatCard from '../../components/common/StatCard';
 import { getCustomers } from '../../services/customerApi';
 import { getSales } from '../../services/salesApi';
 
@@ -49,7 +50,7 @@ const CustomersReport = () => {
   }, []);
 
   const columns = [
-    { header: 'Customer', accessor: 'name', cell: (row) => <span className="font-medium text-gray-900 dark:text-white">{row.name}</span> },
+    { header: 'Customer', accessor: 'name', cell: (row) => <span className="font-bold text-[#162033] dark:text-white">{row.name}</span> },
     { header: 'Phone', accessor: 'phone' },
     { header: 'Bills', accessor: 'bills' },
     { header: 'Total Purchases', accessor: 'totalPurchases', cell: (row) => `₹${row.totalPurchases.toFixed(2)}` },
@@ -63,7 +64,7 @@ const CustomersReport = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full pb-12">
       <PageHeader title="Customers Report" description="Customer activity and purchasing metrics." />
       
       <ReportFilterBar 
@@ -73,7 +74,25 @@ const CustomersReport = () => {
         onPrint={() => window.print()}
       />
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Total Customers"
+          value={data.length.toString()}
+          color="primary"
+        />
+        <StatCard
+          title="Total Revenue (All Customers)"
+          value={`₹${data.reduce((acc, curr) => acc + curr.totalPurchases, 0).toFixed(2)}`}
+          color="success"
+        />
+        <StatCard
+          title="Total Outstanding"
+          value={`₹${data.reduce((acc, curr) => acc + curr.outstanding, 0).toFixed(2)}`}
+          color="warning"
+        />
+      </div>
+
+      <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
         {loading ? <LoadingSpinner /> : (
           <DataTable columns={columns} data={data} searchPlaceholder="Search customers..." />
         )}

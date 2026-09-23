@@ -89,29 +89,29 @@ const SupplierDetails = () => {
             <CardContent>
               <p className="text-sm text-gray-500 dark:text-slate-400 mb-4">Recent purchase orders and invoices from this supplier.</p>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-                  <thead className="bg-gray-50 dark:bg-slate-900/50">
+                <table className="min-w-full divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
+                  <thead className="bg-[#24C9A0] text-white">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">PO Number</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Amount</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Status</th>
+                      <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">PO Number</th>
+                      <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Amount</th>
+                      <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+                  <tbody className="bg-white dark:bg-[#102A43] divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
                     {purchaseHistory.length === 0 ? (
-                      <tr><td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500 dark:text-slate-400">No purchases found.</td></tr>
+                      <tr><td colSpan="4" className="px-6 py-4 text-center text-sm text-[#64748B] dark:text-[#B8CCE0]">No purchases found.</td></tr>
                     ) : (
                       purchaseHistory.map(purchase => (
-                        <tr key={purchase.id} className="hover:bg-gray-50 dark:hover:bg-slate-750/50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-600 dark:text-primary-400">
+                        <tr key={purchase.id} className="hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2482ED] dark:text-[#4292F1]">
                             <Link to={`/purchases/${purchase.id}`} className="hover:underline">{purchase.purchaseOrderNumber || purchase.id}</Link>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">{new Date(purchase.orderDate || purchase.createdAt).toLocaleDateString()}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100 font-medium">₹{(purchase.totalAmount || 0).toFixed(2)}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-[#64748B] dark:text-[#B8CCE0]">{new Date(purchase.orderDate || purchase.createdAt).toLocaleDateString()}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-[#162033] dark:text-[#F8FAFC] font-medium">₹{(purchase.totalAmount || 0).toFixed(2)}</td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              purchase.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                            <span className={`px-2 inline-flex text-[11px] font-bold rounded ${
+                              purchase.paymentStatus === 'Paid' ? 'bg-[#24C9A0]/20 text-[#1BA885] dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
                             }`}>
                               {purchase.paymentStatus || 'Pending'}
                             </span>
@@ -134,58 +134,58 @@ const SupplierDetails = () => {
                 <p className="text-sm text-gray-400 dark:text-slate-500 text-center py-6">No purchase returns found.</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-                    <thead className="bg-gray-50 dark:bg-slate-900/50">
+                  <table className="min-w-full divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
+                    <thead className="bg-[#24C9A0] text-white">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Return ID</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Purchase / PO</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Medicine</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Batch</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Qty</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Return Amount</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Reason</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Status</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Return ID</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Purchase / PO</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Medicine</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Batch</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Qty</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Return Amount</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Reason</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Date</th>
+                        <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+                    <tbody className="bg-white dark:bg-[#102A43] divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
                       {returnHistory.map(ret => {
                         // One row per medicine returned; shared columns span across items
                         const items = ret.items && ret.items.length > 0 ? ret.items : [{}];
                         return items.map((item, idx) => (
-                          <tr key={`${ret.id}-${idx}`} className="hover:bg-gray-50 dark:hover:bg-slate-750/50">
+                          <tr key={`${ret.id}-${idx}`} className="hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50 transition-colors">
                             {idx === 0 && (
                               <>
-                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm font-medium text-primary-600 dark:text-primary-400 align-top">
+                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm font-medium text-[#2482ED] dark:text-[#4292F1] align-top">
                                   {ret.id.startsWith('PR-') ? ret.id : `PR-${ret.id}`}
                                 </td>
-                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400 align-top">
+                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm text-[#64748B] dark:text-[#B8CCE0] align-top">
                                   {ret.purchaseOrderNumber || (ret.purchaseId ? String(ret.purchaseId) : '-')}
                                 </td>
                               </>
                             )}
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">
+                            <td className="px-4 py-3 text-sm text-[#162033] dark:text-[#F8FAFC]">
                               {item.medicineName || item.name || '-'}
                             </td>
-                            <td className="px-4 py-3 text-sm text-gray-500 dark:text-slate-400">
+                            <td className="px-4 py-3 text-sm text-[#64748B] dark:text-[#B8CCE0]">
                               {item.batchNumber || item.batch || '-'}
                             </td>
-                            <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">
+                            <td className="px-4 py-3 text-sm text-[#162033] dark:text-[#F8FAFC]">
                               {item.quantity ?? item.returnQty ?? '-'}
                             </td>
                             {idx === 0 && (
                               <>
-                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-slate-100 align-top">
+                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm font-medium text-[#162033] dark:text-[#F8FAFC] align-top">
                                   ₹{(Number(ret.refundAmount) || Number(ret.amount) || 0).toFixed(2)}
                                 </td>
-                                <td rowSpan={items.length} className="px-4 py-3 text-sm text-gray-500 dark:text-slate-400 align-top">
+                                <td rowSpan={items.length} className="px-4 py-3 text-sm text-[#64748B] dark:text-[#B8CCE0] align-top">
                                   {ret.reason || '-'}
                                 </td>
-                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400 align-top">
+                                <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap text-sm text-[#64748B] dark:text-[#B8CCE0] align-top">
                                   {new Date(ret.date || ret.createdAt).toLocaleDateString()}
                                 </td>
                                 <td rowSpan={items.length} className="px-4 py-3 whitespace-nowrap align-top">
-                                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                  <span className="inline-flex px-2 py-1 text-[11px] font-bold rounded bg-[#24C9A0]/20 text-[#1BA885] dark:bg-emerald-900/30 dark:text-emerald-400">
                                     {ret.status || 'Processed'}
                                   </span>
                                 </td>
@@ -207,14 +207,14 @@ const SupplierDetails = () => {
             <CardHeader><CardTitle>Supplier Summary</CardTitle></CardHeader>
             <CardContent>
               <dl className="space-y-4">
-                <div><dt className="text-sm font-medium text-gray-500 dark:text-slate-400">Company Name</dt><dd className="mt-1 text-sm text-gray-900 dark:text-slate-100">{supplier.companyName}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500 dark:text-slate-400">Contact Person</dt><dd className="mt-1 text-sm text-gray-900 dark:text-slate-100">{supplier.contactPerson}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500 dark:text-slate-400">Phone</dt><dd className="mt-1 text-sm text-gray-900 dark:text-slate-100">{supplier.phoneNumber}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500 dark:text-slate-400">Email</dt><dd className="mt-1 text-sm text-gray-900 dark:text-slate-100">{supplier.email || '-'}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500 dark:text-slate-400">GST Number</dt><dd className="mt-1 text-sm text-gray-900 dark:text-slate-100">{supplier.gstNumber}</dd></div>
-                <div><dt className="text-sm font-medium text-gray-500 dark:text-slate-400">Payment Terms</dt><dd className="mt-1 text-sm text-gray-900 dark:text-slate-100">{supplier.paymentTerms}</dd></div>
-                <hr className="my-4 border-gray-200 dark:border-slate-700" />
-                <div><dt className="text-sm font-medium text-gray-500 dark:text-slate-400">Outstanding Balance</dt><dd className="mt-1 text-2xl font-bold text-red-600 dark:text-red-400">₹{supplier.outstandingAmount.toLocaleString()}</dd></div>
+                <div><dt className="text-[13px] font-bold text-[#162033] dark:text-white mb-1">Company Name</dt><dd className="mt-1 text-sm text-[#64748B] dark:text-[#B8CCE0]">{supplier.companyName}</dd></div>
+                <div><dt className="text-[13px] font-bold text-[#162033] dark:text-white mb-1">Contact Person</dt><dd className="mt-1 text-sm text-[#64748B] dark:text-[#B8CCE0]">{supplier.contactPerson}</dd></div>
+                <div><dt className="text-[13px] font-bold text-[#162033] dark:text-white mb-1">Phone</dt><dd className="mt-1 text-sm text-[#64748B] dark:text-[#B8CCE0]">{supplier.phoneNumber}</dd></div>
+                <div><dt className="text-[13px] font-bold text-[#162033] dark:text-white mb-1">Email</dt><dd className="mt-1 text-sm text-[#64748B] dark:text-[#B8CCE0]">{supplier.email || '-'}</dd></div>
+                <div><dt className="text-[13px] font-bold text-[#162033] dark:text-white mb-1">GST Number</dt><dd className="mt-1 text-sm text-[#64748B] dark:text-[#B8CCE0]">{supplier.gstNumber}</dd></div>
+                <div><dt className="text-[13px] font-bold text-[#162033] dark:text-white mb-1">Payment Terms</dt><dd className="mt-1 text-sm text-[#64748B] dark:text-[#B8CCE0]">{supplier.paymentTerms}</dd></div>
+                <hr className="my-4 border-[#DDE6F0] dark:border-slate-700/50" />
+                <div><dt className="text-[13px] font-bold text-[#162033] dark:text-white mb-1">Outstanding Balance</dt><dd className="mt-1 text-2xl font-bold text-red-600 dark:text-red-400">₹{supplier.outstandingAmount.toLocaleString()}</dd></div>
               </dl>
             </CardContent>
           </Card>

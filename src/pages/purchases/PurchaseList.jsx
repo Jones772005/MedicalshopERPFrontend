@@ -44,7 +44,7 @@ const PurchaseList = () => {
     { 
       header: 'Purchase Order', 
       accessor: 'purchaseOrderNumber',
-      cell: (row) => <span className="font-medium text-primary-600 dark:text-primary-400">{row.purchaseOrderNumber || row.id}</span>
+      cell: (row) => <span className="font-semibold text-[#2482ED] hover:text-[#1A6BC7] dark:text-blue-400 cursor-pointer">{row.purchaseOrderNumber || row.id}</span>
     },
     { 
       header: 'Supplier', 
@@ -90,7 +90,7 @@ const PurchaseList = () => {
               size="sm" 
               onClick={() => navigate(`/purchases/${row.id}/receive`)}
               title="Receive Goods"
-              className="text-blue-600 dark:text-blue-400"
+              className="text-[#2482ED] hover:text-[#1A6BC7] dark:text-blue-400 dark:hover:text-blue-300"
             >
               <Truck className="w-4 h-4" />
             </Button>
@@ -101,7 +101,7 @@ const PurchaseList = () => {
               size="sm" 
               onClick={() => navigate(`/payments/new?purchaseId=${row.id}`)}
               title="Record Payment"
-              className="text-green-600 dark:text-green-400"
+              className="text-[#24C9A0] hover:text-[#1BA885] dark:text-emerald-400 dark:hover:text-emerald-300"
             >
               <CreditCard className="w-4 h-4" />
             </Button>
@@ -129,25 +129,25 @@ const PurchaseList = () => {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Total Purchases</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{purchases.length}</div>
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Total Purchases</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">{purchases.length}</div>
         </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Pending Orders</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Pending Orders</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">
             {purchases.filter(p => p.status === 'Ordered' || p.status === 'Partially Received').length}
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Received</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Received</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">
             {purchases.filter(p => p.status === 'Received').length}
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
-          <div className="text-sm text-gray-500 dark:text-slate-400">Pending Payments</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
+          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Pending Payments</div>
+          <div className="text-2xl font-bold text-[#162033] dark:text-white">
             {purchases.filter(p => p.paymentStatus !== 'Paid').length}
           </div>
         </div>

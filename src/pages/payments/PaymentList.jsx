@@ -5,6 +5,7 @@ import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import Button from '../../components/common/Button';
 import StatusBadge from '../../components/common/StatusBadge';
+import StatCard from '../../components/common/StatCard';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import PaymentForm from '../../components/payments/PaymentForm';
 import { getPayments } from '../../services/paymentApi';
@@ -173,7 +174,7 @@ const PaymentList = () => {
     { 
       header: 'Amount', 
       accessor: 'amount',
-      cell: (row) => <span className="font-semibold text-gray-900 dark:text-white">₹{row.amount.toFixed(2)}</span>
+      cell: (row) => <span className="font-bold text-[#162033] dark:text-white">₹{row.amount.toFixed(2)}</span>
     },
     { 
       header: 'Status', 
@@ -193,8 +194,11 @@ const PaymentList = () => {
 
   if (loading) return <LoadingSpinner />;
 
+  const incomingTotal = payments.filter(p => getTransactionInfo(p).direction === 'INCOMING').reduce((acc, curr) => acc + curr.amount, 0);
+  const outgoingTotal = payments.filter(p => getTransactionInfo(p).direction === 'OUTGOING').reduce((acc, curr) => acc + curr.amount, 0);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       <PageHeader 
         title="Payments" 
         description="Manage all incoming and outgoing payments."
@@ -206,6 +210,24 @@ const PaymentList = () => {
           )
         }
       />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard 
+          title="Total Payments"
+          value={payments.length.toString()}
+          trend={null}
+        />
+        <StatCard 
+          title="Total Incoming"
+          value={`₹${incomingTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          trend={null}
+        />
+        <StatCard 
+          title="Total Outgoing"
+          value={`₹${outgoingTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          trend={null}
+        />
+      </div>
 
       {showForm && (
         <div className="mb-8">
@@ -223,68 +245,68 @@ const PaymentList = () => {
 
       {selectedPayment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-md border border-gray-200 dark:border-slate-700">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Payment Details</h3>
-              <button onClick={() => setSelectedPayment(null)} className="text-gray-400 hover:text-gray-500 transition-colors">
+          <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-xl w-full max-w-md border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-[#DDE6F0] dark:border-[#263B50] bg-gray-50/50 dark:bg-slate-800/50">
+              <h3 className="text-lg font-bold text-[#162033] dark:text-white">Payment Details</h3>
+              <button onClick={() => setSelectedPayment(null)} className="text-[#64748B] hover:text-[#162033] transition-colors dark:text-slate-400 dark:hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="p-6 space-y-4 text-sm">
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Payment ID:</span>
-                <span className="font-medium text-gray-900 dark:text-white">
+            <div className="p-6 space-y-4 text-[13px]">
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Payment ID:</span>
+                <span className="font-bold text-[#162033] dark:text-white">
                   {String(selectedPayment.id).startsWith('PAY-') ? String(selectedPayment.id) : `PAY-${String(selectedPayment.id).padStart(6, '0')}`}
                 </span>
               </div>
               
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Reference:</span>
-                <span className="font-medium text-primary-600 dark:text-primary-400">{getTransactionInfo(selectedPayment).refId}</span>
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Reference:</span>
+                <span className="font-bold text-[#2482ED]">{getTransactionInfo(selectedPayment).refId}</span>
               </div>
               
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Transaction No.:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{getTransactionInfo(selectedPayment).txnNo}</span>
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Transaction No.:</span>
+                <span className="font-bold text-[#162033] dark:text-white">{getTransactionInfo(selectedPayment).txnNo}</span>
               </div>
               
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Party:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{getEntityName(selectedPayment)}</span>
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Party:</span>
+                <span className="font-bold text-[#162033] dark:text-white">{getEntityName(selectedPayment)}</span>
               </div>
               
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Type:</span>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getTransactionInfo(selectedPayment).color}`}>
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Type:</span>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getTransactionInfo(selectedPayment).color}`}>
                   {getTransactionInfo(selectedPayment).type}
                 </span>
               </div>
               
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Direction:</span>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getTransactionInfo(selectedPayment).direction === 'INCOMING' ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400' : 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400'}`}>
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Direction:</span>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getTransactionInfo(selectedPayment).direction === 'INCOMING' ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400' : 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400'}`}>
                   {getTransactionInfo(selectedPayment).direction}
                 </span>
               </div>
               
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Method:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{selectedPayment.method || selectedPayment.paymentMethod || '-'}</span>
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Method:</span>
+                <span className="font-bold text-[#162033] dark:text-white">{selectedPayment.method || selectedPayment.paymentMethod || '-'}</span>
               </div>
               
-              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-2">
-                <span className="text-gray-500 dark:text-slate-400">Amount:</span>
-                <span className="font-bold text-gray-900 dark:text-white">₹{selectedPayment.amount.toFixed(2)}</span>
+              <div className="flex justify-between border-b border-gray-100 dark:border-slate-700/50 pb-3">
+                <span className="text-[#64748B] font-medium">Amount:</span>
+                <span className="font-bold text-[#162033] dark:text-white">₹{selectedPayment.amount.toFixed(2)}</span>
               </div>
               
               <div className="flex justify-between pt-1">
-                <span className="text-gray-500 dark:text-slate-400">Status:</span>
+                <span className="text-[#64748B] font-medium">Status:</span>
                 <StatusBadge status={selectedPayment.status} />
               </div>
             </div>
             
-            <div className="p-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 rounded-b-lg flex justify-end">
+            <div className="p-4 border-t border-[#DDE6F0] dark:border-[#263B50] bg-gray-50/50 dark:bg-slate-800/50 flex justify-end">
               <Button variant="secondary" onClick={() => setSelectedPayment(null)}>Close</Button>
             </div>
           </div>

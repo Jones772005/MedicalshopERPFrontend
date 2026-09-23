@@ -77,7 +77,7 @@ const MedicineList = () => {
   const clearFilters = () => setFilters({ category: '', status: '', prescription: '' });
 
   const columns = [
-    { header: 'Medicine', accessor: 'name', cell: (row) => <span className="font-medium text-gray-900">{row.name}</span> },
+    { header: 'Medicine', accessor: 'name', cell: (row) => <span className="font-semibold text-[#162033] dark:text-white">{row.name}</span> },
     { header: 'Generic Name', accessor: 'genericName' },
     { header: 'Category', accessor: 'category' },
     { header: 'Batch', accessor: 'batchNumber' },
@@ -90,25 +90,25 @@ const MedicineList = () => {
       cell: (row) => (
         <div className="flex space-x-2">
           <button 
-            className="text-gray-400 hover:text-primary-600 transition-colors cursor-pointer"
+            className="text-[#94A3B8] hover:text-[#2482ED] transition-colors cursor-pointer"
             onClick={() => navigate(`/medicines/${row.id}`)}
           >
-            <Eye className="w-5 h-5" />
+            <Eye className="w-[18px] h-[18px]" />
           </button>
           <PermissionGuard permission="medicines.edit">
             <button 
-              className="text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
+              className="text-[#94A3B8] hover:text-[#24C9A0] transition-colors cursor-pointer"
               onClick={() => navigate(`/medicines/${row.id}/edit`)}
             >
-              <Edit className="w-5 h-5" />
+              <Edit className="w-[18px] h-[18px]" />
             </button>
           </PermissionGuard>
           <PermissionGuard permission="medicines.delete">
             <button 
-              className="text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+              className="text-[#94A3B8] hover:text-red-500 transition-colors cursor-pointer"
               onClick={() => setDeleteDialog({ isOpen: true, id: row.id })}
             >
-              <Trash2 className="w-5 h-5" />
+              <Trash2 className="w-[18px] h-[18px]" />
             </button>
           </PermissionGuard>
         </div>
@@ -139,11 +139,11 @@ const MedicineList = () => {
       />
 
       {showFilters && (
-        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-wrap gap-4 items-end">
+        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-wrap gap-4 items-end">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] mb-1.5">Category</label>
             <select 
-              className="block w-48 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+              className="block w-48 pl-3 pr-8 py-2 text-[13px] border border-[#DDE6F0] dark:border-slate-600 bg-white dark:bg-slate-800 text-[#162033] dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:border-transparent cursor-pointer"
               value={filters.category}
               onChange={(e) => setFilters({...filters, category: e.target.value})}
             >
@@ -152,9 +152,9 @@ const MedicineList = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Stock Status</label>
+            <label className="block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] mb-1.5">Stock Status</label>
             <select 
-              className="block w-48 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+              className="block w-48 pl-3 pr-8 py-2 text-[13px] border border-[#DDE6F0] dark:border-slate-600 bg-white dark:bg-slate-800 text-[#162033] dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:border-transparent cursor-pointer"
               value={filters.status}
               onChange={(e) => setFilters({...filters, status: e.target.value})}
             >
@@ -163,9 +163,9 @@ const MedicineList = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Prescription</label>
+            <label className="block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] mb-1.5">Prescription</label>
             <select 
-              className="block w-48 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+              className="block w-48 pl-3 pr-8 py-2 text-[13px] border border-[#DDE6F0] dark:border-slate-600 bg-white dark:bg-slate-800 text-[#162033] dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:border-transparent cursor-pointer"
               value={filters.prescription}
               onChange={(e) => setFilters({...filters, prescription: e.target.value})}
             >
@@ -176,7 +176,7 @@ const MedicineList = () => {
           </div>
           <button 
             onClick={clearFilters}
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 cursor-pointer flex items-center"
+            className="px-4 py-2 text-[13px] font-semibold text-[#64748B] hover:text-[#162033] dark:hover:text-white cursor-pointer flex items-center bg-transparent border border-transparent hover:bg-[#F5F8FC] dark:hover:bg-slate-700 rounded-lg transition-colors"
           >
             <X className="w-4 h-4 mr-1" /> Clear
           </button>

@@ -3,6 +3,7 @@ import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
+import StatCard from '../../components/common/StatCard';
 
 import { getSales } from '../../services/salesApi';
 import { getPurchases } from '../../services/purchaseApi';
@@ -90,11 +91,11 @@ const TaxReport = () => {
     { header: 'Reference', accessor: 'reference', cell: (row) => <span className="font-medium text-primary-600 dark:text-primary-400">{row.reference}</span> },
     { header: 'Taxable Amount', accessor: 'taxableAmount', cell: (row) => `₹${row.taxableAmount.toFixed(2)}` },
     { header: 'GST Amount', accessor: 'gstAmount', cell: (row) => <span className="text-orange-600 dark:text-orange-400 font-medium">₹{row.gstAmount.toFixed(2)}</span> },
-    { header: 'Total', accessor: 'total', cell: (row) => <span className="font-bold text-gray-900 dark:text-white">₹{row.total.toFixed(2)}</span> }
+    { header: 'Total', accessor: 'total', cell: (row) => <span className="font-bold text-[#162033] dark:text-white">₹{row.total.toFixed(2)}</span> }
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full pb-12">
       <PageHeader title="Tax Report" description="GST collected and tax breakdowns." />
       
       <ReportFilterBar 
@@ -104,30 +105,26 @@ const TaxReport = () => {
       />
 
       {summary && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-            <div className="text-sm text-gray-500 dark:text-slate-400">Net Output Tax (Sales GST)</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">₹{summary.netOutputTax.toFixed(2)}</div>
-          </div>
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-            <div className="text-sm text-gray-500 dark:text-slate-400">Net Input Tax (Purchase GST)</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">₹{summary.netInputTax.toFixed(2)}</div>
-          </div>
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
-            <div className="text-sm text-gray-500 dark:text-slate-400">
-              {summary.netTaxPayable >= 0 ? 'Net Tax Payable' : 'Input Tax Credit (ITC)'}
-            </div>
-            <div className={`text-2xl font-bold ${summary.netTaxPayable >= 0 ? 'text-orange-600 dark:text-orange-400' : 'text-green-600 dark:text-green-400'}`}>
-              ₹{Math.abs(summary.netTaxPayable).toFixed(2)}
-            </div>
-            <div className="text-xs text-gray-400 dark:text-slate-500 mt-1">
-              {summary.netTaxPayable >= 0 ? 'Output Tax − Input Tax' : 'Input Tax exceeds Output Tax'}
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StatCard
+            title="Net Output Tax (Sales GST)"
+            value={`₹${summary.netOutputTax.toFixed(2)}`}
+            color="primary"
+          />
+          <StatCard
+            title="Net Input Tax (Purchase GST)"
+            value={`₹${summary.netInputTax.toFixed(2)}`}
+            color="info"
+          />
+          <StatCard
+            title={summary.netTaxPayable >= 0 ? 'Net Tax Payable' : 'Input Tax Credit (ITC)'}
+            value={`₹${Math.abs(summary.netTaxPayable).toFixed(2)}`}
+            color={summary.netTaxPayable >= 0 ? 'warning' : 'success'}
+          />
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
         {loading ? <LoadingSpinner /> : (
           <DataTable columns={columns} data={data} searchPlaceholder="Search tax records..." />
         )}
