@@ -1,0 +1,674 @@
+﻿
+> medical-shop-erp@0.0.0 lint
+> oxlint
+
+
+  ! eslint(no-unused-vars): Catch parameter 'err' is caught but never used.
+    ,-[src/services/reportApi.js:37:16]
+ 36 |         resolve({ data });
+ 37 |       } catch (err) {
+    :                ^|^
+    :                 `-- 'err' is declared here
+ 38 |         resolve({ data: [] });
+    `----
+  help: Consider handling this error.
+
+  ! eslint(no-async-promise-executor): Promise executor functions should not be `async`.
+   ,-[src/services/reportApi.js:6:22]
+ 5 | export const getReports = async (type, filters = {}) => {
+ 6 |   return new Promise(async (resolve) => {
+   :                      ^^^^^
+ 7 |     setTimeout(async () => {
+   `----
+  help: Remove the `async` keyword from the Promise executor function.
+
+  ! eslint(no-unused-vars): Identifier 'api' is imported but never used.
+   ,-[src/services/backupApi.js:1:8]
+ 1 | import api from './api';
+   :        ^|^
+   :         `-- 'api' is imported here
+ 2 | 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Parameter 'file' is declared but never used. Unused parameters should start with a '_'.
+    ,-[src/services/backupApi.js:18:37]
+ 17 | 
+ 18 | export const restoreBackup = async (file) => {
+    :                                     ^^|^
+    :                                       `-- 'file' is declared here
+ 19 |   return new Promise((resolve) => {
+    `----
+  help: Consider removing this parameter.
+
+  ! eslint(no-unused-vars): Identifier 'api' is imported but never used.
+   ,-[src/services/auditApi.js:1:8]
+ 1 | import api from './api';
+   :        ^|^
+   :         `-- 'api' is imported here
+ 2 | import { mockAuditLogs } from '../data/auditLogs';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-expressions): Expected expression to be used
+    ,-[src/services/purchaseApi.js:20:9]
+ 19 |       setTimeout(() => {
+ 20 |         purchase ? resolve({ data: purchase }) : reject(new Error('Purchase not found'));
+    :         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 21 |       }, 300);
+    `----
+  help: Consider using this expression or removing it
+
+  ! eslint(no-unused-expressions): Expected expression to be used
+    ,-[src/services/prescriptionApi.js:18:7]
+ 17 |       const rx = prescriptions.find(p => p.id === parseInt(id));
+ 18 |       rx ? resolve({ data: rx }) : reject(new Error('Prescription not found'));
+    :       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 19 |     }, 300);
+    `----
+  help: Consider using this expression or removing it
+
+  ! eslint(no-unused-expressions): Expected expression to be used
+    ,-[src/services/paymentApi.js:18:9]
+ 17 |       setTimeout(() => {
+ 18 |         payment ? resolve({ data: payment }) : reject(new Error('Payment not found'));
+    :         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 19 |       }, 300);
+    `----
+  help: Consider using this expression or removing it
+
+  ! eslint(no-unused-vars): Catch parameter 'err' is caught but never used.
+    ,-[src/services/alternativeMedicineApi.js:35:16]
+ 34 |         resolve({ data: alternatives });
+ 35 |       } catch (err) {
+    :                ^|^
+    :                 `-- 'err' is declared here
+ 36 |         resolve({ data: [] });
+    `----
+  help: Consider handling this error.
+
+  ! eslint(no-async-promise-executor): Promise executor functions should not be `async`.
+   ,-[src/services/alternativeMedicineApi.js:6:22]
+ 5 | export const getAlternativeMedicines = async (medicineId) => {
+ 6 |   return new Promise(async (resolve) => {
+   :                      ^^^^^
+ 7 |     setTimeout(async () => {
+   `----
+  help: Remove the `async` keyword from the Promise executor function.
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+   ,-[src/utils/permissions.jsx:6:14]
+ 5 | // In a real app, permissions might come attached to the user object upon login
+ 6 | export const getUserPermissions = (user) => {
+   :              ^^^^^^^^^^^^^^^^^^
+ 7 |   if (!user || !user.role) return null;
+   `----
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+    ,-[src/utils/permissions.jsx:13:14]
+ 12 | // Check if user has a specific permission (e.g., 'inventory.adjust')
+ 13 | export const hasPermission = (user, permissionString) => {
+    :              ^^^^^^^^^^^^^
+ 14 |   if (!user) return false;
+    `----
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+    ,-[src/utils/permissions.jsx:31:14]
+ 30 | 
+ 31 | export const hasAnyPermission = (user, permissionStrings) => {
+    :              ^^^^^^^^^^^^^^^^
+ 32 |   if (!user) return false;
+    `----
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+    ,-[src/utils/permissions.jsx:37:14]
+ 36 | 
+ 37 | export const hasAllPermissions = (user, permissionStrings) => {
+    :              ^^^^^^^^^^^^^^^^^
+ 38 |   if (!user) return false;
+    `----
+
+  ! eslint(no-unused-vars): Identifier 'api' is imported but never used.
+   ,-[src/services/staffApi.js:1:8]
+ 1 | import api from './api';
+   :        ^|^
+   :         `-- 'api' is imported here
+ 2 | import { mockStaff } from '../data/staff';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'api' is imported but never used.
+   ,-[src/services/settingsApi.js:1:8]
+ 1 | import api from './api';
+   :        ^|^
+   :         `-- 'api' is imported here
+ 2 | import { mockSettings } from '../data/settings';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'api' is imported but never used.
+   ,-[src/services/securityApi.js:1:8]
+ 1 | import api from './api';
+   :        ^|^
+   :         `-- 'api' is imported here
+ 2 | import { mockSessions } from '../data/sessions';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-expressions): Expected expression to be used
+    ,-[src/services/salesApi.js:19:9]
+ 18 |       setTimeout(() => {
+ 19 |         sale ? resolve({ data: sale }) : reject(new Error('Sale not found'));
+    :         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 20 |       }, 300);
+    `----
+  help: Consider using this expression or removing it
+
+  ! eslint(no-unused-vars): Identifier 'api' is imported but never used.
+   ,-[src/services/rolesApi.js:1:8]
+ 1 | import api from './api';
+   :        ^|^
+   :         `-- 'api' is imported here
+ 2 | import { mockRoles } from '../data/roles';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-expressions): Expected expression to be used
+    ,-[src/services/marketingApi.js:17:7]
+ 16 |       const camp = campaigns.find(c => c.id === parseInt(id));
+ 17 |       camp ? resolve({ data: camp }) : reject(new Error('Campaign not found'));
+    :       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 18 |     }, 300);
+    `----
+  help: Consider using this expression or removing it
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+   ,-[src/context/SettingsContext.jsx:7:14]
+ 6 | 
+ 7 | export const useSettings = () => useContext(SettingsContext);
+   :              ^^^^^^^^^^^
+ 8 | 
+   `----
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/reports/PurchasesReport.jsx:26:5]
+ 24 | 
+ 25 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 26 |     fetchPurchases();
+    :     ^^^^^^^|^^^^^^
+    :            `-- Avoid calling setState() directly within an effect
+ 27 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/reports/InventoryReport.jsx:26:5]
+ 24 | 
+ 25 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 26 |     fetchInventory();
+    :     ^^^^^^^|^^^^^^
+    :            `-- Avoid calling setState() directly within an effect
+ 27 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'Printer' is imported but never used.
+   ,-[src/pages/settings/SecuritySettings.jsx:2:16]
+ 1 | import { useState, useEffect } from 'react';
+ 2 | import { Save, Printer, Shield } from 'lucide-react';
+   :                ^^^|^^^
+   :                   `-- 'Printer' is imported here
+ 3 | import Button from '../../components/common/Button';
+   `----
+  help: Consider removing this import.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/SecuritySettings.jsx:13:5]
+ 11 | 
+ 12 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 13 |     setFormData(settings.security);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 14 |   }, [settings.security]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Variable 'setLoading' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/pages/reports/FinancialReport.jsx:15:19]
+ 14 | const FinancialReport = () => {
+ 15 |   const [loading, setLoading] = useState(false);
+    :                   ^^^^^|^^^^
+    :                        `-- 'setLoading' is declared here
+ 16 | 
+    `----
+  help: Consider removing this declaration.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/suppliers/SupplierList.jsx:31:5]
+ 29 | 
+ 30 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 31 |     fetchSuppliers();
+    :     ^^^^^^^|^^^^^^
+    :            `-- Avoid calling setState() directly within an effect
+ 32 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'useNavigate' is imported but never used.
+   ,-[src/components/payments/PaymentForm.jsx:2:10]
+ 1 | import { useState, useEffect } from 'react';
+ 2 | import { useNavigate } from 'react-router-dom';
+   :          ^^^^^|^^^^^
+   :               `-- 'useNavigate' is imported here
+ 3 | import { useForm } from 'react-hook-form';
+   `----
+  help: Consider removing this import.
+
+  ! react(incompatible-library): Use of incompatible library
+    ,-[src/components/payments/PaymentForm.jsx:60:23]
+ 59 | 
+ 60 |   const paymentType = watch('type');
+    :                       ^^|^^
+    :                         `-- React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+ 61 | 
+    `----
+  help: This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/incompatible-library
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/customers/CustomerList.jsx:30:5]
+ 28 | 
+ 29 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 30 |     fetchCustomers();
+    :     ^^^^^^^|^^^^^^
+    :            `-- Avoid calling setState() directly within an effect
+ 31 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/QRSettings.jsx:13:5]
+ 11 | 
+ 12 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 13 |     setFormData(settings.qr);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 14 |   }, [settings.qr]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/prescriptions/PrescriptionDetails.jsx:32:5]
+ 30 | 
+ 31 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 32 |     fetchRx();
+    :     ^^^|^^^
+    :        `-- Avoid calling setState() directly within an effect
+ 33 |   }, [id]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'fetchRx'
+    ,-[src/pages/prescriptions/PrescriptionDetails.jsx:33:6]
+ 31 |   useEffect(() => {
+ 32 |     fetchRx();
+    :     ^^^|^^^
+    :        `-- useEffect uses `fetchRx` here
+ 33 |   }, [id]);
+    :      ^^^^
+ 34 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'PageHeader' is imported but never used.
+   ,-[src/pages/purchases/PurchaseDetails.jsx:4:8]
+ 3 | import { ArrowLeft, Truck, CreditCard, Printer } from 'lucide-react';
+ 4 | import PageHeader from '../../components/common/PageHeader';
+   :        ^^^^^|^^^^
+   :             `-- 'PageHeader' is imported here
+ 5 | import Button from '../../components/common/Button';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Button' is imported but never used.
+   ,-[src/pages/medicines/AlternativeMedicines.jsx:4:8]
+ 3 | import PageHeader from '../../components/common/PageHeader';
+ 4 | import Button from '../../components/common/Button';
+   :        ^^^|^^
+   :           `-- 'Button' is imported here
+ 5 | import DataTable from '../../components/common/DataTable';
+   `----
+  help: Consider removing this import.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/PrinterSettings.jsx:13:5]
+ 11 | 
+ 12 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 13 |     setFormData(settings.printer);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 14 |   }, [settings.printer]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/PharmacySettings.jsx:13:5]
+ 11 | 
+ 12 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 13 |     setFormData(settings.pharmacy);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 14 |   }, [settings.pharmacy]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/payments/PaymentList.jsx:43:5]
+ 41 | 
+ 42 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 43 |     fetchAllData();
+    :     ^^^^^^|^^^^^
+    :           `-- Avoid calling setState() directly within an effect
+ 44 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/notifications/Notifications.jsx:36:5]
+ 34 | 
+ 35 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 36 |     fetchNotifications();
+    :     ^^^^^^^^^|^^^^^^^^
+    :              `-- Avoid calling setState() directly within an effect
+ 37 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/NotificationSettings.jsx:12:5]
+ 10 | 
+ 11 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 12 |     setFormData(settings.notifications);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 13 |   }, [settings.notifications]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'ShoppingCart' is imported but never used.
+   ,-[src/components/layout/NotificationDropdown.jsx:3:57]
+ 2 | import { useNavigate } from 'react-router-dom';
+ 3 | import { Bell, Check, Info, AlertTriangle, AlertCircle, ShoppingCart } from 'lucide-react';
+   :                                                         ^^^^^^|^^^^^
+   :                                                               `-- 'ShoppingCart' is imported here
+ 4 | import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../../services/notificationApi';
+   `----
+  help: Consider removing this import.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/components/layout/NotificationDropdown.jsx:31:5]
+ 29 | 
+ 30 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 31 |     fetchNotifications();
+    :     ^^^^^^^^^|^^^^^^^^
+    :              `-- Avoid calling setState() directly within an effect
+ 32 |     // In a real app, this might poll or use websockets
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Variable 'amountReceived' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/pages/billing/POS.jsx:29:10]
+ 28 |   const [paymentMethod, setPaymentMethod] = useState('Cash');
+ 29 |   const [amountReceived, setAmountReceived] = useState(0);
+    :          ^^^^^^^|^^^^^^
+    :                 `-- 'amountReceived' is declared here
+ 30 |   const [isSubmitting, setIsSubmitting] = useState(false);
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Identifier 'Plus' is imported but never used.
+   ,-[src/components/billing/ProductSearch.jsx:3:18]
+ 2 | import { useNavigate } from 'react-router-dom';
+ 3 | import { Search, Plus, AlertTriangle, SearchCode } from 'lucide-react';
+   :                  ^^|^
+   :                    `-- 'Plus' is imported here
+ 4 | import Input from '../common/Input';
+   `----
+  help: Consider removing this import.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/InvoiceSettings.jsx:13:5]
+ 11 | 
+ 12 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 13 |     setFormData(settings.invoice);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 14 |   }, [settings.invoice]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/marketing/MarketingAnalytics.jsx:72:5]
+ 70 | 
+ 71 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 72 |     setLoading(true);
+    :     ^^^^^|^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 73 |     // Simulate API fetch
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'Shield' is imported but never used.
+   ,-[src/components/layout/Header.jsx:2:53]
+ 1 | import { useState, useRef, useEffect } from 'react';
+ 2 | import { Search, User, Sun, Moon, LogOut, Settings, Shield } from 'lucide-react';
+   :                                                     ^^^|^^
+   :                                                        `-- 'Shield' is imported here
+ 3 | import { useNavigate } from 'react-router-dom';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Input' is imported but never used.
+   ,-[src/components/billing/PaymentPanel.jsx:2:8]
+ 1 | import { useState } from 'react';
+ 2 | import Input from '../common/Input';
+   :        ^^|^^
+   :          `-- 'Input' is imported here
+ 3 | 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'PageHeader' is imported but never used.
+   ,-[src/pages/purchases/GoodsReceiving.jsx:8:8]
+ 7 | 
+ 8 | import PageHeader from '../../components/common/PageHeader';
+   :        ^^^^^|^^^^
+   :             `-- 'PageHeader' is imported here
+ 9 | import Button from '../../components/common/Button';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Input' is imported but never used.
+    ,-[src/pages/purchases/GoodsReceiving.jsx:10:8]
+  9 | import Button from '../../components/common/Button';
+ 10 | import Input from '../../components/common/Input';
+    :        ^^|^^
+    :          `-- 'Input' is imported here
+ 11 | import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'PageHeader' is imported but never used.
+   ,-[src/pages/staff/StaffDetails.jsx:4:8]
+ 3 | import { ArrowLeft, Edit, User, Shield, Briefcase, Mail, Phone, Calendar, MapPin } from 'lucide-react';
+ 4 | import PageHeader from '../../components/common/PageHeader';
+   :        ^^^^^|^^^^
+   :             `-- 'PageHeader' is imported here
+ 5 | import Button from '../../components/common/Button';
+   `----
+  help: Consider removing this import.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/BarcodeSettings.jsx:12:5]
+ 10 | 
+ 11 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 12 |     setFormData(settings.barcode);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 13 |   }, [settings.barcode]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'calculateItemSubtotal' is imported but never used.
+    ,-[src/pages/purchases/CreatePurchase.jsx:17:10]
+ 16 | import { createPurchase } from '../../services/purchaseApi';
+ 17 | import { calculateItemSubtotal, calculateItemAmount, calculateGrandTotal } from '../../utils/billingCalculations';
+    :          ^^^^^^^^^^|^^^^^^^^^^
+    :                    `-- 'calculateItemSubtotal' is imported here
+ 18 | 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'calculateGrandTotal' is imported but never used.
+    ,-[src/pages/purchases/CreatePurchase.jsx:17:54]
+ 16 | import { createPurchase } from '../../services/purchaseApi';
+ 17 | import { calculateItemSubtotal, calculateItemAmount, calculateGrandTotal } from '../../utils/billingCalculations';
+    :                                                      ^^^^^^^^^|^^^^^^^^^
+    :                                                               `-- 'calculateGrandTotal' is imported here
+ 18 | 
+    `----
+  help: Consider removing this import.
+
+  ! react(incompatible-library): Use of incompatible library
+    ,-[src/pages/purchases/CreatePurchase.jsx:55:22]
+ 54 | 
+ 55 |   const watchItems = watch('items');
+    :                      ^^|^^
+    :                        `-- React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+ 56 | 
+    `----
+  help: This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/incompatible-library
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/BackupSettings.jsx:18:5]
+ 16 | 
+ 17 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 18 |     setFormData(settings.backup);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 19 |   }, [settings.backup]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'PageHeader' is imported but never used.
+   ,-[src/pages/roles/RoleDetails.jsx:4:8]
+ 3 | import { ArrowLeft, Edit, Check, X } from 'lucide-react';
+ 4 | import PageHeader from '../../components/common/PageHeader';
+   :        ^^^^^|^^^^
+   :             `-- 'PageHeader' is imported here
+ 5 | import Button from '../../components/common/Button';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Input' is imported but never used.
+   ,-[src/pages/settings/TaxSettings.jsx:4:8]
+ 3 | import Button from '../../components/common/Button';
+ 4 | import Input from '../../components/common/Input';
+   :        ^^|^^
+   :          `-- 'Input' is imported here
+ 5 | import { useSettings } from '../../context/SettingsContext';
+   `----
+  help: Consider removing this import.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/settings/TaxSettings.jsx:13:5]
+ 11 | 
+ 12 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 13 |     setFormData(settings.tax);
+    :     ^^^^^|^^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 14 |   }, [settings.tax]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/pages/reports/SalesReport.jsx:25:5]
+ 23 | 
+ 24 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 25 |     fetchSales();
+    :     ^^^^^|^^^^
+    :          `-- Avoid calling setState() directly within an effect
+ 26 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'StatusBadge' is imported but never used.
+   ,-[src/pages/inventory/ReorderRecommendations.jsx:7:8]
+ 6 | import Button from '../../components/common/Button';
+ 7 | import StatusBadge from '../../components/common/StatusBadge';
+   :        ^^^^^|^^^^^
+   :             `-- 'StatusBadge' is imported here
+ 8 | 
+   `----
+  help: Consider removing this import.
+
+Found 61 warnings and 0 errors.
+Finished in 193ms on 143 files with 104 rules using 8 threads.
