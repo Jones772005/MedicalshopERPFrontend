@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import {
   LayoutDashboard, ShoppingCart, Package, Users, Building,
   FileText, Activity, CreditCard, BarChart2, Bell, Shield, Settings,
-  ChevronDown, ChevronRight, Pill, Megaphone, X
+  ChevronDown, ChevronRight, Pill, X
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '../../utils/cn';
@@ -55,28 +55,29 @@ const NavItem = ({ to, icon: Icon, label, exact = false }) => {
         onMouseLeave={() => setHovered(false)}
         className={({ isActive }) =>
           cn(
-            'flex items-center transition-colors duration-150 rounded-[7px]',
+            'flex items-center transition-all duration-150 rounded-[12px]',
             isCollapsed
-              /* Collapsed: centred icon, 44px tall, horizontal margin 7px each side */
-              ? 'justify-center h-11 mx-[7px] my-0.5'
-              /* Expanded: left-aligned with text */
-              : 'px-3 py-2 gap-3 mx-1.5 my-0.5',
+              ? 'justify-center h-11 mx-[7px] my-[3px]'
+              : 'px-[14px] py-[10px] gap-[12px] mx-[10px] my-[2px]',
             isActive
-              ? 'bg-white/20 text-white shadow-sm'
-              : 'text-[#D0E4FC] hover:bg-white/10 hover:text-white'
+              ? 'text-white shadow-sm'
+              : 'text-[#C8DEFF] hover:bg-white/[0.09] hover:text-white'
           )
+        }
+        style={({ isActive }) =>
+          isActive ? { background: 'rgba(72, 142, 245, 0.75)' } : undefined
         }
       >
         {Icon && (
           <Icon
             className={cn(
               'flex-shrink-0 transition-colors duration-150',
-              isCollapsed ? 'h-5 w-5' : 'h-[17px] w-[17px]'
+              isCollapsed ? 'h-5 w-5' : 'h-[18px] w-[18px]'
             )}
           />
         )}
         {!isCollapsed && (
-          <span className="text-[13.5px] font-medium truncate">{label}</span>
+          <span className="text-[14px] font-semibold truncate flex-1 leading-none">{label}</span>
         )}
       </NavLink>
 
@@ -116,12 +117,13 @@ const NavGroup = ({ icon: Icon, label, paths = [], children }) => {
           aria-label={`Open ${label}`}
           title={label}
           className={cn(
-            'flex items-center justify-center w-full h-11 my-0.5 rounded-[7px] transition-colors duration-150 cursor-pointer',
+            'flex items-center justify-center h-11 my-[3px] rounded-[12px] transition-all duration-150 cursor-pointer',
             'w-[calc(100%-14px)]',
             isAnyChildActive
-              ? 'bg-white/20 text-white shadow-sm'
-              : 'text-[#D0E4FC] hover:bg-white/10 hover:text-white'
+              ? 'text-white shadow-sm'
+              : 'text-[#C8DEFF] hover:bg-white/[0.09] hover:text-white'
           )}
+          style={isAnyChildActive ? { background: 'rgba(72, 142, 245, 0.75)' } : undefined}
         >
           <Icon className="h-5 w-5" />
         </button>
@@ -131,28 +133,29 @@ const NavGroup = ({ icon: Icon, label, paths = [], children }) => {
 
   // ── EXPANDED MODE ──────────────────────────────────────────
   return (
-    <div className="mx-1.5 my-0.5">
+    <div className="mx-[10px] my-[2px]">
       <button
         onClick={() => setIsOpen(o => !o)}
         className={cn(
-          'w-full flex items-center justify-between px-3 py-2 text-[13.5px] font-medium rounded-[7px] transition-colors duration-150 cursor-pointer',
+          'w-full flex items-center justify-between px-[14px] py-[10px] text-[14px] font-semibold rounded-[12px] transition-all duration-150 cursor-pointer leading-none',
           isAnyChildActive
-            ? 'text-white bg-white/10'
-            : 'text-[#D0E4FC] hover:bg-white/10 hover:text-white'
+            ? 'text-white'
+            : 'text-[#C8DEFF] hover:bg-white/[0.09] hover:text-white'
         )}
+        style={isAnyChildActive ? { background: 'rgba(72, 142, 245, 0.75)' } : undefined}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-[12px]">
           <Icon
             className={cn(
-              'h-[17px] w-[17px] flex-shrink-0',
-              isAnyChildActive ? 'text-white' : 'text-[#A1CAFA]'
+              'h-[18px] w-[18px] flex-shrink-0',
+              isAnyChildActive ? 'text-white' : 'text-[#A8CAFF]'
             )}
           />
           <span>{label}</span>
         </div>
         {isOpen
-          ? <ChevronDown className="h-3.5 w-3.5 opacity-50 flex-shrink-0" />
-          : <ChevronRight className="h-3.5 w-3.5 opacity-50 flex-shrink-0" />
+          ? <ChevronDown className="h-3.5 w-3.5 opacity-60 flex-shrink-0" />
+          : <ChevronRight className="h-3.5 w-3.5 opacity-60 flex-shrink-0" />
         }
       </button>
 
@@ -177,10 +180,10 @@ const SubItem = ({ to, label, exact = false }) => {
       onClick={closeMobile}
       className={({ isActive }) =>
         cn(
-          'flex items-center gap-2.5 pl-8 pr-3 py-1.5 text-[12.5px] rounded-[6px] transition-colors duration-150',
+          'flex items-center gap-2.5 pl-[48px] pr-3 py-[8px] text-[13px] rounded-[8px] transition-all duration-150',
           isActive
             ? 'bg-white/15 text-white font-semibold'
-            : 'text-[#A1CAFA] hover:bg-white/10 hover:text-white'
+            : 'text-[#A8CAFF] hover:bg-white/[0.09] hover:text-white'
         )
       }
     >
@@ -195,10 +198,13 @@ const SubItem = ({ to, label, exact = false }) => {
 ───────────────────────────────────────────────────────────── */
 const SectionLabel = ({ label }) => {
   const { isCollapsed } = useSidebar();
-  if (isCollapsed) return <div className="h-2" />;
+  if (isCollapsed) return <div className="h-3" />;
   return (
-    <div className="px-4 pt-4 pb-1.5">
-      <p className="text-[10.5px] uppercase tracking-[0.1em] font-bold text-[#A1CAFA] select-none">
+    <div className="px-[14px] pt-[22px] pb-[8px]">
+      <p
+        className="text-[10.5px] uppercase tracking-[0.14em] font-bold select-none"
+        style={{ color: 'var(--sidebar-section-label, #8AB4F8)' }}
+      >
         {label}
       </p>
     </div>
@@ -210,6 +216,52 @@ const SectionLabel = ({ label }) => {
 ───────────────────────────────────────────────────────────── */
 const SidebarSep = () => (
   <div className="mx-4 my-2 border-t border-white/10" />
+);
+
+/* ─────────────────────────────────────────────────────────────
+   SIDEBAR FOOTER  — fixed at bottom, never scrolls
+   Structure: flex-shrink-0 outside the scrolling nav
+───────────────────────────────────────────────────────────── */
+const SidebarFooter = ({ isCollapsed }) => (
+  <div
+    className="sidebar-footer"
+    style={{
+      borderTop: '1px solid rgba(255,255,255,0.15)',
+      minHeight: isCollapsed ? '60px' : '92px',
+    }}
+  >
+    {/* Decorative shapes — all purely presentational */}
+    <div className="sidebar-footer-arc" aria-hidden="true" />
+    <div className="sidebar-footer-blob1" aria-hidden="true" />
+    <div className="sidebar-footer-blob2" aria-hidden="true" />
+
+    <div
+      className={cn(
+        'relative z-10 flex flex-col items-center text-center',
+        isCollapsed ? 'py-3' : 'py-5 px-3'
+      )}
+    >
+      {/* Decorative icon badge */}
+      <div
+        className="mb-2 w-8 h-8 rounded-full flex items-center justify-center"
+        style={{ background: 'rgba(255,255,255,0.12)' }}
+        aria-hidden="true"
+      >
+        <Activity className="h-4 w-4" style={{ color: 'rgba(255,255,255,0.55)' }} />
+      </div>
+
+      {!isCollapsed && (
+        <p
+          className="text-[11px] font-bold uppercase tracking-[0.12em] leading-[1.65] select-none"
+          style={{ color: 'rgba(170, 210, 255, 0.80)' }}
+        >
+          DEVELOPED BY CODE BLAZA
+          <br />
+          TECHNOLOGY
+        </p>
+      )}
+    </div>
+  </div>
 );
 
 /* ─────────────────────────────────────────────────────────────
@@ -233,11 +285,12 @@ const Sidebar = () => {
       <aside
         style={{
           background: 'var(--sidebar-bg)',
-          width: isCollapsed ? '68px' : '220px',
+          width: isCollapsed ? '68px' : '240px',
           transition: 'width 220ms ease-in-out',
           borderRight: '1px solid var(--sidebar-border)',
         }}
         className={cn(
+          /* flex-col + h-full ensures nav scrolls independently and footer stays fixed */
           'flex flex-col flex-shrink-0 h-full overflow-hidden z-[160]',
           'fixed lg:relative',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
@@ -246,25 +299,28 @@ const Sidebar = () => {
         {/* ── Brand area ─────────────────────────────────────── */}
         <div
           className="flex items-center flex-shrink-0 h-16 px-3"
-          style={{ borderBottom: '1px solid var(--sidebar-border)' }}
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}
         >
-          {/* Logo icon — always visible, centered when collapsed */}
+          {/* Logo icon — always visible, centred when collapsed */}
           <div
             className={cn(
               'flex items-center justify-center w-9 h-9 rounded-[9px] bg-white flex-shrink-0 shadow-md',
               isCollapsed && 'mx-auto'
             )}
           >
-            <Activity className="h-5 w-5 text-[#2482ED]" />
+            <Activity className="h-5 w-5 text-[#153FA8]" />
           </div>
 
-          {/* Brand text — fades out when collapsed */}
+          {/* Brand text — hidden when collapsed */}
           {!isCollapsed && (
             <div className="ml-2.5 overflow-hidden">
               <span className="text-[15px] font-bold text-white leading-tight block whitespace-nowrap">
                 MediShop
               </span>
-              <span className="text-[10px] font-semibold text-[#D0E4FC] tracking-widest whitespace-nowrap uppercase">
+              <span
+                className="text-[10px] font-semibold tracking-widest whitespace-nowrap uppercase"
+                style={{ color: '#A8CAFF' }}
+              >
                 ERP Platform
               </span>
             </div>
@@ -274,7 +330,8 @@ const Sidebar = () => {
           {!isCollapsed && (
             <button
               onClick={closeMobile}
-              className="lg:hidden ml-auto flex items-center justify-center w-7 h-7 rounded-md text-[#D0E4FC] hover:bg-white/10 transition-colors cursor-pointer"
+              className="lg:hidden ml-auto flex items-center justify-center w-7 h-7 rounded-md hover:bg-white/10 transition-colors cursor-pointer"
+              style={{ color: '#D4E6FF' }}
               aria-label="Close sidebar"
             >
               <X className="h-4 w-4" />
@@ -282,8 +339,9 @@ const Sidebar = () => {
           )}
         </div>
 
-        {/* ── Navigation ─────────────────────────────────────── */}
-        <nav className="flex-1 overflow-y-auto py-2">
+        {/* ── Navigation — flex-1 so it fills space; overflow-y-auto so it scrolls ── */}
+        {/* footer sits OUTSIDE this nav as a flex-shrink-0 sibling                   */}
+        <nav className="sidebar-scroll flex-1 overflow-y-auto py-2">
 
           {/* Dashboard */}
           <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" exact />
@@ -408,6 +466,9 @@ const Sidebar = () => {
             <NavItem to="/settings" icon={Settings} label="Settings" />
           </PermissionGuard>
         </nav>
+
+        {/* ── Footer — anchored to bottom, never scrolls ─────── */}
+        <SidebarFooter isCollapsed={isCollapsed} />
       </aside>
     </>
   );

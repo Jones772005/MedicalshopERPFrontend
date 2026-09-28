@@ -23,12 +23,15 @@
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light;
 
-  /* Structural Navy colors (sidebar) */
-  --sidebar-bg:        linear-gradient(180deg, #1457D9 0%, #1550B8 100%);
-  --sidebar-dark:      #0C42A6;
-  --sidebar-hover:     rgba(255, 255, 255, 0.1);
-  --sidebar-active:    rgba(255, 255, 255, 0.2);
+  /* Structural Navy colors (sidebar) — Code Blaza reference palette */
+  --sidebar-bg:        linear-gradient(180deg, #1D55D4 0%, #194CC1 45%, #153FA8 75%, #10358F 100%);
+  --sidebar-dark:      #10358F;
+  --sidebar-hover:     rgba(255, 255, 255, 0.09);
+  --sidebar-active:    rgba(72, 142, 245, 0.75);
   --sidebar-border:    transparent;
+  --sidebar-section-label: #8AB4F8;
+  --sidebar-item-text: #C8DEFF;
+  --sidebar-active-radius: 12px;
 
   /* Page & card layout */
   --page-bg:           #F5F8FC;
@@ -86,6 +89,72 @@ body {
 }
 
 /* ============================================
+   SIDEBAR FOOTER DECORATION
+   Angular / diagonal geometric shapes — CSS only
+   All shapes are pointer-events:none and aria-hidden
+============================================ */
+.sidebar-footer {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Large diagonal band sweeping bottom-left to top-right */
+.sidebar-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.045);
+  clip-path: polygon(0 65%, 100% 20%, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+
+/* Second diagonal layer — opposing angle, slightly different opacity */
+.sidebar-footer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.03);
+  clip-path: polygon(0 80%, 100% 45%, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+
+/* Diagonal arc strip across the upper portion of the footer */
+.sidebar-footer-arc {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.025);
+  clip-path: polygon(0 0, 100% 30%, 100% 55%, 0 28%);
+  pointer-events: none;
+}
+
+/* Large rotated rectangle — lower left anchor */
+.sidebar-footer-blob1 {
+  position: absolute;
+  bottom: -18px;
+  left: -22px;
+  width: 96px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.05);
+  transform: rotate(-32deg);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* Smaller rotated rectangle — upper right */
+.sidebar-footer-blob2 {
+  position: absolute;
+  top: -10px;
+  right: -14px;
+  width: 72px;
+  height: 58px;
+  background: rgba(255, 255, 255, 0.04);
+  transform: rotate(28deg);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* ============================================
    SCROLLBAR — subtle themed
 ============================================ */
 ::-webkit-scrollbar {
@@ -101,4 +170,12 @@ body {
 }
 html.dark ::-webkit-scrollbar-thumb {
   background: #23415C;
+}
+/* Sidebar internal scrollbar — more subtle */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 3px;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
 }

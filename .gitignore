@@ -57,3 +57,15 @@ coverage/
 
 # Vite generated metadata
 vite.config.*.timestamp-*
+
+# Test reports
+playwright-report/
+test-results/
+tests/
+
+# Test / lint generated output
+lint-results.txt
+
+test_instructions.md/
+
+ui_reference_analysis.md/

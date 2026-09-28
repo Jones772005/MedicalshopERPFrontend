@@ -73,16 +73,16 @@ const Header = () => {
         {/* Theme toggle */}
         <button
           onClick={toggleTheme}
-          className="relative inline-flex items-center justify-center w-14 h-7 rounded-full bg-[#EAF3FE] dark:bg-[#163A59] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:ring-offset-2 dark:focus:ring-offset-[#102A43] cursor-pointer"
+          className="relative inline-flex items-center justify-center w-14 h-7 rounded-full bg-[#DCEBFA] dark:bg-[#163A59] border border-[#B8D2EE] dark:border-transparent shadow-[inset_0_0_0_1px_rgba(255,255,255,0.45),0_1px_4px_rgba(36,130,237,0.16)] dark:shadow-none transition-colors focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:ring-offset-2 dark:focus:ring-offset-[#102A43] cursor-pointer"
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           <span className="sr-only">Toggle theme</span>
           <span
-            className={`absolute left-1 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-[#102A43] shadow transform transition-transform duration-200 ease-in-out ${theme === 'dark' ? 'translate-x-7' : 'translate-x-0'}`}
+            className={`absolute left-1 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-[#102A43] border border-[#B8D2EE] dark:border-transparent shadow-[0_1px_4px_rgba(15,23,42,0.18)] dark:shadow-none transform transition-transform duration-200 ease-in-out ${theme === 'dark' ? 'translate-x-7' : 'translate-x-0'}`}
           >
             {theme === 'dark'
               ? <Moon className="w-3 h-3 text-[#38BDF8]" />
-              : <Sun  className="w-3 h-3 text-yellow-500" />
+              : <Sun  className="w-3 h-3 text-[#F59E0B]" />
             }
           </span>
         </button>

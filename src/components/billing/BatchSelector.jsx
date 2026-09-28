@@ -77,8 +77,9 @@ const BatchSelector = ({ medicine, onSelect, onCancel }) => {
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] font-medium text-[#64748B] dark:text-slate-400 mt-1">
-                      Expiry: {batch.expiryDate ? new Date(batch.expiryDate).toLocaleDateString() : 'N/A'}
+                    <div className="text-[11px] font-medium text-[#64748B] dark:text-slate-400 mt-1 flex flex-wrap gap-x-3">
+                      <span>Expiry: {batch.expiryDate ? new Date(batch.expiryDate).toLocaleDateString() : 'N/A'}</span>
+                      <span>Rack No: <span className="font-semibold">{batch.rack || '—'}</span></span>
                     </div>
                   </div>
                   <div className="text-right">
