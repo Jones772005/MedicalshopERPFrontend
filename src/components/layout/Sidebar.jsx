@@ -379,13 +379,7 @@ const Sidebar = () => {
           {/* ── CATALOGUE ───────────────────────────────────── */}
           <PermissionGuard permission="medicines.view">
             <SectionLabel label="Catalogue" />
-            <NavGroup
-              icon={Pill}
-              label="Medicines"
-              paths={['/medicines']}
-            >
-              <SubItem to="/medicines" label="All Medicines" exact />
-            </NavGroup>
+            <NavItem to="/medicines" icon={Pill} label="Medicines" />
           </PermissionGuard>
 
           {/* ── INVENTORY ───────────────────────────────────── */}
@@ -423,11 +417,15 @@ const Sidebar = () => {
             <NavGroup
               icon={BarChart2}
               label="Reports & Analytics"
-              paths={['/reports', '/analytics']}
+              paths={['/reports']}
             >
-              <SubItem to="/reports" label="Reports Dashboard" exact />
-              <SubItem to="/analytics/bi" label="Business Intelligence" />
-              <SubItem to="/analytics/predictions" label="Stock Prediction" />
+              <SubItem to="/reports/sales" label="Sales Report" />
+              <SubItem to="/reports/purchases" label="Purchases Report" />
+              <SubItem to="/reports/inventory" label="Inventory Report" />
+              <SubItem to="/reports/financial" label="Financial Report" />
+              <SubItem to="/reports/tax" label="Tax Report" />
+              <SubItem to="/reports/customers" label="Customers Report" />
+              <SubItem to="/reports/suppliers" label="Suppliers Report" />
             </NavGroup>
           </PermissionGuard>
 
