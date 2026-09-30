@@ -25,7 +25,6 @@ const BarcodeInput = ({ onBarcodeDetected }) => {
           value={barcode}
           onChange={(e) => setBarcode(e.target.value)}
           icon={<ScanBarcode className="w-4 h-4 text-blue-500" />}
-          autoFocus
         />
       </div>
       <Button type="submit" variant="secondary">

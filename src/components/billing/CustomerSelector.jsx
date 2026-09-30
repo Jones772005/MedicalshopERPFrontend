@@ -1,34 +1,40 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
 import { Search, Plus, X } from 'lucide-react';
 import { getCustomers, createCustomer } from '../../services/customerApi';
 import Input from '../common/Input';
 import Button from '../common/Button';
 
-const CustomerSelector = ({ onSelect }) => {
+const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
   
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ name: '', phoneNumber: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const internalInputRef = useRef(null);
+  const searchInputRef = ref || internalInputRef;
   const wrapperRef = useRef(null);
+  const newCustomerBtnRef = useRef(null);
+  const modalNameInputRef = useRef(null);
+  const itemRefs = useRef([]);
 
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
-
-  const fetchCustomers = async () => {
+  const fetchCustomers = useCallback(async () => {
     try {
       const response = await getCustomers();
       setCustomers(response.data);
     } catch (err) {
       console.error('Failed to load customers', err);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [fetchCustomers]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -40,9 +46,34 @@ const CustomerSelector = ({ onSelect }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Focus name field when modal opens
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        modalNameInputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [showModal]);
+
+  const filteredCustomers = customers.filter(c => 
+    c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (c.phoneNumber && c.phoneNumber.includes(searchTerm))
+  );
+
+  // Total items in dropdown = 1 (Walk-in Customer) + filteredCustomers.length
+  const totalItems = 1 + filteredCustomers.length;
+
+  useEffect(() => {
+    if (isDropdownOpen && itemRefs.current[highlightedIndex]) {
+      itemRefs.current[highlightedIndex]?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [highlightedIndex, isDropdownOpen]);
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setIsDropdownOpen(true);
+    setHighlightedIndex(0);
     if (selectedCustomer) {
       setSelectedCustomer(null);
       onSelect(null);
@@ -54,19 +85,62 @@ const CustomerSelector = ({ onSelect }) => {
     setSearchTerm(customer ? `${customer.name} (${customer.phoneNumber})` : 'Walk-in Customer');
     setIsDropdownOpen(false);
     onSelect(customer);
+    if (onSelectComplete) {
+      onSelectComplete(customer);
+    }
   };
 
-  const filteredCustomers = customers.filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (c.phoneNumber && c.phoneNumber.includes(searchTerm))
-  );
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!isDropdownOpen) {
+        setIsDropdownOpen(true);
+      } else {
+        setHighlightedIndex((prev) => (prev < totalItems - 1 ? prev + 1 : 0));
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!isDropdownOpen) {
+        setIsDropdownOpen(true);
+      } else {
+        setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : totalItems - 1));
+      }
+    } else if (e.key === 'Enter') {
+      if (isDropdownOpen) {
+        e.preventDefault();
+        if (highlightedIndex === 0) {
+          handleSelect(null); // Walk-in customer
+        } else if (filteredCustomers[highlightedIndex - 1]) {
+          handleSelect(filteredCustomers[highlightedIndex - 1]);
+        }
+      }
+    } else if (e.key === 'Escape') {
+      if (isDropdownOpen) {
+        e.preventDefault();
+        setIsDropdownOpen(false);
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setNewCustomer({ name: '', phoneNumber: '' });
+    // Restore focus back to the button that opened modal
+    newCustomerBtnRef.current?.focus();
+  };
 
   const handleCreateCustomer = async (e) => {
     e.preventDefault();
     if (!newCustomer.name || !newCustomer.phoneNumber) return;
     setIsSubmitting(true);
     try {
-      const res = await createCustomer({ ...newCustomer, type: 'New', loyaltyPoints: 0, outstandingPayment: 0, status: 'Active' });
+      const res = await createCustomer({ 
+        ...newCustomer, 
+        type: 'New', 
+        loyaltyPoints: 0, 
+        outstandingPayment: 0, 
+        status: 'Active' 
+      });
       await fetchCustomers();
       handleSelect(res.data);
       setShowModal(false);
@@ -80,59 +154,127 @@ const CustomerSelector = ({ onSelect }) => {
 
   return (
     <div className="relative mb-4" ref={wrapperRef}>
-      <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Customer</label>
+      <label htmlFor="customerSearchInput" className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+        Customer
+      </label>
       <div className="flex space-x-2">
         <div className="relative flex-grow">
           <Input
-            placeholder="Search Customer (Name/Phone)..."
+            ref={searchInputRef}
+            id="customerSearchInput"
+            placeholder="Search Customer (Name/Phone)... (F3)"
             value={searchTerm}
             onChange={handleSearchChange}
-            onFocus={() => setIsDropdownOpen(true)}
+            onFocus={() => {
+              setIsDropdownOpen(true);
+              setHighlightedIndex(0);
+            }}
+            onKeyDown={handleInputKeyDown}
             icon={<Search className="w-4 h-4" />}
+            aria-label="Customer search"
           />
           {isDropdownOpen && (
-            <div className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
-              <ul className="divide-y divide-gray-200 dark:divide-slate-700">
+            <div 
+              className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-[#DDE6F0] dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto"
+              role="listbox"
+              aria-label="Customer options"
+            >
+              <ul className="divide-y divide-[#DDE6F0] dark:divide-slate-700 p-1">
+                {/* Option 0: Walk-in Customer */}
                 <li 
-                  className="p-3 hover:bg-gray-50 dark:hover:bg-slate-750 cursor-pointer font-medium text-gray-900 dark:text-white"
+                  ref={(el) => { itemRefs.current[0] = el; }}
+                  role="option"
+                  aria-selected={highlightedIndex === 0}
+                  className={`p-3 rounded-lg cursor-pointer font-medium text-gray-900 dark:text-white transition-colors ${
+                    highlightedIndex === 0 
+                      ? 'bg-[#EAF3FE] dark:bg-[#163A59] ring-2 ring-[#2482ED]' 
+                      : 'hover:bg-gray-50 dark:hover:bg-slate-750'
+                  }`}
+                  onMouseEnter={() => setHighlightedIndex(0)}
                   onClick={() => handleSelect(null)}
                 >
                   Walk-in Customer
                 </li>
-                {filteredCustomers.map(c => (
-                  <li 
-                    key={c.id}
-                    className="p-3 hover:bg-gray-50 dark:hover:bg-slate-750 cursor-pointer"
-                    onClick={() => handleSelect(c)}
-                  >
-                    <div className="font-medium text-gray-900 dark:text-white">{c.name}</div>
-                    <div className="text-sm text-gray-500">{c.phoneNumber}</div>
-                  </li>
-                ))}
+
+                {/* Filtered Customers */}
+                {filteredCustomers.map((c, idx) => {
+                  const itemIndex = idx + 1;
+                  const isHighlighted = highlightedIndex === itemIndex;
+
+                  return (
+                    <li 
+                      key={c.id}
+                      ref={(el) => { itemRefs.current[itemIndex] = el; }}
+                      role="option"
+                      aria-selected={isHighlighted}
+                      className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                        isHighlighted 
+                          ? 'bg-[#EAF3FE] dark:bg-[#163A59] ring-2 ring-[#2482ED]' 
+                          : 'hover:bg-gray-50 dark:hover:bg-slate-750'
+                      }`}
+                      onMouseEnter={() => setHighlightedIndex(itemIndex)}
+                      onClick={() => handleSelect(c)}
+                    >
+                      <div className="font-medium text-gray-900 dark:text-white">{c.name}</div>
+                      <div className="text-sm text-gray-500 dark:text-slate-400">{c.phoneNumber}</div>
+                    </li>
+                  );
+                })}
+
                 {filteredCustomers.length === 0 && searchTerm && (
-                  <li className="p-3 text-sm text-gray-500">No customers found.</li>
+                  <li className="p-3 text-sm text-gray-500 dark:text-slate-400">No customers found.</li>
                 )}
               </ul>
             </div>
           )}
         </div>
-        <Button type="button" variant="outline" onClick={() => setShowModal(true)} className="px-3" title="New Customer">
+        <Button 
+          ref={newCustomerBtnRef}
+          type="button" 
+          variant="outline" 
+          onClick={() => setShowModal(true)} 
+          className="px-3 focus:outline-none focus:ring-2 focus:ring-[#2482ED]" 
+          title="New Customer"
+          aria-label="Add new customer"
+        >
           <Plus className="w-5 h-5" />
         </Button>
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-[100] overflow-y-auto flex items-center justify-center">
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={() => setShowModal(false)}></div>
+        <div 
+          className="fixed inset-0 z-[100] overflow-y-auto flex items-center justify-center"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.stopPropagation();
+              handleCloseModal();
+            }
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="new-customer-title"
+        >
+          <div 
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
+            onClick={handleCloseModal}
+          ></div>
           <div className="relative bg-white dark:bg-[#102A43] rounded-xl max-w-sm w-full p-6 shadow-2xl border border-[#DDE6F0] dark:border-slate-700/50">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-[15px] font-bold text-[#162033] dark:text-white">Add New Customer</h3>
-              <button onClick={() => setShowModal(false)} className="text-[#64748B] hover:text-[#162033] dark:hover:text-white transition-colors">
+              <h3 id="new-customer-title" className="text-[15px] font-bold text-[#162033] dark:text-white">
+                Add New Customer
+              </h3>
+              <button 
+                type="button"
+                onClick={handleCloseModal} 
+                aria-label="Close add customer dialog"
+                className="text-[#64748B] hover:text-[#162033] dark:hover:text-white transition-colors rounded p-1 focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleCreateCustomer} className="space-y-4">
               <Input 
+                ref={modalNameInputRef}
                 label="Name *" 
                 value={newCustomer.name}
                 onChange={(e) => setNewCustomer({...newCustomer, name: e.target.value})}
@@ -145,7 +287,9 @@ const CustomerSelector = ({ onSelect }) => {
                 required
               />
               <div className="pt-2 flex justify-end space-x-2">
-                <Button type="button" variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+                <Button type="button" variant="secondary" onClick={handleCloseModal}>
+                  Cancel
+                </Button>
                 <Button type="submit" disabled={isSubmitting || !newCustomer.name || !newCustomer.phoneNumber}>
                   {isSubmitting ? 'Saving...' : 'Save Customer'}
                 </Button>
@@ -156,6 +300,8 @@ const CustomerSelector = ({ onSelect }) => {
       )}
     </div>
   );
-};
+});
+
+CustomerSelector.displayName = 'CustomerSelector';
 
 export default CustomerSelector;
