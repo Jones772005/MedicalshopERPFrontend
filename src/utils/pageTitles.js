@@ -91,6 +91,7 @@ const ROUTE_TITLES = [
   { pattern: /^\/staff\/[^/]+\/edit$/,          title: 'Edit Staff', icon: Shield },
   { pattern: /^\/staff\/[^/]+$/,                title: 'Staff Details', icon: Shield },
   { pattern: /^\/staff$/,                       title: 'Staff List', icon: Shield },
+  { pattern: /^\/roles\/new$/,                title: 'Create Role', icon: Key },
   { pattern: /^\/roles\/[^/]+\/edit$/,          title: 'Edit Role', icon: Key },
   { pattern: /^\/roles\/[^/]+$/,                title: 'Role Details', icon: Key },
   { pattern: /^\/roles$/,                       title: 'Roles & Permissions', icon: Key },

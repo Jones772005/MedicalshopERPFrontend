@@ -37,3 +37,11 @@ export const updateStaffStatus = async (id, status) => {
   await recordAuditEvent('UPDATE', 'Staff', `Updated status of staff ${id} to ${status}`, id);
   return { data: updatedStaff };
 };
+export const deleteStaff = async (id) => {
+  await new Promise(resolve => setTimeout(resolve, 400));
+  const staff = localDb.getById(KEYS.STAFF, id);
+  if (!staff) throw new Error('Staff member not found');
+  localDb.remove(KEYS.STAFF, id);
+  await recordAuditEvent('DELETE', 'Staff', `Deleted staff member ${staff.firstName} ${staff.lastName}`, id);
+  return { data: { id } };
+};

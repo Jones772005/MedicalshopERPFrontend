@@ -42,7 +42,6 @@ import DiscountForm from '../pages/discounts/DiscountForm';
 import DiscountDetails from '../pages/discounts/DiscountDetails';
 
 // Phase 4 Imports
-// Phase 4 Imports
 import Notifications from '../pages/notifications/Notifications';
 import MedicineRequests from '../pages/billing/MedicineRequests';
 
@@ -71,6 +70,7 @@ import EditStaff from '../pages/staff/EditStaff';
 import RolesList from '../pages/roles/RolesList';
 import RoleDetails from '../pages/roles/RoleDetails';
 import EditRole from '../pages/roles/EditRole';
+import CreateRole from '../pages/roles/CreateRole';
 
 // Phase 5 Imports - Security & Profile
 import AuditLogs from '../pages/security/AuditLogs';
@@ -133,17 +133,16 @@ const AppRoutes = () => {
         {/* Medicines */}
         <Route path="medicines" element={<RoleRoute permission="medicines.view"><MedicineList /></RoleRoute>} />
         <Route path="medicines/add" element={<RoleRoute permission="medicines.create"><MedicineForm /></RoleRoute>} />
-
         <Route path="medicines/:id" element={<RoleRoute permission="medicines.view"><MedicineDetails /></RoleRoute>} />
         <Route path="medicines/:id/edit" element={<RoleRoute permission="medicines.edit"><MedicineForm /></RoleRoute>} />
         
         {/* Inventory */}
-        <Route path="inventory" element={<RoleRoute permission="inventory.view"><InventoryList /></RoleRoute>} />
-        <Route path="inventory/low-stock" element={<RoleRoute permission="inventory.view"><LowStockList /></RoleRoute>} />
-        <Route path="inventory/out-of-stock" element={<RoleRoute permission="inventory.view"><OutOfStockList /></RoleRoute>} />
-        <Route path="inventory/expiry" element={<RoleRoute permission="inventory.expiry"><ExpiryManagement /></RoleRoute>} />
-        <Route path="inventory/fefo" element={<RoleRoute permission="inventory.view"><FefoView /></RoleRoute>} />
-        <Route path="inventory/transactions" element={<RoleRoute permission="inventory.transactions"><StockTransactions /></RoleRoute>} />
+        <Route path="inventory" element={<RoleRoute permission="inventory.stock.view"><InventoryList /></RoleRoute>} />
+        <Route path="inventory/low-stock" element={<RoleRoute permission="inventory.low-stock.view"><LowStockList /></RoleRoute>} />
+        <Route path="inventory/out-of-stock" element={<RoleRoute permission="inventory.out-of-stock.view"><OutOfStockList /></RoleRoute>} />
+        <Route path="inventory/expiry" element={<RoleRoute permission="inventory.expiry.view"><ExpiryManagement /></RoleRoute>} />
+        <Route path="inventory/fefo" element={<RoleRoute permission="inventory.stock.view"><FefoView /></RoleRoute>} />
+        <Route path="inventory/transactions" element={<RoleRoute permission="inventory.transactions.view"><StockTransactions /></RoleRoute>} />
 
         
         {/* Customers */}
@@ -163,48 +162,48 @@ const AppRoutes = () => {
         <Route path="purchases/new" element={<RoleRoute permission="purchases.create"><CreatePurchase /></RoleRoute>} />
         <Route path="purchases/:id" element={<RoleRoute permission="purchases.view"><PurchaseDetails /></RoleRoute>} />
         <Route path="purchases/:id/receive" element={<RoleRoute permission="purchases.receive"><GoodsReceiving /></RoleRoute>} />
-        <Route path="purchases/returns" element={<RoleRoute permission="returns.process"><PurchaseReturns /></RoleRoute>} />
-        <Route path="purchases/returns/:id" element={<RoleRoute permission="returns.process"><PurchaseReturnDetails /></RoleRoute>} />
+        <Route path="purchases/returns" element={<RoleRoute permission="purchase-returns.view"><PurchaseReturns /></RoleRoute>} />
+        <Route path="purchases/returns/:id" element={<RoleRoute permission="purchase-returns.view"><PurchaseReturnDetails /></RoleRoute>} />
         
         {/* Billing & Sales */}
-        <Route path="billing" element={<RoleRoute permission="billing.create"><POS /></RoleRoute>} />
-        <Route path="billing/history" element={<RoleRoute permission="billing.print"><SalesHistory /></RoleRoute>} />
-        <Route path="billing/invoice/:id" element={<RoleRoute permission="billing.print"><Invoice /></RoleRoute>} />
+        <Route path="billing" element={<RoleRoute permission="pos.create"><POS /></RoleRoute>} />
+        <Route path="billing/history" element={<RoleRoute permission="sales-history.view"><SalesHistory /></RoleRoute>} />
+        <Route path="billing/invoice/:id" element={<RoleRoute permission="sales-history.view"><Invoice /></RoleRoute>} />
         <Route path="sales" element={<Navigate to="/billing/history" replace />} />
-        <Route path="sales/returns" element={<RoleRoute permission="returns.process"><SalesReturns /></RoleRoute>} />
-        <Route path="sales/returns/new" element={<RoleRoute permission="returns.process"><SalesReturns /></RoleRoute>} />
-        <Route path="sales/returns/:id" element={<RoleRoute permission="returns.process"><SalesReturnDetails /></RoleRoute>} />
-        <Route path="sales/medicine-requests" element={<RoleRoute permission="billing.create"><MedicineRequests /></RoleRoute>} />
+        <Route path="sales/returns" element={<RoleRoute permission="sales-returns.view"><SalesReturns /></RoleRoute>} />
+        <Route path="sales/returns/new" element={<RoleRoute permission="sales-returns.create"><SalesReturns /></RoleRoute>} />
+        <Route path="sales/returns/:id" element={<RoleRoute permission="sales-returns.view"><SalesReturnDetails /></RoleRoute>} />
+        <Route path="sales/medicine-requests" element={<RoleRoute permission="medicine-requests.view"><MedicineRequests /></RoleRoute>} />
         
         {/* Discounts */}
         <Route path="discounts" element={<RoleRoute permission="discounts.view"><DiscountList /></RoleRoute>} />
-        <Route path="discounts/new" element={<RoleRoute permission="discounts.manage"><DiscountForm /></RoleRoute>} />
+        <Route path="discounts/new" element={<RoleRoute permission="discounts.create"><DiscountForm /></RoleRoute>} />
         <Route path="discounts/:id" element={<RoleRoute permission="discounts.view"><DiscountDetails /></RoleRoute>} />
-        <Route path="discounts/:id/edit" element={<RoleRoute permission="discounts.manage"><DiscountForm /></RoleRoute>} />
+        <Route path="discounts/:id/edit" element={<RoleRoute permission="discounts.edit"><DiscountForm /></RoleRoute>} />
         
         {/* Payments */}
-        <Route path="payments" element={<RoleRoute permission="billing.payment"><PaymentList /></RoleRoute>} />
-        <Route path="payments/new" element={<RoleRoute permission="billing.payment"><PaymentList /></RoleRoute>} />
-        
+        <Route path="payments" element={<RoleRoute permission="payments.view"><PaymentList /></RoleRoute>} />
+        <Route path="payments/new" element={<RoleRoute permission="payments.view"><PaymentList /></RoleRoute>} />
+
 
 
         {/* Reports */}
-        <Route path="reports" element={<RoleRoute permissions={['reports.sales', 'reports.purchases', 'reports.inventory']}><ReportsDashboard /></RoleRoute>} />
-        <Route path="reports/sales" element={<RoleRoute permission="reports.sales"><SalesReport /></RoleRoute>} />
-        <Route path="reports/purchases" element={<RoleRoute permission="reports.purchases"><PurchasesReport /></RoleRoute>} />
-        <Route path="reports/inventory" element={<RoleRoute permission="reports.inventory"><InventoryReport /></RoleRoute>} />
-        <Route path="reports/financial" element={<RoleRoute permission="reports.financial"><FinancialReport /></RoleRoute>} />
-        <Route path="reports/tax" element={<RoleRoute permission="reports.tax"><TaxReport /></RoleRoute>} />
-        <Route path="reports/customers" element={<RoleRoute permission="customers.view"><CustomersReport /></RoleRoute>} />
-        <Route path="reports/suppliers" element={<RoleRoute permission="suppliers.view"><SuppliersReport /></RoleRoute>} />
+        <Route path="reports" element={<RoleRoute permissions={['reports.sales.view', 'reports.purchases.view', 'reports.inventory.view']}><ReportsDashboard /></RoleRoute>} />
+        <Route path="reports/sales" element={<RoleRoute permission="reports.sales.view"><SalesReport /></RoleRoute>} />
+        <Route path="reports/purchases" element={<RoleRoute permission="reports.purchases.view"><PurchasesReport /></RoleRoute>} />
+        <Route path="reports/inventory" element={<RoleRoute permission="reports.inventory.view"><InventoryReport /></RoleRoute>} />
+        <Route path="reports/financial" element={<RoleRoute permission="reports.financial.view"><FinancialReport /></RoleRoute>} />
+        <Route path="reports/tax" element={<RoleRoute permission="reports.tax.view"><TaxReport /></RoleRoute>} />
+        <Route path="reports/customers" element={<RoleRoute permission="reports.customers.view"><CustomersReport /></RoleRoute>} />
+        <Route path="reports/suppliers" element={<RoleRoute permission="reports.suppliers.view"><SuppliersReport /></RoleRoute>} />
 
         {/* Analytics & BI */}
-        <Route path="analytics/bi" element={<RoleRoute permission="dashboard.analytics"><BusinessIntelligence /></RoleRoute>} />
-        <Route path="analytics/predictions" element={<RoleRoute permission="dashboard.analytics"><StockPrediction /></RoleRoute>} />
+        <Route path="analytics/bi" element={<RoleRoute permission="analytics.bi.view"><BusinessIntelligence /></RoleRoute>} />
+        <Route path="analytics/predictions" element={<RoleRoute permission="analytics.predictions.view"><StockPrediction /></RoleRoute>} />
 
         {/* Marketing */}
         <Route path="marketing/campaigns" element={<RoleRoute permission="marketing.campaigns"><CampaignList /></RoleRoute>} />
-        <Route path="marketing/campaigns/new" element={<RoleRoute permission="marketing.create_campaign"><CreateCampaign /></RoleRoute>} />
+        <Route path="marketing/campaigns/new" element={<RoleRoute permission="marketing.create"><CreateCampaign /></RoleRoute>} />
         <Route path="marketing/qr" element={<RoleRoute permission="marketing.qr"><QRManagement /></RoleRoute>} />
         <Route path="marketing/analytics" element={<RoleRoute permission="marketing.analytics"><MarketingAnalytics /></RoleRoute>} />
 
@@ -218,28 +217,29 @@ const AppRoutes = () => {
         <Route path="staff/:id/edit" element={<RoleRoute permission="staff.edit"><EditStaff /></RoleRoute>} />
         
         {/* Phase 5 - Roles */}
-        <Route path="roles" element={<RoleRoute permission="staff.roles"><RolesList /></RoleRoute>} />
-        <Route path="roles/:id" element={<RoleRoute permission="staff.roles"><RoleDetails /></RoleRoute>} />
-        <Route path="roles/:id/edit" element={<RoleRoute permission="staff.roles"><EditRole /></RoleRoute>} />
+        <Route path="roles" element={<RoleRoute permission="roles.view"><RolesList /></RoleRoute>} />
+        <Route path="roles/new" element={<RoleRoute permission="roles.create"><CreateRole /></RoleRoute>} />
+        <Route path="roles/:id" element={<RoleRoute permission="roles.view"><RoleDetails /></RoleRoute>} />
+        <Route path="roles/:id/edit" element={<RoleRoute permission="roles.edit"><EditRole /></RoleRoute>} />
 
         {/* Phase 5 - Security & Audit */}
-        <Route path="audit-logs" element={<RoleRoute permission="security.audit"><AuditLogs /></RoleRoute>} />
-        <Route path="sessions" element={<RoleRoute permission="security.sessions"><Sessions /></RoleRoute>} />
+        <Route path="audit-logs" element={<RoleRoute permission="security.audit-logs.view"><AuditLogs /></RoleRoute>} />
+        <Route path="sessions" element={<RoleRoute permission="security.sessions.view"><Sessions /></RoleRoute>} />
         <Route path="profile" element={<Profile />} />
 
         {/* Phase 5 - Settings */}
-        <Route path="settings" element={<RoleRoute permission="settings.view"><SettingsLayout /></RoleRoute>}>
+        <Route path="settings" element={<RoleRoute permission="settings.pharmacy.view"><SettingsLayout /></RoleRoute>}>
           <Route index element={<Navigate to="/settings/pharmacy" replace />} />
-          <Route path="pharmacy" element={<RoleRoute permission="settings.view"><PharmacySettings /></RoleRoute>} />
-          <Route path="invoice" element={<RoleRoute permission="settings.invoice"><InvoiceSettings /></RoleRoute>} />
-          <Route path="tax" element={<RoleRoute permission="settings.tax"><TaxSettings /></RoleRoute>} />
-          <Route path="notifications" element={<RoleRoute permission="settings.view"><NotificationSettings /></RoleRoute>} />
-          <Route path="printer" element={<RoleRoute permission="settings.printer"><PrinterSettings /></RoleRoute>} />
-          <Route path="barcode" element={<RoleRoute permission="settings.view"><BarcodeSettings /></RoleRoute>} />
-          <Route path="qr" element={<RoleRoute permission="settings.view"><QRSettings /></RoleRoute>} />
-          <Route path="security" element={<RoleRoute permission="security.settings"><SecuritySettings /></RoleRoute>} />
-          <Route path="backup" element={<RoleRoute permission="settings.backup"><BackupSettings /></RoleRoute>} />
-          <Route path="system" element={<RoleRoute permission="settings.view"><SystemAdministration /></RoleRoute>} />
+          <Route path="pharmacy" element={<RoleRoute permission="settings.pharmacy.view"><PharmacySettings /></RoleRoute>} />
+          <Route path="invoice" element={<RoleRoute permission="settings.invoice.view"><InvoiceSettings /></RoleRoute>} />
+          <Route path="tax" element={<RoleRoute permission="settings.tax.view"><TaxSettings /></RoleRoute>} />
+          <Route path="notifications" element={<RoleRoute permission="settings.pharmacy.view"><NotificationSettings /></RoleRoute>} />
+          <Route path="printer" element={<RoleRoute permission="settings.printer.view"><PrinterSettings /></RoleRoute>} />
+          <Route path="barcode" element={<RoleRoute permission="settings.pharmacy.view"><BarcodeSettings /></RoleRoute>} />
+          <Route path="qr" element={<RoleRoute permission="settings.pharmacy.view"><QRSettings /></RoleRoute>} />
+          <Route path="security" element={<RoleRoute permission="settings.security.view"><SecuritySettings /></RoleRoute>} />
+          <Route path="backup" element={<RoleRoute permission="settings.backup.view"><BackupSettings /></RoleRoute>} />
+          <Route path="system" element={<RoleRoute permission="settings.pharmacy.view"><SystemAdministration /></RoleRoute>} />
         </Route>
       </Route>
       

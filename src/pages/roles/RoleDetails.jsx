@@ -72,7 +72,7 @@ const RoleDetails = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <button onClick={() => navigate('/roles')} className="p-2 bg-white dark:bg-slate-800 rounded-full shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-500 transition-colors">

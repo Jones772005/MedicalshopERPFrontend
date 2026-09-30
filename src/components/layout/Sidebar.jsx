@@ -347,7 +347,7 @@ const Sidebar = () => {
           <NavItem to="/dashboard" icon={LayoutDashboard} label="Dashboard" exact />
 
           {/* ── SALES ─────────────────────────────────────── */}
-          <PermissionGuard permissions={['billing.create', 'discounts.view']}>
+          <PermissionGuard permissions={['pos.create', 'discounts.view']}>
             <SectionLabel label="Sales" />
             <NavGroup
               icon={ShoppingCart}
@@ -383,7 +383,7 @@ const Sidebar = () => {
           </PermissionGuard>
 
           {/* ── INVENTORY ───────────────────────────────────── */}
-          <PermissionGuard permission="inventory.view">
+          <PermissionGuard permission="inventory.stock.view">
             <NavGroup
               icon={Package}
               label="Inventory"
@@ -407,12 +407,12 @@ const Sidebar = () => {
           <PermissionGuard permission="suppliers.view">
             <NavItem to="/suppliers" icon={Building} label="Suppliers" />
           </PermissionGuard>
-          <PermissionGuard permission="billing.payment">
+          <PermissionGuard permission="payments.view">
             <NavItem to="/payments" icon={CreditCard} label="Payments" />
           </PermissionGuard>
 
           {/* ── ANALYTICS ────────────────────────────────────── */}
-          <PermissionGuard permissions={['reports.sales', 'reports.purchases', 'reports.inventory']}>
+          <PermissionGuard permissions={['reports.sales.view', 'reports.purchases.view', 'reports.inventory.view']}>
             <SectionLabel label="Analytics" />
             <NavGroup
               icon={BarChart2}
@@ -459,7 +459,7 @@ const Sidebar = () => {
             </NavGroup>
           </PermissionGuard>
 
-          <PermissionGuard permission="settings.view">
+          <PermissionGuard permission="settings.pharmacy.view">
             <NavItem to="/settings" icon={Settings} label="Settings" />
           </PermissionGuard>
         </nav>

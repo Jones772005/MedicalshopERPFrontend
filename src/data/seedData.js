@@ -1,5 +1,6 @@
 import { KEYS, CURRENT_DB_VERSION } from './storageKeys';
 import localDb from '../services/localDb';
+import { migratePermissions } from './screenPermissions';
 
 // Import all mock data arrays
 import { medicinesData } from './medicines';
@@ -26,8 +27,49 @@ const seedKey = (key, dataArray) => {
   }
 };
 
+/**
+ * Migrate any roles still stored with the old nested permission format
+ * { module: { action: bool } } to the new flat format { "screen.action": bool }.
+ * Runs on every app startup — safe to call multiple times (idempotent).
+ * Does NOT reset LocalStorage — migrates data in place.
+ */
+const migrateRolePermissions = () => {
+  try {
+    const roles = localDb.get(KEYS.ROLES);
+    if (!roles || !roles.length) return;
+
+    let changed = false;
+    const migratedRoles = roles.map(role => {
+      if (!role.permissions) return role;
+      const sampleKey = Object.keys(role.permissions)[0];
+      // If the first value is an object, it's the old nested format
+      if (sampleKey && typeof role.permissions[sampleKey] === 'object') {
+        changed = true;
+        return { ...role, permissions: migratePermissions(role.permissions) };
+      }
+      // Already flat — run through migratePermissions to fill in any missing keys
+      const migrated = migratePermissions(role.permissions);
+      if (JSON.stringify(migrated) !== JSON.stringify(role.permissions)) {
+        changed = true;
+        return { ...role, permissions: migrated };
+      }
+      return role;
+    });
+
+    if (changed) {
+      localDb.set(KEYS.ROLES, migratedRoles);
+      console.log('[MediShop ERP] Role permissions migrated to screen-based format.');
+    }
+  } catch (err) {
+    console.error('Role permission migration failed:', err);
+  }
+};
+
 const normalizeDatabase = () => {
   try {
+    // 0. Migrate role permissions to new screen-based format
+    migrateRolePermissions();
+
     // 1. Normalize Payments (Fix PO-null)
     const payments = localDb.get(KEYS.PAYMENTS);
     let changed = false;
@@ -121,6 +163,6 @@ export const initializeDatabase = (force = false) => {
     localStorage.setItem(KEYS.VERSION, CURRENT_DB_VERSION);
   }
 
-  // Always run normalization on start
+  // Always run normalization on start (includes role permission migration)
   normalizeDatabase();
 };

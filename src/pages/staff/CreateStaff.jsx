@@ -48,7 +48,7 @@ const CreateStaff = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
       <div className="flex items-center space-x-4">
         <button onClick={() => navigate('/staff')} className="p-2 bg-white dark:bg-slate-800 rounded-full shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-500 transition-colors">
           <ArrowLeft className="w-5 h-5" />
