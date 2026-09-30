@@ -114,9 +114,10 @@ const ExpiryManagement = () => {
             });
           }}
           disabled={row.quantity === 0}
-          className={`text-[13px] font-semibold transition-colors ${row.quantity === 0 ? 'text-[#94A3B8] dark:text-slate-500 cursor-not-allowed' : 'text-[#2482ED] dark:text-blue-400 hover:text-[#1A6BC7] dark:hover:text-blue-300 cursor-pointer'}`}
+          title="Return to Supplier"
+          className={`p-1.5 rounded text-[13px] font-semibold transition-colors ${row.quantity === 0 ? 'text-[#94A3B8] dark:text-slate-500 cursor-not-allowed' : 'text-orange-500 hover:text-orange-600 hover:bg-orange-50 dark:text-orange-400 dark:hover:text-orange-300 dark:hover:bg-orange-900/20 cursor-pointer'}`}
         >
-          {row.quantity === 0 ? 'No Stock' : 'Return to Supplier'}
+          {row.quantity === 0 ? 'No Stock' : 'Return'}
         </button>
       )
     }

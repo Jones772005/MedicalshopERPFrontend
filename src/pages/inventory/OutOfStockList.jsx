@@ -36,7 +36,7 @@ const OutOfStockList = () => {
     const supplier = suppliers.find(s => s.supplierName === row.supplier);
     const supplierId = supplier ? supplier.id : undefined;
     
-    // Use the same smart recommendation logic as ReorderRecommendations.jsx
+    // Use smart recommendation logic
     const avgDailyDemand = row.avgDailyDemand || 10;
     const minStock = row.minStock !== undefined ? Number(row.minStock) : 0;
     const recommendedQty = row.recommendedQty || Math.max(minStock * 2, avgDailyDemand * 30);

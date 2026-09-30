@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, Eye, Edit } from 'lucide-react';
 import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import Button from '../../components/common/Button';
@@ -39,14 +39,22 @@ const StaffList = () => {
       header: 'Action',
       sortable: false,
       cell: (row) => (
-        <div className="flex space-x-2">
-          <Button variant="ghost" className="px-2 py-1 text-xs" onClick={() => navigate(`/staff/${row.id}`)}>
-            View
-          </Button>
+        <div className="flex space-x-1">
+          <button
+            title="View Staff"
+            className="p-1.5 rounded text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-pointer"
+            onClick={() => navigate(`/staff/${row.id}`)}
+          >
+            <Eye className="w-4 h-4" />
+          </button>
           <PermissionGuard permission="staff.edit">
-            <Button variant="outline" className="px-2 py-1 text-xs" onClick={() => navigate(`/staff/${row.id}/edit`)}>
-              Edit
-            </Button>
+            <button
+              title="Edit Staff"
+              className="p-1.5 rounded text-[#2482ED] hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
+              onClick={() => navigate(`/staff/${row.id}/edit`)}
+            >
+              <Edit className="w-4 h-4" />
+            </button>
           </PermissionGuard>
         </div>
       )

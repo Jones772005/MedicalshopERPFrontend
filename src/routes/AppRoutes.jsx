@@ -14,7 +14,7 @@ import OutOfStockList from '../pages/inventory/OutOfStockList';
 import ExpiryManagement from '../pages/inventory/ExpiryManagement';
 import FefoView from '../pages/inventory/FefoView';
 import StockTransactions from '../pages/inventory/StockTransactions';
-import ReorderRecommendations from '../pages/inventory/ReorderRecommendations';
+
 import CustomerList from '../pages/customers/CustomerList';
 import CustomerForm from '../pages/customers/CustomerForm';
 import CustomerDetails from '../pages/customers/CustomerDetails';
@@ -44,7 +44,7 @@ import DiscountDetails from '../pages/discounts/DiscountDetails';
 // Phase 4 Imports
 // Phase 4 Imports
 import Notifications from '../pages/notifications/Notifications';
-import AlternativeMedicines from '../pages/medicines/AlternativeMedicines';
+import MedicineRequests from '../pages/billing/MedicineRequests';
 
 import ReportsDashboard from '../pages/reports/ReportsDashboard';
 import SalesReport from '../pages/reports/SalesReport';
@@ -133,7 +133,7 @@ const AppRoutes = () => {
         {/* Medicines */}
         <Route path="medicines" element={<RoleRoute permission="medicines.view"><MedicineList /></RoleRoute>} />
         <Route path="medicines/add" element={<RoleRoute permission="medicines.create"><MedicineForm /></RoleRoute>} />
-        <Route path="medicines/alternatives" element={<RoleRoute permission="medicines.view"><AlternativeMedicines /></RoleRoute>} />
+
         <Route path="medicines/:id" element={<RoleRoute permission="medicines.view"><MedicineDetails /></RoleRoute>} />
         <Route path="medicines/:id/edit" element={<RoleRoute permission="medicines.edit"><MedicineForm /></RoleRoute>} />
         
@@ -144,7 +144,7 @@ const AppRoutes = () => {
         <Route path="inventory/expiry" element={<RoleRoute permission="inventory.expiry"><ExpiryManagement /></RoleRoute>} />
         <Route path="inventory/fefo" element={<RoleRoute permission="inventory.view"><FefoView /></RoleRoute>} />
         <Route path="inventory/transactions" element={<RoleRoute permission="inventory.transactions"><StockTransactions /></RoleRoute>} />
-        <Route path="inventory/reorder" element={<RoleRoute permission="inventory.reorder"><ReorderRecommendations /></RoleRoute>} />
+
         
         {/* Customers */}
         <Route path="customers" element={<RoleRoute permission="customers.view"><CustomerList /></RoleRoute>} />
@@ -174,6 +174,7 @@ const AppRoutes = () => {
         <Route path="sales/returns" element={<RoleRoute permission="returns.process"><SalesReturns /></RoleRoute>} />
         <Route path="sales/returns/new" element={<RoleRoute permission="returns.process"><SalesReturns /></RoleRoute>} />
         <Route path="sales/returns/:id" element={<RoleRoute permission="returns.process"><SalesReturnDetails /></RoleRoute>} />
+        <Route path="sales/medicine-requests" element={<RoleRoute permission="billing.create"><MedicineRequests /></RoleRoute>} />
         
         {/* Discounts */}
         <Route path="discounts" element={<RoleRoute permission="discounts.view"><DiscountList /></RoleRoute>} />

@@ -56,27 +56,30 @@ const SupplierList = () => {
       header: 'Actions',
       sortable: false,
       cell: (row) => (
-        <div className="flex space-x-2">
+        <div className="flex space-x-1">
           <button 
-            className="text-gray-400 hover:text-primary-600 transition-colors cursor-pointer"
+            title="View Supplier"
+            className="p-1.5 rounded text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-pointer"
             onClick={() => navigate(`/suppliers/${row.id}`)}
           >
-            <Eye className="w-5 h-5" />
+            <Eye className="w-4 h-4" />
           </button>
           <PermissionGuard permission="suppliers.edit">
             <button 
-              className="text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
+              title="Edit Supplier"
+              className="p-1.5 rounded text-[#2482ED] hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
               onClick={() => navigate(`/suppliers/${row.id}/edit`)}
             >
-              <Edit className="w-5 h-5" />
+              <Edit className="w-4 h-4" />
             </button>
           </PermissionGuard>
           <PermissionGuard permission="suppliers.delete">
             <button 
-              className="text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+              title="Delete Supplier"
+              className="p-1.5 rounded text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
               onClick={() => setDeleteDialog({ isOpen: true, id: row.id })}
             >
-              <Trash2 className="w-5 h-5" />
+              <Trash2 className="w-4 h-4" />
             </button>
           </PermissionGuard>
         </div>

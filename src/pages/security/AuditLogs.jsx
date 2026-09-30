@@ -54,7 +54,7 @@ const AuditLogs = () => {
       header: 'Details',
       sortable: false,
       cell: (row) => (
-        <Button variant="ghost" className="px-2 py-1 text-xs" onClick={() => setSelectedLog(row)}>
+        <Button variant="ghost" className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20" onClick={() => setSelectedLog(row)} title="View Details">
           <Eye className="w-4 h-4" />
         </Button>
       )

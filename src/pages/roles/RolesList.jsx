@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Settings } from 'lucide-react';
+import { Shield, Settings, Eye } from 'lucide-react';
 import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
-import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { getRoles } from '../../services/rolesApi';
 import { PermissionGuard } from '../../utils/permissions';
@@ -48,14 +47,22 @@ const RolesList = () => {
       header: 'Action',
       sortable: false,
       cell: (row) => (
-        <div className="flex space-x-2">
-          <Button variant="ghost" className="px-2 py-1 text-xs" onClick={() => navigate(`/roles/${row.id}`)}>
-            View Matrix
-          </Button>
+        <div className="flex space-x-1">
+          <button
+            title="View Permission Matrix"
+            className="p-1.5 rounded text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-pointer"
+            onClick={() => navigate(`/roles/${row.id}`)}
+          >
+            <Eye className="w-4 h-4" />
+          </button>
           <PermissionGuard permission="staff.roles">
-            <Button className="px-2 py-1 text-xs" onClick={() => navigate(`/roles/${row.id}/edit`)}>
-              <Settings className="w-3 h-3 mr-1" /> Configure
-            </Button>
+            <button
+              title="Configure Role"
+              className="p-1.5 rounded text-[#2482ED] hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
+              onClick={() => navigate(`/roles/${row.id}/edit`)}
+            >
+              <Settings className="w-4 h-4" />
+            </button>
           </PermissionGuard>
         </div>
       )

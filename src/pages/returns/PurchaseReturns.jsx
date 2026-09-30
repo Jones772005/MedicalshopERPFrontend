@@ -201,6 +201,7 @@ const PurchaseReturns = () => {
           size="sm"
           onClick={() => navigate(`/purchases/returns/${row.id}`)}
           title="View Return"
+          className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20"
         >
           <Eye className="w-4 h-4" />
         </Button>

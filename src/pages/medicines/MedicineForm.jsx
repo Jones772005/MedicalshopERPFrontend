@@ -84,7 +84,7 @@ const MedicineForm = () => {
         description="Enter medicine details, pricing, and stock information."
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-5xl">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
         <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
           <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Basic Information</CardTitle>
@@ -113,7 +113,7 @@ const MedicineForm = () => {
           <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Pricing Information</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-5">
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-5">
             <Input label="Purchase Price" type="number" step="0.01" error={errors.purchasePrice?.message} {...register('purchasePrice')} />
             <Input label="Selling Price" type="number" step="0.01" error={errors.sellingPrice?.message} {...register('sellingPrice')} />
             <Input label="MRP" type="number" step="0.01" error={errors.mrp?.message} {...register('mrp')} />
@@ -125,7 +125,7 @@ const MedicineForm = () => {
           <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Inventory & Supplier</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5">
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-5">
             <Input label="Opening Quantity" type="number" error={errors.quantity?.message} {...register('quantity')} />
             <div>
               <Input label="Low Stock Alert At" type="number" error={errors.minimumStockLevel?.message} {...register('minimumStockLevel')} />
@@ -141,13 +141,15 @@ const MedicineForm = () => {
           <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Additional Details</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6 pt-5">
-            <div className="flex items-center bg-[#F5F8FC] dark:bg-slate-800/50 p-4 rounded-lg border border-[#DDE6F0] dark:border-slate-700/50">
-              <input type="checkbox" id="prescription" className="h-4 w-4 text-[#2482ED] focus:ring-[#2482ED] border-[#DDE6F0] dark:border-slate-600 rounded cursor-pointer dark:bg-slate-800" {...register('prescriptionRequired')} />
-              <label htmlFor="prescription" className="ml-3 block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] cursor-pointer">Prescription Required</label>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-5">
+            <div className="flex flex-col justify-end">
+              <div className="flex items-center bg-[#F5F8FC] dark:bg-slate-800/50 px-4 h-[42px] rounded-lg border border-[#DDE6F0] dark:border-slate-700/50">
+                <input type="checkbox" id="prescription" className="h-4 w-4 text-[#2482ED] focus:ring-[#2482ED] border-[#DDE6F0] dark:border-slate-600 rounded cursor-pointer dark:bg-slate-800" {...register('prescriptionRequired')} />
+                <label htmlFor="prescription" className="ml-3 block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] cursor-pointer">Prescription Required</label>
+              </div>
             </div>
             <Input label="Barcode" error={errors.barcode?.message} {...register('barcode')} />
-            <div className="w-full">
+            <div className="col-span-full">
               <label className="block text-[13px] font-semibold text-[#162033] dark:text-[#EAF3FE] mb-1.5">Description</label>
               <textarea 
                 className="flex w-full rounded-lg border border-[#DDE6F0] dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-[13px] text-[#162033] dark:text-white placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#2482ED] focus:border-transparent transition-shadow" 

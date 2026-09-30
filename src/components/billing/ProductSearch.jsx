@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, AlertTriangle, SearchCode } from 'lucide-react';
+import { Search, AlertTriangle } from 'lucide-react';
 import Input from '../common/Input';
 import { getMedicines } from '../../services/medicineApi';
 import { getMedicineStock } from '../../services/inventoryApi';
 
 const ProductSearch = ({ onProductSelect }) => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [medicines, setMedicines] = useState([]);
   const [stockMap, setStockMap] = useState({});
@@ -87,15 +85,6 @@ const ProductSearch = ({ onProductSelect }) => {
                   {(stockMap[medicine.id] ?? 0) <= 0 ? (
                     <div className="flex items-center space-x-2">
                       <span className="text-[11px] font-bold text-red-500 dark:text-red-400">Out of Stock</span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate('/medicines/alternatives');
-                        }}
-                        className="text-[11px] bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 px-2 py-1 rounded hover:bg-orange-200 dark:hover:bg-orange-900/50 flex items-center transition-colors font-bold"
-                      >
-                        <SearchCode className="w-3 h-3 mr-1" /> Find Alt
-                      </button>
                     </div>
                   ) : (
                     <div className="text-[11px] text-[#24C9A0] dark:text-emerald-400 font-bold">Stock: {stockMap[medicine.id]}</div>

@@ -4,6 +4,7 @@ import { Plus, Eye, Truck, CreditCard } from 'lucide-react';
 import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import Button from '../../components/common/Button';
+import StatCard from '../../components/common/StatCard';
 import StatusBadge from '../../components/common/StatusBadge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { getPurchases } from '../../services/purchaseApi';
@@ -75,12 +76,13 @@ const PurchaseList = () => {
       header: 'Actions',
       sortable: false,
       cell: (row) => (
-        <div className="flex space-x-2">
+        <div className="flex space-x-1">
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => navigate(`/purchases/${row.id}`)}
             title="View Details"
+            className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20"
           >
             <Eye className="w-4 h-4" />
           </Button>
@@ -90,7 +92,7 @@ const PurchaseList = () => {
               size="sm" 
               onClick={() => navigate(`/purchases/${row.id}/receive`)}
               title="Receive Goods"
-              className="text-[#2482ED] hover:text-[#1A6BC7] dark:text-blue-400 dark:hover:text-blue-300"
+              className="p-1.5 text-teal-600 hover:text-teal-700 hover:bg-teal-50 dark:text-teal-400 dark:hover:text-teal-300 dark:hover:bg-teal-900/20"
             >
               <Truck className="w-4 h-4" />
             </Button>
@@ -101,7 +103,7 @@ const PurchaseList = () => {
               size="sm" 
               onClick={() => navigate(`/payments/new?purchaseId=${row.id}`)}
               title="Record Payment"
-              className="text-[#24C9A0] hover:text-[#1BA885] dark:text-emerald-400 dark:hover:text-emerald-300"
+              className="p-1.5 text-green-600 hover:text-green-700 hover:bg-green-50 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/20"
             >
               <CreditCard className="w-4 h-4" />
             </Button>
@@ -129,28 +131,26 @@ const PurchaseList = () => {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
-          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Total Purchases</div>
-          <div className="text-2xl font-bold text-[#162033] dark:text-white">{purchases.length}</div>
-        </div>
-        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
-          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Pending Orders</div>
-          <div className="text-2xl font-bold text-[#162033] dark:text-white">
-            {purchases.filter(p => p.status === 'Ordered' || p.status === 'Partially Received').length}
-          </div>
-        </div>
-        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
-          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Received</div>
-          <div className="text-2xl font-bold text-[#162033] dark:text-white">
-            {purchases.filter(p => p.status === 'Received').length}
-          </div>
-        </div>
-        <div className="bg-white dark:bg-[#102A43] p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
-          <div className="text-[13px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">Pending Payments</div>
-          <div className="text-2xl font-bold text-[#162033] dark:text-white">
-            {purchases.filter(p => p.paymentStatus !== 'Paid').length}
-          </div>
-        </div>
+        <StatCard
+          title="Total Purchases"
+          value={purchases.length.toString()}
+          color="info"
+        />
+        <StatCard
+          title="Pending Orders"
+          value={purchases.filter(p => p.status === 'Ordered' || p.status === 'Partially Received').length.toString()}
+          color="warning"
+        />
+        <StatCard
+          title="Received"
+          value={purchases.filter(p => p.status === 'Received').length.toString()}
+          color="success"
+        />
+        <StatCard
+          title="Pending Payments"
+          value={purchases.filter(p => p.paymentStatus !== 'Paid').length.toString()}
+          color="danger"
+        />
       </div>
 
       <DataTable 

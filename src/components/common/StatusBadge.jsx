@@ -8,6 +8,7 @@ const StatusBadge = ({ status, className }) => {
       case 'paid':
       case 'verified':
       case 'completed':
+      case 'fulfilled':
         return 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400';
       case 'low stock':
       case 'near expiry':
@@ -18,6 +19,7 @@ const StatusBadge = ({ status, className }) => {
       case 'expired':
       case 'failed':
       case 'critical':
+      case 'cancelled':
         return 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400';
       default:
         return 'bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-300';

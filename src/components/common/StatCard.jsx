@@ -1,7 +1,24 @@
+import { isValidElement } from 'react';
 import { Card, CardContent } from './Card';
 import { cn } from '../../utils/cn';
+import { resolveStatCardIcon } from '../../utils/statCardIcons';
 
-const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'primary' }) => {
+const StatCard = ({ title, value, icon, trend, trendValue, color }) => {
+  // Resolve auto-icon from title when no explicit icon is provided
+  const derived = resolveStatCardIcon(title);
+
+  // Determine the icon to render:
+  // 1. Explicit icon prop (component ref or JSX element) wins
+  // 2. Otherwise use the title-derived icon
+  const IconComponent = icon || derived.icon;
+
+  // Determine if the icon is a JSX element (e.g. <Activity className="..." />)
+  // vs a component reference (e.g. Activity)
+  const isJsxElement = isValidElement(IconComponent);
+
+  // Determine color: explicit prop wins, then derived fallback
+  const resolvedColor = color || derived.color;
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -10,16 +27,19 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'primar
             <p className="text-sm font-medium text-[#64748B] dark:text-slate-400 mb-1">{title}</p>
             <h4 className="text-2xl font-bold text-[#162033] dark:text-white">{value}</h4>
           </div>
-          {Icon && (
+          {IconComponent && (
             <div className={cn(
-              "p-2 rounded-lg flex items-center justify-center",
-              color === 'primary' && "bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400",
-              color === 'info' && "bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400",
-              color === 'success' && "bg-green-50 dark:bg-green-900/40 text-green-600 dark:text-green-400",
-              color === 'warning' && "bg-yellow-50 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400",
-              color === 'danger' && "bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400",
+              "p-2 rounded-lg flex items-center justify-center shrink-0",
+              resolvedColor === 'primary' && "bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400",
+              resolvedColor === 'info' && "bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400",
+              resolvedColor === 'success' && "bg-green-50 dark:bg-green-900/40 text-green-600 dark:text-green-400",
+              resolvedColor === 'warning' && "bg-yellow-50 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400",
+              resolvedColor === 'danger' && "bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400",
             )}>
-              <Icon className="w-5 h-5" />
+              {isJsxElement
+                ? IconComponent
+                : <IconComponent className="w-5 h-5" />
+              }
             </div>
           )}
         </div>
@@ -40,3 +60,4 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'primar
 };
 
 export default StatCard;
+

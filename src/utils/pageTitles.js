@@ -14,7 +14,7 @@ import {
 const ROUTE_TITLES = [
   // ── Medicines ────────────────────────────────────────
   { pattern: /^\/medicines\/add$/,              title: 'Add Medicine', icon: Pill },
-  { pattern: /^\/medicines\/alternatives$/,     title: 'Alternative Medicines', icon: Pill },
+
   { pattern: /^\/medicines\/[^/]+\/edit$/,      title: 'Edit Medicine', icon: FileEdit },
   { pattern: /^\/medicines\/[^/]+$/,            title: 'Medicine Details', icon: Pill },
   { pattern: /^\/medicines$/,                   title: 'Medicines', icon: Pill },
@@ -25,7 +25,7 @@ const ROUTE_TITLES = [
   { pattern: /^\/inventory\/expiry$/,           title: 'Expiry Management', icon: CheckSquare },
   { pattern: /^\/inventory\/fefo$/,             title: 'FEFO Recommendations', icon: CheckSquare },
   { pattern: /^\/inventory\/transactions$/,     title: 'Stock Transactions', icon: History },
-  { pattern: /^\/inventory\/reorder$/,          title: 'Reorder Recommendations', icon: TrendingUp },
+
   { pattern: /^\/inventory$/,                   title: 'Current Stock', icon: Package },
 
   // ── Customers ─────────────────────────────────────────
@@ -55,6 +55,7 @@ const ROUTE_TITLES = [
   { pattern: /^\/sales\/returns\/new$/,         title: 'New Sales Return', icon: ClipboardList },
   { pattern: /^\/sales\/returns\/[^/]+$/,       title: 'Sales Return Details', icon: ClipboardList },
   { pattern: /^\/sales\/returns$/,              title: 'Sales Returns', icon: ClipboardList },
+  { pattern: /^\/sales\/medicine-requests$/,    title: 'Medicine Requests', icon: ClipboardList },
 
   // ── Discounts ─────────────────────────────────────────
   { pattern: /^\/discounts\/new$/,              title: 'New Discount', icon: Settings },

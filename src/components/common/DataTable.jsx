@@ -8,12 +8,13 @@ const DataTable = ({
   searchPlaceholder = "Search...", 
   loading = false, 
   emptyMessage = "No data found",
-  itemsPerPage = 10,
+  itemsPerPage: defaultItemsPerPage = 10,
   searchable = true,
   customToolbar = null
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(defaultItemsPerPage);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   // Handle sorting
@@ -25,6 +26,12 @@ const DataTable = ({
       direction = 'desc';
     }
     setSortConfig({ key: accessor, direction });
+  };
+
+  // Handle page-size change
+  const handlePageSizeChange = (newSize) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
   };
 
   // Filter and Sort Data
@@ -58,21 +65,23 @@ const DataTable = ({
     return filtered;
   }, [data, searchTerm, sortConfig]);
 
-  // Pagination
+  // Pagination calculations
   const totalItems = processedData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / pageSize);
   
-  // Ensure current page is valid after filtering
-  if (currentPage > totalPages && totalPages > 0) {
-    setCurrentPage(totalPages);
-  } else if (currentPage === 0 && totalPages > 0) {
-    setCurrentPage(1);
+  // Derive a safe current page (clamp without setState during render)
+  const safePage = totalPages === 0 ? 1 : Math.min(currentPage, totalPages);
+
+  // If safePage drifted from currentPage, sync on next tick
+  if (safePage !== currentPage && totalPages > 0) {
+    // Use queueMicrotask to avoid setState during render
+    queueMicrotask(() => setCurrentPage(safePage));
   }
 
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return processedData.slice(startIndex, startIndex + itemsPerPage);
-  }, [processedData, currentPage, itemsPerPage]);
+    const startIndex = (safePage - 1) * pageSize;
+    return processedData.slice(startIndex, startIndex + pageSize);
+  }, [processedData, safePage, pageSize]);
 
   const renderSortIcon = (accessor) => {
     if (!accessor) return null;
@@ -119,9 +128,9 @@ const DataTable = ({
         </div>
       )}
       
-      <div className="overflow-x-auto">
+      <div className="overflow-auto relative" style={{ height: '506px' }}>
         <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-          <thead style={{ backgroundColor: 'var(--table-header-bg)' }}>
+          <thead className="sticky top-0 z-10" style={{ backgroundColor: 'var(--table-header-bg)' }}>
             <tr>
               {columns.map((col, idx) => (
                 <th 
@@ -180,11 +189,12 @@ const DataTable = ({
       
       {!loading && totalItems > 0 && (
         <Pagination 
-          currentPage={currentPage} 
+          currentPage={safePage} 
           totalPages={totalPages} 
           onPageChange={setCurrentPage} 
-          itemsPerPage={itemsPerPage}
+          itemsPerPage={pageSize}
           totalItems={totalItems}
+          onItemsPerPageChange={handlePageSizeChange}
         />
       )}
     </div>
@@ -192,3 +202,4 @@ const DataTable = ({
 };
 
 export default DataTable;
+

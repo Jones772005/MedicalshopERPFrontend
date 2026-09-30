@@ -75,9 +75,21 @@ const InvoicePreview = ({ sale, medicines }) => {
             <span>₹{sale.subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Discount:</span>
+            <span>Item Discount:</span>
             <span>-₹{sale.discount.toFixed(2)}</span>
           </div>
+          {sale.overallDiscount > 0 && (
+            <div className="flex justify-between text-orange-700">
+              <span>
+                Overall Discount
+                {sale.overallDiscountType === 'percentage' && sale.overallDiscountValue
+                  ? ` (${sale.overallDiscountValue}%)`
+                  : ''}
+                :
+              </span>
+              <span>-₹{sale.overallDiscount.toFixed(2)}</span>
+            </div>
+          )}
           <div className="flex justify-between">
             <span>GST:</span>
             <span>+₹{sale.tax.toFixed(2)}</span>

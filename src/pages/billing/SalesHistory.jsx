@@ -74,12 +74,13 @@ const SalesHistory = () => {
       header: 'Actions',
       sortable: false,
       cell: (row) => (
-        <div className="flex space-x-2">
+        <div className="flex space-x-1">
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => navigate(`/billing/invoice/${row.id}`)}
             title="View Invoice"
+            className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20"
           >
             <FileText className="w-4 h-4" />
           </Button>
@@ -88,7 +89,7 @@ const SalesHistory = () => {
             size="sm" 
             onClick={() => navigate(`/sales/returns/new?invoiceId=${row.id}`)}
             title="Sales Return"
-            className="text-orange-600 dark:text-orange-400"
+            className="p-1.5 text-[#7C3AED] hover:text-[#6D28D9] hover:bg-purple-50 dark:text-[#A78BFA] dark:hover:text-[#C4B5FD] dark:hover:bg-purple-900/20"
           >
             <CornerUpLeft className="w-4 h-4" />
           </Button>

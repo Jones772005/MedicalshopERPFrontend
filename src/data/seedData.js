@@ -3,7 +3,7 @@ import localDb from '../services/localDb';
 
 // Import all mock data arrays
 import { medicinesData } from './medicines';
-import { alternativeMedicinesData as alternativeMedicines } from './alternatives';
+
 import { inventoryData } from './inventory';
 import { suppliersData } from './suppliers';
 import { purchasesData } from './purchases';
@@ -86,7 +86,7 @@ export const initializeDatabase = (force = false) => {
     
     // Core data
     seedKey(KEYS.MEDICINES, medicinesData);
-    seedKey(KEYS.ALTERNATIVES, alternativeMedicines);
+
     seedKey(KEYS.INVENTORY, inventoryData);
     seedKey(KEYS.INVENTORY_TRANSACTIONS, []);
     

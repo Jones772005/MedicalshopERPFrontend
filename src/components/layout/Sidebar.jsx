@@ -358,6 +358,7 @@ const Sidebar = () => {
               <SubItem to="/billing/history" label="Sales History" />
               <SubItem to="/sales/returns" label="Sales Returns" />
               <SubItem to="/discounts" label="Discount Management" />
+              <SubItem to="/sales/medicine-requests" label="Medicine Requests" />
             </NavGroup>
           </PermissionGuard>
 
@@ -370,7 +371,7 @@ const Sidebar = () => {
               paths={['/purchases']}
             >
               <SubItem to="/purchases" label="Purchase Orders" exact />
-              <SubItem to="/purchases/new" label="New Purchase" />
+
               <SubItem to="/purchases/returns" label="Purchase Returns" />
             </NavGroup>
           </PermissionGuard>
@@ -384,8 +385,6 @@ const Sidebar = () => {
               paths={['/medicines']}
             >
               <SubItem to="/medicines" label="All Medicines" exact />
-              <SubItem to="/medicines/add" label="Add Medicine" />
-              <SubItem to="/medicines/alternatives" label="Alternatives" />
             </NavGroup>
           </PermissionGuard>
 
@@ -402,7 +401,7 @@ const Sidebar = () => {
               <SubItem to="/inventory/expiry" label="Expiry Management" />
               {/* <SubItem to="/inventory/fefo" label="FEFO Recommendations" /> */}
               <SubItem to="/inventory/transactions" label="Transactions" />
-              <SubItem to="/inventory/reorder" label="Reorder Recommendations" />
+
             </NavGroup>
           </PermissionGuard>
 

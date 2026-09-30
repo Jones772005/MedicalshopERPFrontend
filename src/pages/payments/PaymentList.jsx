@@ -185,8 +185,8 @@ const PaymentList = () => {
       header: 'Actions',
       accessor: 'actions',
       cell: (row) => (
-        <Button variant="ghost" onClick={() => setSelectedPayment(row)} className="p-1" title="View Details">
-          <Eye className="w-4 h-4 text-gray-500 hover:text-primary-600" />
+        <Button variant="ghost" onClick={() => setSelectedPayment(row)} className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20" title="View Details">
+          <Eye className="w-4 h-4" />
         </Button>
       )
     }

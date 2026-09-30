@@ -88,16 +88,18 @@ const MedicineList = () => {
       header: 'Actions',
       sortable: false,
       cell: (row) => (
-        <div className="flex space-x-2">
+        <div className="flex space-x-1">
           <button 
-            className="text-[#94A3B8] hover:text-[#2482ED] transition-colors cursor-pointer"
+            title="View Medicine"
+            className="p-1.5 rounded text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-pointer"
             onClick={() => navigate(`/medicines/${row.id}`)}
           >
             <Eye className="w-[18px] h-[18px]" />
           </button>
           <PermissionGuard permission="medicines.edit">
             <button 
-              className="text-[#94A3B8] hover:text-[#24C9A0] transition-colors cursor-pointer"
+              title="Edit Medicine"
+              className="p-1.5 rounded text-[#2482ED] hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
               onClick={() => navigate(`/medicines/${row.id}/edit`)}
             >
               <Edit className="w-[18px] h-[18px]" />
@@ -105,7 +107,8 @@ const MedicineList = () => {
           </PermissionGuard>
           <PermissionGuard permission="medicines.delete">
             <button 
-              className="text-[#94A3B8] hover:text-red-500 transition-colors cursor-pointer"
+              title="Delete Medicine"
+              className="p-1.5 rounded text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
               onClick={() => setDeleteDialog({ isOpen: true, id: row.id })}
             >
               <Trash2 className="w-[18px] h-[18px]" />

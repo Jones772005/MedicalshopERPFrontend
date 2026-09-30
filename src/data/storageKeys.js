@@ -13,7 +13,7 @@ export const KEYS = {
   
   // Entities
   MEDICINES: 'medishop-medicines',
-  ALTERNATIVES: 'medishop-alternatives',
+
   BATCHES: 'medishop-batches',
   
   INVENTORY: 'medishop-inventory', // Can be derived, but storing distinct records for speed
@@ -26,6 +26,7 @@ export const KEYS = {
   CUSTOMERS: 'medishop-customers',
   SALES: 'medishop-sales',
   SALES_RETURNS: 'medishop-sales-returns',
+  MEDICINE_REQUESTS: 'medishop-medicine-requests',
   
   PAYMENTS: 'medishop-payments',
   PRESCRIPTIONS: 'medishop-prescriptions',

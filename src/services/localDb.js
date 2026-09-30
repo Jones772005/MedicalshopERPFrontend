@@ -173,7 +173,7 @@ const localDb = {
   resetDemoData: () => {
     const keysToClear = [
       KEYS.MEDICINES,
-      KEYS.ALTERNATIVES,
+
       KEYS.BATCHES,
       KEYS.INVENTORY,
       KEYS.INVENTORY_TRANSACTIONS,

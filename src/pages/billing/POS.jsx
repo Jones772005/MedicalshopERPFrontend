@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, ShieldAlert, FileText } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 
 import ProductSearch from '../../components/billing/ProductSearch';
 import BarcodeInput from '../../components/billing/BarcodeInput';
@@ -14,10 +14,11 @@ import {
   calculateItemAmount, 
   calculateCartSubtotal, 
   calculateCartDiscount, 
-  calculateCartTax, 
-  calculateGrandTotal,
   calculateItemDiscount,
-  calculateItemSubtotal
+  calculateItemSubtotal,
+  calculateCartTaxWithOverallDiscount,
+  calculateGrandTotalWithOverallDiscount,
+  resolveOverallDiscountAmount
 } from '../../utils/billingCalculations';
 import { createSale } from '../../services/salesApi';
 import { getDiscountForMedicine } from '../../services/discountApi';
@@ -30,6 +31,8 @@ const POS = () => {
   const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [amountReceived, setAmountReceived] = useState(0); // eslint-disable-line no-unused-vars
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [overallDiscountType, setOverallDiscountType] = useState('percentage');
+  const [overallDiscountValue, setOverallDiscountValue] = useState(0);
 
   // Prescription Integration
   const [prescriptionVerified, setPrescriptionVerified] = useState(false);
@@ -116,12 +119,16 @@ const POS = () => {
     setPaymentMethod('Cash');
     setAmountReceived(0);
     setPrescriptionVerified(false);
+    setOverallDiscountType('percentage');
+    setOverallDiscountValue(0);
   };
 
   const subtotal = calculateCartSubtotal(cartItems);
   const totalDiscount = calculateCartDiscount(cartItems);
-  const totalTax = calculateCartTax(cartItems);
-  const grandTotal = calculateGrandTotal(subtotal, totalDiscount, totalTax);
+  // Resolve overall discount (percentage or amount) to a ₹ value, already clamped
+  const effectiveOverallDiscount = resolveOverallDiscountAmount(cartItems, overallDiscountType, overallDiscountValue);
+  const totalTax = calculateCartTaxWithOverallDiscount(cartItems, effectiveOverallDiscount);
+  const grandTotal = calculateGrandTotalWithOverallDiscount(cartItems, effectiveOverallDiscount);
 
   const isGenerateDisabled = cartItems.length === 0 || isSubmitting || (cartRequiresPrescription && !prescriptionVerified);
 
@@ -157,6 +164,9 @@ const POS = () => {
         cashier: 'Admin', // In real app, from AuthContext
         subtotal,
         discount: totalDiscount,
+        overallDiscount: effectiveOverallDiscount,
+        overallDiscountType,
+        overallDiscountValue,
         tax: totalTax,
         grandTotal,
         paymentMethod,
@@ -248,9 +258,67 @@ const POS = () => {
               <span>₹{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-[13px] font-semibold text-red-500 dark:text-red-400">
-              <span>Discount</span>
+              <span>Item Discount</span>
               <span>-₹{totalDiscount.toFixed(2)}</span>
             </div>
+
+            {/* Overall Bill Discount — Type Selector + Value Input */}
+            <div className="flex justify-between items-center text-[13px] font-semibold text-orange-600 dark:text-orange-400 gap-2">
+              <span className="whitespace-nowrap">Overall Discount</span>
+              <div className="flex items-center gap-1.5">
+                <select
+                  id="overallDiscountType"
+                  value={overallDiscountType}
+                  disabled={cartItems.length === 0}
+                  onChange={(e) => {
+                    setOverallDiscountType(e.target.value);
+                    setOverallDiscountValue(0);
+                  }}
+                  className="h-[30px] px-1.5 text-[12px] font-bold border border-orange-300 dark:border-orange-700/50 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:focus:ring-orange-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <option value="percentage">%</option>
+                  <option value="amount">₹</option>
+                </select>
+                <input
+                  id="overallDiscountValue"
+                  type="number"
+                  min="0"
+                  max={overallDiscountType === 'percentage' ? 100 : undefined}
+                  step="0.01"
+                  value={overallDiscountValue || ''}
+                  disabled={cartItems.length === 0}
+                  placeholder="0"
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    if (raw === '' || raw === null) {
+                      setOverallDiscountValue(0);
+                      return;
+                    }
+                    const val = parseFloat(raw);
+                    if (isNaN(val) || val < 0) {
+                      setOverallDiscountValue(0);
+                    } else if (overallDiscountType === 'percentage' && val > 100) {
+                      setOverallDiscountValue(100);
+                    } else {
+                      setOverallDiscountValue(val);
+                    }
+                  }}
+                  className="w-20 text-right px-2 py-1 text-[13px] font-semibold border border-orange-300 dark:border-orange-700/50 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:focus:ring-orange-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed [&::-webkit-inner-spin-button]:appearance-none"
+                  style={{ MozAppearance: 'textfield' }}
+                />
+              </div>
+            </div>
+            {effectiveOverallDiscount > 0 && (
+              <div className="flex justify-between text-[12px] text-orange-500 dark:text-orange-400">
+                <span>
+                  {overallDiscountType === 'percentage' && overallDiscountValue > 0
+                    ? `${overallDiscountValue}%`
+                    : ''}
+                </span>
+                <span>-₹{effectiveOverallDiscount.toFixed(2)}</span>
+              </div>
+            )}
+
             <div className="flex justify-between text-[13px] font-semibold text-[#64748B] dark:text-slate-400">
               <span>GST</span>
               <span>+₹{totalTax.toFixed(2)}</span>

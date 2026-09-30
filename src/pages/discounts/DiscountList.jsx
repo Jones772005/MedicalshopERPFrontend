@@ -99,28 +99,38 @@ const DiscountList = () => {
       header: 'Actions',
       accessor: 'actions',
       cell: (row) => (
-        <div className="flex space-x-2">
-          <Button variant="ghost" size="sm" onClick={() => navigate(`/discounts/${row.id}`)} title="View Details">
+        <div className="flex space-x-1">
+          <Button variant="ghost" size="sm" onClick={() => navigate(`/discounts/${row.id}`)} title="View Details"
+            className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+          >
             <Eye className="w-4 h-4" />
           </Button>
           {hasPermission(user, 'discounts.manage') && (
-            <Button variant="ghost" size="sm" onClick={() => navigate(`/discounts/${row.id}/edit`)} title="Edit Discount">
+            <Button variant="ghost" size="sm" onClick={() => navigate(`/discounts/${row.id}/edit`)} title="Edit Discount"
+              className="p-1.5 text-[#2482ED] hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
               <Edit className="w-4 h-4" />
             </Button>
           )}
           {hasPermission(user, 'discounts.activate') && (
             row.status === 'active' ? (
-              <Button variant="ghost" size="sm" onClick={() => handleDeactivate(row.id)} title="Deactivate" className="text-orange-500">
+              <Button variant="ghost" size="sm" onClick={() => handleDeactivate(row.id)} title="Deactivate"
+                className="p-1.5 text-orange-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20"
+              >
                 <PowerOff className="w-4 h-4" />
               </Button>
             ) : (
-              <Button variant="ghost" size="sm" onClick={() => handleActivate(row.id)} title="Activate" className="text-green-500">
+              <Button variant="ghost" size="sm" onClick={() => handleActivate(row.id)} title="Activate"
+                className="p-1.5 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
+              >
                 <Power className="w-4 h-4" />
               </Button>
             )
           )}
           {hasPermission(user, 'discounts.manage') && (
-            <Button variant="ghost" size="sm" onClick={() => handleDelete(row.id)} title="Archive Discount" className="text-red-500">
+            <Button variant="ghost" size="sm" onClick={() => handleDelete(row.id)} title="Archive Discount"
+              className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
               <Trash2 className="w-4 h-4" />
             </Button>
           )}

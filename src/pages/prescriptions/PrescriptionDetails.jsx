@@ -145,7 +145,7 @@ const PrescriptionDetails = () => {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 disabled={!canVerify || prescription.verificationStatus === 'Verified'}
-                placeholder="Enter notes regarding dosage, alternatives, or verification steps..."
+                placeholder="Enter notes regarding dosage or verification steps..."
               />
             </div>
 
