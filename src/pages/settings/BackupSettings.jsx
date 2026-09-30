@@ -1,12 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
-import { Save, Database, Download, UploadCloud, RefreshCw } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Database, Download, UploadCloud, RefreshCw } from 'lucide-react';
 import Button from '../../components/common/Button';
 import { useSettings } from '../../context/SettingsContext';
 import { createBackup, restoreBackup } from '../../services/backupApi';
+import SettingsHeader from '../../components/settings/SettingsHeader';
+import SettingsSection from '../../components/settings/SettingsSection';
 
 const BackupSettings = () => {
   const { settings, updateCategorySettings } = useSettings();
-  const [formData, setFormData] = useState(settings.backup);
+  const [formData, setFormData] = useState(settings.backup || {});
+  const [prevSettings, setPrevSettings] = useState(settings.backup);
   const [saving, setSaving] = useState(false);
   const [backingUp, setBackingUp] = useState(false);
   const [restoring, setRestoring] = useState(false);
@@ -16,10 +19,12 @@ const BackupSettings = () => {
     size: settings.backup?.backupSize
   });
 
-  useEffect(() => {
-    // eslint-disable-next-line react/set-state-in-effect
-    setFormData(settings.backup);
-  }, [settings.backup]);
+  if (prevSettings !== settings.backup) {
+    setPrevSettings(settings.backup);
+    setFormData(settings.backup || {});
+  }
+
+  const hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(settings.backup);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -92,116 +97,139 @@ const BackupSettings = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between border-b border-gray-200 dark:border-slate-700 pb-4 mb-6">
-        <div>
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-            <Database className="w-5 h-5 mr-2 text-primary-500" /> Database Backup & Restore
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Manage local and cloud backups of your ERP data.</p>
-        </div>
-        <Button onClick={handleSave} disabled={saving}>
-          <Save className="w-4 h-4 mr-2" /> {saving ? 'Saving...' : 'Save Settings'}
-        </Button>
-      </div>
+    <div>
+      <SettingsHeader
+        icon={Database}
+        title="Database Backup & Restore"
+        description="Schedule automated data archives, download immediate snapshots, or restore system state."
+        onSave={handleSave}
+        saving={saving}
+        hasUnsavedChanges={hasUnsavedChanges}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+        {/* Left Column: Automated Backups */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-slate-800 p-5 border border-gray-200 dark:border-slate-700 rounded-lg">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4">Automated Backups</h3>
-            
-            <label className="flex items-center mb-4">
-              <input type="checkbox" name="autoBackup" checked={formData.autoBackup} onChange={handleChange} className="form-checkbox h-4 w-4 text-primary-600 rounded" />
-              <span className="ml-3 text-sm text-gray-900 dark:text-white font-medium">Enable Automated Backups</span>
-            </label>
+          <SettingsSection title="Automated Backup Schedule">
+            <div className="bg-[#F8FAFC] dark:bg-slate-800/40 p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/60 space-y-4">
+              <label className="flex items-center justify-between p-2.5 rounded-lg border border-[#DDE6F0] dark:border-slate-700/60 bg-white dark:bg-[#102A43] cursor-pointer">
+                <div>
+                  <span className="block text-xs sm:text-sm font-bold text-[#162033] dark:text-white">
+                    Enable Automated Periodic Backups
+                  </span>
+                  <span className="block text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
+                    Automatically generates encrypted database archives in background
+                  </span>
+                </div>
+                <input 
+                  type="checkbox" 
+                  name="autoBackup" 
+                  checked={formData.autoBackup || false} 
+                  onChange={handleChange} 
+                  className="h-4 w-4 text-[#2482ED] rounded border-[#DDE6F0] dark:border-slate-600 focus:ring-[#2482ED] cursor-pointer" 
+                />
+              </label>
 
-            {formData.autoBackup && (
-              <div className="space-y-4 pl-7 border-l-2 border-gray-100 dark:border-slate-700 ml-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Backup Frequency</label>
-                  <select 
-                    name="frequency" 
-                    value={formData.frequency} 
-                    onChange={handleChange}
-                    className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100"
-                  >
-                    <option value="Hourly">Hourly</option>
-                    <option value="Daily">Daily (Midnight)</option>
-                    <option value="Weekly">Weekly (Sunday)</option>
-                    <option value="Monthly">Monthly (1st)</option>
-                  </select>
+              {formData.autoBackup && (
+                <div className="space-y-4 pt-1">
+                  <div>
+                    <label htmlFor="backupFreq" className="block text-xs font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-300 mb-1.5">
+                      Backup Frequency
+                    </label>
+                    <select 
+                      id="backupFreq"
+                      name="frequency" 
+                      value={formData.frequency || 'Daily'} 
+                      onChange={handleChange} 
+                      className="block w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-2 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100 transition-colors"
+                    >
+                      <option value="Hourly">Hourly (High Frequency)</option>
+                      <option value="Daily">Daily (Midnight Batch - Recommended)</option>
+                      <option value="Weekly">Weekly (Every Sunday)</option>
+                      <option value="Monthly">Monthly (1st of Month)</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="retentionDays" className="block text-xs font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-300 mb-1.5">
+                      Retention Window
+                    </label>
+                    <select 
+                      id="retentionDays"
+                      name="retentionDays" 
+                      value={formData.retentionDays || 30} 
+                      onChange={handleChange} 
+                      className="block w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-2 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100 transition-colors"
+                    >
+                      <option value="7">Keep archives for 7 days</option>
+                      <option value="30">Keep archives for 30 days</option>
+                      <option value="90">Keep archives for 90 days</option>
+                      <option value="365">Keep archives for 1 full year</option>
+                    </select>
+                  </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Retention Period</label>
-                  <select 
-                    name="retentionDays" 
-                    value={formData.retentionDays} 
-                    onChange={handleChange}
-                    className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100"
-                  >
-                    <option value="7">Keep for 7 days</option>
-                    <option value="30">Keep for 30 days</option>
-                    <option value="90">Keep for 90 days</option>
-                    <option value="365">Keep for 1 year</option>
-                  </select>
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </SettingsSection>
         </div>
 
+        {/* Right Column: Manual Snapshot & Restore */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-800 border border-blue-100 dark:border-slate-700 p-5 rounded-lg text-center shadow-sm">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Manual Backup</h3>
-            <p className="text-sm text-gray-600 dark:text-slate-400 mb-6">
-              Create an immediate snapshot of your database (Medicines, Inventory, Sales, Users).
-            </p>
-            
-            <Button onClick={handleManualBackup} disabled={backingUp} className="w-full justify-center py-3 text-base shadow-md">
-              {backingUp ? <RefreshCw className="w-5 h-5 mr-2 animate-spin" /> : <Download className="w-5 h-5 mr-2" />}
-              {backingUp ? 'Generating Backup...' : 'Generate Now'}
-            </Button>
+          <SettingsSection title="Manual Snapshot Download">
+            <div className="bg-[#F8FAFC] dark:bg-slate-800/40 p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/60 space-y-3">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
+                Generate an immediate full export containing all medicines, batches, customers, sales invoices, and security configurations.
+              </p>
 
-            {lastBackupDetails.date && (
-              <div className="mt-6 pt-4 border-t border-blue-100 dark:border-slate-700 text-sm text-left">
-                <div className="flex justify-between mb-1">
-                  <span className="text-gray-500 dark:text-slate-400">Last Backup:</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{new Date(lastBackupDetails.date).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-slate-400">Size:</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{lastBackupDetails.size}</span>
-                </div>
-              </div>
-            )}
-          </div>
+              <Button 
+                type="button"
+                onClick={handleManualBackup} 
+                disabled={backingUp} 
+                className="w-full justify-center h-10 text-xs font-semibold shadow-xs"
+              >
+                {backingUp ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+                {backingUp ? 'Generating Archive...' : 'Download Immediate Backup'}
+              </Button>
 
-          <div className="bg-white dark:bg-slate-800 p-5 border border-gray-200 dark:border-slate-700 rounded-lg">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center">
-              <UploadCloud className="w-4 h-4 mr-2 text-gray-500" /> Restore from Backup
-            </h3>
-            <p className="text-xs text-gray-500 dark:text-slate-400 mb-4">
-              Upload a previously generated .sql or .json backup file to restore your system state.
-            </p>
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-slate-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-slate-600">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  {restoring ? (
-                    <RefreshCw className="w-8 h-8 mb-3 text-gray-400 animate-spin" />
-                  ) : (
-                    <UploadCloud className="w-8 h-8 mb-3 text-gray-400" />
-                  )}
-                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">.json backup files only</p>
+              {lastBackupDetails.date && (
+                <div className="pt-2 text-[11px] text-[#64748B] dark:text-slate-400 border-t border-[#DDE6F0]/70 dark:border-slate-700/50 flex justify-between">
+                  <span>Last backup: <strong className="text-[#162033] dark:text-slate-200">{new Date(lastBackupDetails.date).toLocaleDateString()}</strong></span>
+                  <span>Size: <strong className="text-[#162033] dark:text-slate-200">{lastBackupDetails.size}</strong></span>
                 </div>
-                <input type="file" accept=".json" className="hidden" ref={fileInputRef} onChange={handleFileChange} disabled={restoring} />
+              )}
+            </div>
+          </SettingsSection>
+
+          <SettingsSection title="Restore System State">
+            <div className="bg-[#F8FAFC] dark:bg-slate-800/40 p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/60 space-y-3">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
+                Upload a verified ERP <code className="font-mono bg-white dark:bg-slate-800 px-1 py-0.5 rounded border border-[#DDE6F0] dark:border-slate-700">.json</code> snapshot to rollback or restore data.
+              </p>
+
+              <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-[#DDE6F0] dark:border-slate-700 rounded-xl cursor-pointer bg-white dark:bg-[#102A43] hover:bg-[#F5F8FC] dark:hover:bg-slate-800/50 transition-colors p-3 text-center">
+                {restoring ? (
+                  <RefreshCw className="w-6 h-6 text-[#2482ED] animate-spin mb-1" />
+                ) : (
+                  <UploadCloud className="w-6 h-6 text-[#2482ED] mb-1" />
+                )}
+                <span className="text-xs font-semibold text-[#162033] dark:text-white">
+                  {restoring ? 'Restoring Database...' : 'Click to select or drop backup file'}
+                </span>
+                <span className="text-[10px] text-[#94A3B8] dark:text-slate-500 mt-0.5">
+                  Valid .json format only
+                </span>
+                <input 
+                  ref={fileInputRef}
+                  type="file" 
+                  accept=".json" 
+                  className="hidden" 
+                  onChange={handleFileChange} 
+                  disabled={restoring} 
+                />
               </label>
             </div>
-          </div>
+          </SettingsSection>
         </div>
-
       </div>
     </div>
   );

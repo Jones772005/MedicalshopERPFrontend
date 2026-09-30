@@ -1,19 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Save, FileText } from 'lucide-react';
-import Button from '../../components/common/Button';
+import { useState } from 'react';
+import { FileText, Info } from 'lucide-react';
 import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
+import SettingsHeader from '../../components/settings/SettingsHeader';
+import SettingsSection from '../../components/settings/SettingsSection';
 
 const InvoiceSettings = () => {
   const { settings, updateCategorySettings } = useSettings();
-  const [formData, setFormData] = useState(settings.invoice);
+  const [formData, setFormData] = useState(settings.invoice || {});
+  const [prevSettings, setPrevSettings] = useState(settings.invoice);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line react/set-state-in-effect
-    setFormData(settings.invoice);
-  }, [settings.invoice]);
+  if (prevSettings !== settings.invoice) {
+    setPrevSettings(settings.invoice);
+    setFormData(settings.invoice || {});
+  }
+
+  const hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(settings.invoice);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -30,86 +33,115 @@ const InvoiceSettings = () => {
     alert('Invoice settings saved successfully!');
   };
 
+  const displayToggles = [
+    { id: 'showLogo', label: 'Show Pharmacy Logo on Header' },
+    { id: 'showCustomerInfo', label: 'Show Customer Name & Phone Number' },
+    { id: 'showHsnSac', label: 'Show HSN / SAC Codes in Item Table' },
+    { id: 'showGstBreakdown', label: 'Show Detailed GST Tax Breakdown' },
+    { id: 'showTerms', label: 'Show Terms & Conditions / Footer Note' },
+    { id: 'showQrCode', label: 'Show Payment & Feedback QR Code' }
+  ];
+
   return (
-    <Card className="m-6">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-[#DDE6F0] dark:border-[#263B50] pb-4">
-        <div>
-          <CardTitle className="flex items-center text-[#162033] dark:text-white">
-            <FileText className="w-5 h-5 mr-2 text-[#2482ED]" /> Invoice Settings
-          </CardTitle>
-          <p className="text-sm text-[#64748B] dark:text-slate-400 mt-1">Configure invoice numbering and display preferences.</p>
-        </div>
-        <Button onClick={handleSave} disabled={saving}>
-          <Save className="w-4 h-4 mr-2" /> {saving ? 'Saving...' : 'Save Settings'}
-        </Button>
-      </CardHeader>
+    <div>
+      <SettingsHeader
+        icon={FileText}
+        title="Invoice Settings"
+        description="Configure invoice numbering system, layout, and display preferences."
+        onSave={handleSave}
+        saving={saving}
+        hasUnsavedChanges={hasUnsavedChanges}
+      />
 
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column: Numbering & Terms */}
         <div className="space-y-6">
-          <h3 className="text-sm font-bold text-[#162033] dark:text-white">Numbering System</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <Input label="Invoice Prefix" name="prefix" value={formData.prefix} onChange={handleChange} required />
-            <Input label="Starting Number" type="number" name="startingNumber" value={formData.startingNumber} onChange={handleChange} required />
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-[#64748B] dark:text-slate-300 mb-1">Number Format</label>
-            <select name="format" value={formData.format} onChange={handleChange} className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-1 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100">
-              <option value="PREFIX-NUMBER">PREFIX-NUMBER (e.g. INV-1001)</option>
-              <option value="PREFIX-YEAR-NUMBER">PREFIX-YEAR-NUMBER (e.g. INV-2024-1001)</option>
-              <option value="NUMBER">NUMBER (e.g. 1001)</option>
-            </select>
-          </div>
-          
-          <div className="pt-4 border-t border-[#DDE6F0] dark:border-[#263B50]">
-            <label className="block text-sm font-bold text-[#64748B] dark:text-slate-300 mb-2">Footer / Terms & Conditions</label>
-            <textarea 
-              name="footerText" 
-              rows={4} 
-              value={formData.footerText} 
-              onChange={handleChange}
-              className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-1 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100"
-            ></textarea>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <h3 className="text-sm font-bold text-[#162033] dark:text-white">Display Preferences</h3>
-          
-          <div className="space-y-3">
-            {[
-              { id: 'showLogo', label: 'Show Pharmacy Logo' },
-              { id: 'showCustomerInfo', label: 'Show Customer Information' },
-              { id: 'showHsnSac', label: 'Show HSN/SAC Codes' },
-              { id: 'showGstBreakdown', label: 'Show Detailed GST Breakdown' },
-              { id: 'showTerms', label: 'Show Terms & Conditions' },
-              { id: 'showQrCode', label: 'Show Review/Payment QR Code' }
-            ].map((toggle) => (
-              <label key={toggle.id} className="flex items-center">
-                <input
-                  type="checkbox"
-                  name={toggle.id}
-                  checked={formData[toggle.id]}
-                  onChange={handleChange}
-                  className="form-checkbox h-4 w-4 text-[#2482ED] border-[#DDE6F0] rounded focus:ring-[#2482ED] dark:border-[#263B50] dark:bg-[#0B1A2A]"
-                />
-                <span className="ml-3 text-sm text-[#162033] dark:text-gray-300">{toggle.label}</span>
+          <SettingsSection title="Numbering System">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input 
+                label="Invoice Prefix" 
+                name="prefix" 
+                value={formData.prefix || ''} 
+                onChange={handleChange} 
+                required 
+              />
+              <Input 
+                label="Starting Number" 
+                type="number" 
+                name="startingNumber" 
+                value={formData.startingNumber || ''} 
+                onChange={handleChange} 
+                required 
+              />
+            </div>
+            <div>
+              <label htmlFor="formatSelect" className="block text-sm font-medium text-[#162033] dark:text-[#D9E6F2] mb-1">
+                Number Format
               </label>
-            ))}
-          </div>
+              <select 
+                id="formatSelect"
+                name="format" 
+                value={formData.format || 'PREFIX-NUMBER'} 
+                onChange={handleChange} 
+                className="block w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-2 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100 transition-colors"
+              >
+                <option value="PREFIX-NUMBER">PREFIX-NUMBER (e.g. INV-1001)</option>
+                <option value="PREFIX-YEAR-NUMBER">PREFIX-YEAR-NUMBER (e.g. INV-2026-1001)</option>
+                <option value="NUMBER">NUMBER ONLY (e.g. 1001)</option>
+              </select>
+            </div>
+          </SettingsSection>
 
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md border border-blue-100 dark:border-blue-800 mt-6">
-            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-400 mb-1">Preview Notice</h4>
-            <p className="text-xs text-blue-700 dark:text-blue-300">
-              Changes to invoice settings will immediately affect all future invoices printed from the POS system. Existing invoices in history will retain their original formatting if already printed.
-            </p>
-          </div>
+          <SettingsSection title="Footer / Terms & Conditions">
+            <div>
+              <textarea 
+                name="footerText" 
+                rows={4} 
+                value={formData.footerText || ''} 
+                onChange={handleChange}
+                placeholder="Enter standard disclaimer or thank you note..."
+                className="block w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2.5 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-2 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100 transition-colors"
+              ></textarea>
+            </div>
+          </SettingsSection>
         </div>
 
+        {/* Right Column: Display Preferences & Preview Notice */}
+        <div className="space-y-6">
+          <SettingsSection title="Display Preferences">
+            <div className="space-y-2.5 bg-[#F8FAFC] dark:bg-slate-800/40 p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/60">
+              {displayToggles.map((toggle) => (
+                <label 
+                  key={toggle.id} 
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  <span className="text-xs sm:text-sm font-medium text-[#162033] dark:text-slate-200">
+                    {toggle.label}
+                  </span>
+                  <input
+                    type="checkbox"
+                    name={toggle.id}
+                    checked={formData[toggle.id] || false}
+                    onChange={handleChange}
+                    className="h-4 w-4 rounded text-[#2482ED] border-[#DDE6F0] dark:border-slate-600 focus:ring-[#2482ED] cursor-pointer"
+                  />
+                </label>
+              ))}
+            </div>
+          </SettingsSection>
+
+          <div className="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 flex items-start space-x-3">
+            <Info className="w-5 h-5 text-[#2482ED] flex-shrink-0 mt-0.5" />
+            <div className="text-xs text-blue-900 dark:text-blue-300 space-y-1">
+              <span className="font-bold block">POS Integration Note</span>
+              <p className="text-blue-800/80 dark:text-blue-400">
+                Changes to invoice settings will immediately reflect on all future bills generated and printed from the POS billing counter.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 };
 

@@ -33,8 +33,24 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
   }, []);
 
   useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
+    let ignore = false;
+    const load = async () => {
+      try {
+        const response = await getCustomers();
+        if (!ignore) {
+          setCustomers(response.data);
+        }
+      } catch (err) {
+        if (!ignore) {
+          console.error('Failed to load customers', err);
+        }
+      }
+    };
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

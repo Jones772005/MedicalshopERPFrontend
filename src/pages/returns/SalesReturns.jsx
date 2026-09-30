@@ -71,7 +71,7 @@ const SalesReturns = () => {
         returnQty: 0,
         restockable: true
       })));
-    } catch (err) {
+    } catch {
       setFormError(`Invoice not found: "${id}". Enter a valid Invoice Number or numeric ID.`);
     } finally {
       setSearching(false);

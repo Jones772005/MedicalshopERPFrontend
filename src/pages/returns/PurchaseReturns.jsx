@@ -124,7 +124,7 @@ const PurchaseReturns = () => {
           returnQty: 0
         };
       }));
-    } catch (err) {
+    } catch {
       setFormError(`Purchase not found: "${id}". Enter a valid Purchase ID.`);
     } finally {
       setSearching(false);

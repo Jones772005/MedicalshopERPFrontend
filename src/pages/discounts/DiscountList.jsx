@@ -39,7 +39,6 @@ const DiscountList = () => {
   const { currentUser: user } = useAuth();
 
   const fetchDiscounts = async () => {
-    // eslint-disable-next-line react/set-state-in-effect
     setLoading(true);
     try {
       const res = await getDiscounts();
@@ -52,7 +51,27 @@ const DiscountList = () => {
   };
 
   useEffect(() => {
-    fetchDiscounts();
+    let ignore = false;
+    const load = async () => {
+      try {
+        const res = await getDiscounts();
+        if (!ignore) {
+          setDiscounts(res.data);
+        }
+      } catch (err) {
+        if (!ignore) {
+          console.error(err);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+    load();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const handleActivate = async (id) => {

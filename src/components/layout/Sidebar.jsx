@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import {
   LayoutDashboard, ShoppingCart, Package, Users, Building,
   FileText, Activity, CreditCard, BarChart2, Bell, Shield, Settings,
-  ChevronDown, ChevronRight, Pill, X
+  ChevronDown, ChevronRight, Pill, X, Tag
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '../../utils/cn';
@@ -60,8 +60,8 @@ const NavItem = ({ to, icon: Icon, label, exact = false }) => {
               ? 'justify-center h-11 mx-[7px] my-[3px]'
               : 'px-[14px] py-[10px] gap-[12px] mx-[10px] my-[2px]',
             isActive
-              ? 'text-white shadow-sm'
-              : 'text-[#C8DEFF] hover:bg-white/[0.09] hover:text-white'
+              ? 'text-white shadow-sm font-semibold'
+              : 'text-white hover:bg-white/[0.09] hover:text-white font-medium'
           )
         }
         style={({ isActive }) =>
@@ -71,13 +71,13 @@ const NavItem = ({ to, icon: Icon, label, exact = false }) => {
         {Icon && (
           <Icon
             className={cn(
-              'flex-shrink-0 transition-colors duration-150',
+              'flex-shrink-0 transition-colors duration-150 text-white',
               isCollapsed ? 'h-5 w-5' : 'h-[18px] w-[18px]'
             )}
           />
         )}
         {!isCollapsed && (
-          <span className="text-[14px] font-semibold truncate flex-1 leading-none">{label}</span>
+          <span className="text-[15px] font-semibold truncate flex-1 leading-none">{label}</span>
         )}
       </NavLink>
 
@@ -102,11 +102,15 @@ const NavGroup = ({ icon: Icon, label, paths = [], children }) => {
 
   const isAnyChildActive = paths.some(p => location.pathname.startsWith(p));
   const [isOpen, setIsOpen] = useState(() => isAnyChildActive);
+  const [prevActive, setPrevActive] = useState(isAnyChildActive);
 
   // Auto-expand when a child route becomes active
-  useEffect(() => {
-    if (isAnyChildActive) setIsOpen(true);
-  }, [isAnyChildActive]);
+  if (isAnyChildActive !== prevActive) {
+    setPrevActive(isAnyChildActive);
+    if (isAnyChildActive) {
+      setIsOpen(true);
+    }
+  }
 
   // ── COLLAPSED MODE ─────────────────────────────────────────
   if (isCollapsed) {
@@ -121,11 +125,11 @@ const NavGroup = ({ icon: Icon, label, paths = [], children }) => {
             'w-[calc(100%-14px)]',
             isAnyChildActive
               ? 'text-white shadow-sm'
-              : 'text-[#C8DEFF] hover:bg-white/[0.09] hover:text-white'
+              : 'text-white hover:bg-white/[0.09]'
           )}
           style={isAnyChildActive ? { background: 'rgba(72, 142, 245, 0.75)' } : undefined}
         >
-          <Icon className="h-5 w-5" />
+          <Icon className="h-5 w-5 text-white" />
         </button>
       </div>
     );
@@ -137,30 +141,27 @@ const NavGroup = ({ icon: Icon, label, paths = [], children }) => {
       <button
         onClick={() => setIsOpen(o => !o)}
         className={cn(
-          'w-full flex items-center justify-between px-[14px] py-[10px] text-[14px] font-semibold rounded-[12px] transition-all duration-150 cursor-pointer leading-none',
+          'w-full flex items-center justify-between px-[14px] py-[10px] text-[15px] font-semibold rounded-[12px] transition-all duration-150 cursor-pointer leading-none',
           isAnyChildActive
             ? 'text-white'
-            : 'text-[#C8DEFF] hover:bg-white/[0.09] hover:text-white'
+            : 'text-white hover:bg-white/[0.09] hover:text-white'
         )}
         style={isAnyChildActive ? { background: 'rgba(72, 142, 245, 0.75)' } : undefined}
       >
         <div className="flex items-center gap-[12px]">
           <Icon
-            className={cn(
-              'h-[18px] w-[18px] flex-shrink-0',
-              isAnyChildActive ? 'text-white' : 'text-[#A8CAFF]'
-            )}
+            className="h-[18px] w-[18px] flex-shrink-0 text-white"
           />
           <span>{label}</span>
         </div>
         {isOpen
-          ? <ChevronDown className="h-3.5 w-3.5 opacity-60 flex-shrink-0" />
-          : <ChevronRight className="h-3.5 w-3.5 opacity-60 flex-shrink-0" />
+          ? <ChevronDown className="h-3.5 w-3.5 text-white/70 flex-shrink-0" />
+          : <ChevronRight className="h-3.5 w-3.5 text-white/70 flex-shrink-0" />
         }
       </button>
 
       {isOpen && (
-        <div className="mt-0.5 pl-2 pb-1 space-y-0.5">
+        <div className="mt-0.5 space-y-0.5">
           {children}
         </div>
       )}
@@ -180,14 +181,13 @@ const SubItem = ({ to, label, exact = false }) => {
       onClick={closeMobile}
       className={({ isActive }) =>
         cn(
-          'flex items-center gap-2.5 pl-[48px] pr-3 py-[8px] text-[13px] rounded-[8px] transition-all duration-150',
+          'flex items-center h-[38px] pl-[50px] pr-3 text-[14px] rounded-[8px] transition-all duration-150',
           isActive
-            ? 'bg-white/15 text-white font-semibold'
-            : 'text-[#A8CAFF] hover:bg-white/[0.09] hover:text-white'
+            ? 'bg-white/15 text-white font-semibold shadow-xs'
+            : 'text-white/85 hover:bg-white/[0.09] hover:text-white font-medium'
         )
       }
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60 flex-shrink-0" />
       {label}
     </NavLink>
   );
@@ -201,10 +201,7 @@ const SectionLabel = ({ label }) => {
   if (isCollapsed) return <div className="h-3" />;
   return (
     <div className="px-[14px] pt-[22px] pb-[8px]">
-      <p
-        className="text-[10.5px] uppercase tracking-[0.14em] font-bold select-none"
-        style={{ color: 'var(--sidebar-section-label, #8AB4F8)' }}
-      >
+      <p className="text-[10.5px] uppercase tracking-[0.14em] font-medium select-none text-white/65">
         {label}
       </p>
     </div>
@@ -349,17 +346,22 @@ const Sidebar = () => {
           {/* ── SALES ─────────────────────────────────────── */}
           <PermissionGuard permissions={['pos.create', 'discounts.view']}>
             <SectionLabel label="Sales" />
-            <NavGroup
-              icon={ShoppingCart}
-              label="Sales & Billing"
-              paths={['/billing', '/sales/returns', '/discounts']}
-            >
-              <SubItem to="/billing" label="New Bill (POS)" exact />
-              <SubItem to="/billing/history" label="Sales History" />
-              <SubItem to="/sales/returns" label="Sales Returns" />
-              <SubItem to="/discounts" label="Discount Management" />
-              <SubItem to="/sales/medicine-requests" label="Medicine Requests" />
-            </NavGroup>
+            <PermissionGuard permission="pos.create">
+              <NavGroup
+                icon={ShoppingCart}
+                label="Sales & Billing"
+                paths={['/billing', '/sales/returns', '/sales/medicine-requests']}
+              >
+                <SubItem to="/billing" label="New Bill (POS)" exact />
+                <SubItem to="/billing/history" label="Sales History" />
+                <SubItem to="/sales/returns" label="Sales Returns" />
+                <SubItem to="/sales/medicine-requests" label="Medicine Requests" />
+              </NavGroup>
+            </PermissionGuard>
+
+            <PermissionGuard permission="discounts.view">
+              <NavItem to="/discounts" icon={Tag} label="Discount Management" />
+            </PermissionGuard>
           </PermissionGuard>
 
           {/* ── PROCUREMENT ─────────────────────────────────── */}

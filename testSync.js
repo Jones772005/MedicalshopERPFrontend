@@ -1,4 +1,3 @@
-﻿import localDb from './src/services/localDb.js';
 import { KEYS } from './src/data/storageKeys.js';
 import { createMedicine } from './src/services/medicineApi.js';
 import { getInventory } from './src/services/inventoryApi.js';

@@ -12,7 +12,6 @@ import { customersData } from './customers';
 import { salesData } from './sales';
 import { paymentsData } from './payments';
 import { prescriptionsData } from './prescriptions';
-import { notificationsData } from './notifications';
 import { campaignsData } from './campaigns';
 import { mockSettings as settingsData } from './settings';
 import { usersData } from './users';

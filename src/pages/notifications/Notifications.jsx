@@ -35,7 +35,25 @@ const Notifications = () => {
   };
 
   useEffect(() => {
-    fetchNotifications();
+    let ignore = false;
+    const load = async () => {
+      try {
+        const res = await getNotifications();
+        if (!ignore) {
+          setNotifications(res.data);
+          setLoading(false);
+        }
+      } catch (err) {
+        if (!ignore) {
+          console.error('Failed to load notifications', err);
+          setLoading(false);
+        }
+      }
+    };
+    load();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   useLocalDbListener(KEYS.NOTIFICATIONS, fetchNotifications);

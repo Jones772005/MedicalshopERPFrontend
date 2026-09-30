@@ -68,7 +68,31 @@ const MedicineRequests = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    let ignore = false;
+    const load = async () => {
+      try {
+        const [reqRes, custRes] = await Promise.all([
+          getMedicineRequests(),
+          getCustomers().catch(() => ({ data: [] })) 
+        ]);
+        if (!ignore) {
+          setRequests(reqRes.data || []);
+          setCustomers(custRes.data || []);
+        }
+      } catch (error) {
+        if (!ignore) {
+          console.error('Failed to fetch data:', error);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+    load();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const handleOpenForm = (req = null) => {

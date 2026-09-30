@@ -1,18 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Save, QrCode } from 'lucide-react';
-import Button from '../../components/common/Button';
+import { useState } from 'react';
+import { QrCode } from 'lucide-react';
 import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
+import SettingsHeader from '../../components/settings/SettingsHeader';
+import SettingsSection from '../../components/settings/SettingsSection';
 
 const QRSettings = () => {
   const { settings, updateCategorySettings } = useSettings();
-  const [formData, setFormData] = useState(settings.qr);
+  const [formData, setFormData] = useState(settings.qr || {});
+  const [prevSettings, setPrevSettings] = useState(settings.qr);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line react/set-state-in-effect
-    setFormData(settings.qr);
-  }, [settings.qr]);
+  if (prevSettings !== settings.qr) {
+    setPrevSettings(settings.qr);
+    setFormData(settings.qr || {});
+  }
+
+  const hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(settings.qr);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -30,93 +34,167 @@ const QRSettings = () => {
   };
 
   return (
-    <Card className="m-6">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-[#DDE6F0] dark:border-[#263B50] pb-4">
-        <div>
-          <CardTitle className="flex items-center text-[#162033] dark:text-white">
-            <QrCode className="w-5 h-5 mr-2 text-[#2482ED]" /> Dynamic QR Code Setup
-          </CardTitle>
-          <p className="text-sm text-[#64748B] dark:text-slate-400 mt-1">Configure UPI payments, review links, and invoice QR generation.</p>
-        </div>
-        <Button onClick={handleSave} disabled={saving}>
-          <Save className="w-4 h-4 mr-2" /> {saving ? 'Saving...' : 'Save Settings'}
-        </Button>
-      </CardHeader>
+    <div>
+      <SettingsHeader
+        icon={QrCode}
+        title="Dynamic QR Code Setup"
+        description="Configure UPI payments, digital invoice access, customer reviews, and pole display QR codes."
+        onSave={handleSave}
+        saving={saving}
+        hasUnsavedChanges={hasUnsavedChanges}
+      />
 
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+        {/* Left: Invoice QR Codes */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-[#132B42] p-5 border border-[#DDE6F0] dark:border-[#263B50] rounded-xl">
-            <h3 className="text-sm font-bold text-[#162033] dark:text-white mb-4">Invoice QR Settings</h3>
-            
-            <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableInvoiceQr" checked={formData.enableInvoiceQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
-              <span className="ml-3 text-sm text-[#162033] dark:text-white">Enable Digital Invoice QR</span>
-            </label>
+          <SettingsSection title="Invoice & Payment QR Codes">
+            <div className="bg-[#F8FAFC] dark:bg-slate-800/40 p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/60 space-y-4">
+              <label className="flex items-start p-2.5 rounded-lg border border-[#DDE6F0] dark:border-slate-700/60 bg-white dark:bg-[#102A43] cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  name="enableInvoiceQr" 
+                  checked={formData.enableInvoiceQr || false} 
+                  onChange={handleChange} 
+                  className="h-4 w-4 mt-0.5 text-[#2482ED] rounded border-[#DDE6F0] dark:border-slate-600 focus:ring-[#2482ED] cursor-pointer" 
+                />
+                <div className="ml-3">
+                  <span className="block text-xs font-bold text-[#162033] dark:text-white">
+                    Enable Digital Invoice QR
+                  </span>
+                  <span className="block text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
+                    Customers can scan invoice to view or download a paperless PDF copy
+                  </span>
+                </div>
+              </label>
 
-            <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableUpiQr" checked={formData.enableUpiQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
-              <span className="ml-3 text-sm text-[#162033] dark:text-white">Embed UPI Payment QR on Invoice</span>
-            </label>
+              <div className="p-3 rounded-lg border border-[#DDE6F0] dark:border-slate-700/60 bg-white dark:bg-[#102A43] space-y-3">
+                <label className="flex items-start cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    name="enableUpiQr" 
+                    checked={formData.enableUpiQr || false} 
+                    onChange={handleChange} 
+                    className="h-4 w-4 mt-0.5 text-[#2482ED] rounded border-[#DDE6F0] dark:border-slate-600 focus:ring-[#2482ED] cursor-pointer" 
+                  />
+                  <div className="ml-3">
+                    <span className="block text-xs font-bold text-[#162033] dark:text-white">
+                      Embed UPI Payment QR on Invoices
+                    </span>
+                    <span className="block text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
+                      Encodes merchant VPA and exact payable amount dynamically
+                    </span>
+                  </div>
+                </label>
 
-            {formData.enableUpiQr && (
-              <div className="ml-7 mb-4">
-                <Input label="Merchant UPI ID" name="upiId" value={formData.upiId} onChange={handleChange} placeholder="e.g. yourbusiness@bank" />
+                {formData.enableUpiQr && (
+                  <div className="pt-2 pl-7">
+                    <Input 
+                      label="Merchant UPI ID (VPA)" 
+                      name="upiId" 
+                      value={formData.upiId || ''} 
+                      onChange={handleChange} 
+                      placeholder="e.g. pharmacy@okhdfcbank" 
+                      required 
+                    />
+                  </div>
+                )}
               </div>
-            )}
 
-            <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableReviewQr" checked={formData.enableReviewQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
-              <span className="ml-3 text-sm text-[#162033] dark:text-white">Include Google Review Link QR</span>
-            </label>
+              <div className="p-3 rounded-lg border border-[#DDE6F0] dark:border-slate-700/60 bg-white dark:bg-[#102A43] space-y-3">
+                <label className="flex items-start cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    name="enableReviewQr" 
+                    checked={formData.enableReviewQr || false} 
+                    onChange={handleChange} 
+                    className="h-4 w-4 mt-0.5 text-[#2482ED] rounded border-[#DDE6F0] dark:border-slate-600 focus:ring-[#2482ED] cursor-pointer" 
+                  />
+                  <div className="ml-3">
+                    <span className="block text-xs font-bold text-[#162033] dark:text-white">
+                      Include Google Review Link QR
+                    </span>
+                    <span className="block text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
+                      Invites customers to leave feedback for your pharmacy
+                    </span>
+                  </div>
+                </label>
 
-            {formData.enableReviewQr && (
-              <div className="ml-7">
-                <Input label="Review Link URL" name="reviewUrl" value={formData.reviewUrl} onChange={handleChange} placeholder="https://g.page/r/..." />
+                {formData.enableReviewQr && (
+                  <div className="pt-2 pl-7">
+                    <Input 
+                      label="Google Business / Review URL" 
+                      name="reviewUrl" 
+                      value={formData.reviewUrl || ''} 
+                      onChange={handleChange} 
+                      placeholder="https://g.page/r/..." 
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-white dark:bg-[#132B42] p-5 border border-[#DDE6F0] dark:border-[#263B50] rounded-xl">
-            <h3 className="text-sm font-bold text-[#162033] dark:text-white mb-4">Customer Display QR</h3>
-            
-            <p className="text-sm text-[#64748B] dark:text-slate-400 mb-4">
-              If you have a customer-facing display screen, you can show a dynamic QR code for payment.
-            </p>
-            
-            <label className="flex items-center mb-4">
-              <input type="checkbox" name="enableWebsiteQr" checked={formData.enableWebsiteQr} onChange={handleChange} className="form-checkbox h-4 w-4 text-[#2482ED] rounded focus:ring-[#2482ED] border-[#DDE6F0] dark:border-[#263B50] dark:bg-[#0B1A2A]" />
-              <span className="ml-3 text-sm text-[#162033] dark:text-white">Show Pharmacy Website/App QR when idle</span>
-            </label>
-            
-            {formData.enableWebsiteQr && (
-              <div className="ml-7 mb-4">
-                <Input label="Website / App Store URL" name="websiteUrl" value={formData.websiteUrl} onChange={handleChange} />
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-bold text-[#64748B] dark:text-slate-300 mb-1">QR Display Size</label>
-              <select 
-                name="displaySize" 
-                value={formData.displaySize} 
-                onChange={handleChange}
-                className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-1 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100"
-              >
-                <option value="Small">Small (150x150)</option>
-                <option value="Medium">Medium (300x300)</option>
-                <option value="Large">Large (500x500)</option>
-              </select>
             </div>
-          </div>
+          </SettingsSection>
         </div>
 
+        {/* Right: Customer Display QR */}
+        <div className="space-y-6">
+          <SettingsSection title="Customer Display & Kiosk QR">
+            <div className="bg-[#F8FAFC] dark:bg-slate-800/40 p-4 rounded-xl border border-[#DDE6F0] dark:border-slate-700/60 space-y-4">
+              <p className="text-xs text-[#64748B] dark:text-slate-400 leading-relaxed">
+                If your counter includes a customer-facing screen, you can show a prominent dynamic QR code for instant UPI payment or idle website branding.
+              </p>
+
+              <div className="p-3 rounded-lg border border-[#DDE6F0] dark:border-slate-700/60 bg-white dark:bg-[#102A43] space-y-3">
+                <label className="flex items-start cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    name="enableWebsiteQr" 
+                    checked={formData.enableWebsiteQr || false} 
+                    onChange={handleChange} 
+                    className="h-4 w-4 mt-0.5 text-[#2482ED] rounded border-[#DDE6F0] dark:border-slate-600 focus:ring-[#2482ED] cursor-pointer" 
+                  />
+                  <div className="ml-3">
+                    <span className="block text-xs font-bold text-[#162033] dark:text-white">
+                      Show Pharmacy Website / App QR when idle
+                    </span>
+                    <span className="block text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
+                      Promotes repeat online orders when cashier is not currently billing
+                    </span>
+                  </div>
+                </label>
+
+                {formData.enableWebsiteQr && (
+                  <div className="pt-2 pl-7">
+                    <Input 
+                      label="Website / App Store URL" 
+                      name="websiteUrl" 
+                      value={formData.websiteUrl || ''} 
+                      onChange={handleChange} 
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="displaySize" className="block text-xs font-bold uppercase tracking-wider text-[#64748B] dark:text-slate-300 mb-1.5">
+                  Display Screen QR Size
+                </label>
+                <select 
+                  id="displaySize"
+                  name="displaySize" 
+                  value={formData.displaySize || 'Medium'} 
+                  onChange={handleChange} 
+                  className="block w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm focus:border-[#2482ED] focus:outline-none focus:ring-2 focus:ring-[#2482ED] text-[#162033] dark:text-slate-100 transition-colors"
+                >
+                  <option value="Small">Small (150 × 150 px)</option>
+                  <option value="Medium">Medium (300 × 300 px - Recommended)</option>
+                  <option value="Large">Large (500 × 500 px)</option>
+                </select>
+              </div>
+            </div>
+          </SettingsSection>
+        </div>
       </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 };
 

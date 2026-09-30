@@ -70,14 +70,19 @@ const NotificationDropdown = () => {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  useEffect(() => {
+  if (unreadCount !== prevUnreadCount) {
+    setPrevUnreadCount(unreadCount);
     if (unreadCount > prevUnreadCount) {
       setAnimateBadge(true);
-      const timer = setTimeout(() => setAnimateBadge(false), 600); // Wait for pulse to finish
+    }
+  }
+
+  useEffect(() => {
+    if (animateBadge) {
+      const timer = setTimeout(() => setAnimateBadge(false), 600);
       return () => clearTimeout(timer);
     }
-    setPrevUnreadCount(unreadCount);
-  }, [unreadCount, prevUnreadCount]);
+  }, [animateBadge]);
 
   const handleMarkAsRead = async (id, e) => {
     if (e) e.stopPropagation();

@@ -52,7 +52,7 @@ const FinancialReport = () => {
   useEffect(() => {
     const fetchFinancials = async () => {
       try {
-        const [salesRes, purRes, invRes] = await Promise.all([getSales(), getPurchases(), getInventory()]);
+        const [salesRes, , invRes] = await Promise.all([getSales(), getPurchases(), getInventory()]);
         const sales = salesRes.data || [];
         const inventory = invRes.data || [];
         setAllSales(sales);

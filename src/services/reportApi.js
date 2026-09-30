@@ -34,7 +34,7 @@ export const getReports = async (type, filters = {}) => {
         }
 
         resolve({ data });
-      } catch (err) {
+      } catch {
         resolve({ data: [] });
       }
     }, 500);
