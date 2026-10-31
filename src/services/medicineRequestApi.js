@@ -39,6 +39,15 @@ export const getMedicineRequestById = async (id) => {
 };
 
 export const createMedicineRequest = async (requestData) => {
+  if (!requestData?.medicineName || !requestData.medicineName.trim()) {
+    throw new Error('Medicine name is required');
+  }
+  if (!requestData?.customerName || !requestData.customerName.trim()) {
+    throw new Error('Customer name is required');
+  }
+  if (!requestData?.requestedQuantity || Number(requestData.requestedQuantity) <= 0) {
+    throw new Error('Valid requested quantity is required');
+  }
   return new Promise((resolve) => {
     setTimeout(() => {
       const requests = localDb.get(KEYS.MEDICINE_REQUESTS) || [];

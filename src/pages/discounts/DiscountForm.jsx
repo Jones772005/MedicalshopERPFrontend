@@ -19,6 +19,7 @@ const DiscountForm = () => {
   const [loading, setLoading] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   
   const [medicines, setMedicines] = useState([]);
   const [allBatches, setAllBatches] = useState([]);
@@ -72,6 +73,9 @@ const DiscountForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setFormData(prev => {
       const updated = { ...prev, [name]: value };
       
@@ -92,37 +96,36 @@ const DiscountForm = () => {
   };
 
   const validate = () => {
-    if (!formData.name.trim()) return 'Discount Name is required.';
-    if (!formData.medicineId) return 'Medicine is required.';
+    const errs = {};
+    if (!formData.name.trim()) errs.name = 'Discount Name is required.';
+    if (!formData.medicineId) errs.medicineId = 'Medicine is required.';
     
     const val = Number(formData.discountValue);
-    if (!formData.discountValue || isNaN(val)) return 'Valid Discount Value is required.';
-    
-    if (formData.discountType === 'percentage') {
-      if (val <= 0 || val > 100) return 'Percentage must be between 1 and 100.';
+    if (!formData.discountValue || isNaN(val)) {
+      errs.discountValue = 'Valid Discount Value is required.';
+    } else if (formData.discountType === 'percentage') {
+      if (val <= 0 || val > 100) errs.discountValue = 'Percentage must be between 1 and 100.';
     } else {
-      if (val <= 0) return 'Fixed discount amount must be greater than 0.';
+      if (val <= 0) errs.discountValue = 'Fixed discount amount must be greater than 0.';
     }
 
     if (formData.maxDiscountAmount) {
-      if (Number(formData.maxDiscountAmount) <= 0) return 'Maximum discount amount must be greater than 0.';
+      if (Number(formData.maxDiscountAmount) <= 0) errs.maxDiscountAmount = 'Maximum discount amount must be greater than 0.';
     }
 
-    if (!formData.validFrom) return 'Valid From date is required.';
-    if (!formData.validUntil) return 'Valid Until date is required.';
-    
-    if (new Date(formData.validUntil) < new Date(formData.validFrom)) {
-      return 'Valid Until date must be on or after Valid From date.';
+    if (!formData.validFrom) errs.validFrom = 'Valid From date is required.';
+    if (!formData.validUntil) errs.validUntil = 'Valid Until date is required.';
+    else if (formData.validFrom && new Date(formData.validUntil) < new Date(formData.validFrom)) {
+      errs.validUntil = 'Valid Until date must be on or after Valid From date.';
     }
 
-    return null;
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const err = validate();
-    if (err) {
-      setError(err);
+    if (!validate()) {
       return;
     }
     
@@ -132,6 +135,7 @@ const DiscountForm = () => {
     try {
       const payload = {
         ...formData,
+        name: formData.name.trim(),
         discountValue: Number(formData.discountValue),
         maxDiscountAmount: formData.maxDiscountAmount ? Number(formData.maxDiscountAmount) : null
       };
@@ -191,10 +195,11 @@ const DiscountForm = () => {
                 onChange={handleChange} 
                 placeholder="e.g. October Health Offer" 
                 required 
+                error={fieldErrors.name}
               />
               <div>
                 <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
-                  Status
+                  Status <span className="text-red-500">*</span>
                 </label>
                 <select 
                   name="status"
@@ -211,20 +216,23 @@ const DiscountForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
-                  Medicine
+                  Medicine <span className="text-red-500">*</span>
                 </label>
                 <select 
                   name="medicineId"
                   value={formData.medicineId}
                   onChange={handleChange}
                   required
-                  className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
+                  className={`block w-full h-10 rounded-lg border ${fieldErrors.medicineId ? 'border-red-500' : 'border-[#DDE6F0] dark:border-[#263B50]'} bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]`}
                 >
                   <option value="">Select Medicine</option>
                   {medicines.map(m => (
                     <option key={m.id} value={m.id}>{m.name}</option>
                   ))}
                 </select>
+                {fieldErrors.medicineId && (
+                  <p className="mt-1 text-xs text-red-500">{fieldErrors.medicineId}</p>
+                )}
               </div>
               
               <div>
@@ -249,7 +257,7 @@ const DiscountForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
-                  Discount Type
+                  Discount Type <span className="text-red-500">*</span>
                 </label>
                 <select 
                   name="discountType"
@@ -272,6 +280,7 @@ const DiscountForm = () => {
                 value={formData.discountValue} 
                 onChange={handleChange} 
                 required 
+                error={fieldErrors.discountValue}
               />
               <Input 
                 label="Max Discount (₹)" 
@@ -283,6 +292,7 @@ const DiscountForm = () => {
                 onChange={handleChange} 
                 disabled={formData.discountType === 'fixed'}
                 placeholder="Optional"
+                error={fieldErrors.maxDiscountAmount}
               />
             </div>
 
@@ -294,6 +304,7 @@ const DiscountForm = () => {
                 value={formData.validFrom} 
                 onChange={handleChange} 
                 required 
+                error={fieldErrors.validFrom}
               />
               <Input 
                 label="Valid Until" 
@@ -302,6 +313,7 @@ const DiscountForm = () => {
                 value={formData.validUntil} 
                 onChange={handleChange} 
                 required 
+                error={fieldErrors.validUntil}
               />
             </div>
 

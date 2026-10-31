@@ -23,13 +23,21 @@ const purchaseSchema = z.object({
   notes: z.string().optional(),
   items: z.array(z.object({
     medicineId: z.string().min(1, 'Medicine is required'),
-    quantity: z.number().min(1, 'Quantity must be > 0'),
-    purchasePrice: z.number().min(0, 'Invalid price'),
-    sellingPrice: z.number().min(0, 'Invalid selling price'),
-    mrp: z.number().min(0, 'Invalid MRP'),
-    gst: z.number().min(0, 'Invalid GST'),
-    discount: z.number().min(0, 'Invalid discount')
+    quantity: z.coerce.number({ invalid_type_error: 'Quantity is required' }).positive('Quantity must be greater than 0'),
+    purchasePrice: z.coerce.number({ invalid_type_error: 'Valid price is required' }).min(0, 'Invalid price'),
+    sellingPrice: z.coerce.number({ invalid_type_error: 'Valid price is required' }).min(0, 'Invalid selling price'),
+    mrp: z.coerce.number({ invalid_type_error: 'Valid MRP is required' }).min(0, 'Invalid MRP'),
+    gst: z.coerce.number({ invalid_type_error: 'Valid GST is required' }).min(0, 'Invalid GST'),
+    discount: z.coerce.number({ invalid_type_error: 'Valid discount is required' }).min(0, 'Invalid discount').max(100, 'Cannot exceed 100%')
   })).min(1, 'At least one item is required')
+}).refine(data => {
+  if (data.orderDate && data.expectedDeliveryDate) {
+    return new Date(data.expectedDeliveryDate) >= new Date(data.orderDate);
+  }
+  return true;
+}, {
+  message: 'Expected delivery date must be on or after order date',
+  path: ['expectedDeliveryDate']
 });
 
 const CreatePurchase = () => {

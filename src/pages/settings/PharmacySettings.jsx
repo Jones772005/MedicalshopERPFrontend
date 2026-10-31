@@ -11,6 +11,8 @@ const PharmacySettings = () => {
   const [formData, setFormData] = useState(settings.pharmacy || {});
   const [prevSettings, setPrevSettings] = useState(settings.pharmacy);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [statusMessage, setStatusMessage] = useState(null);
   const fileInputRef = useRef(null);
 
   // Synchronize state during render if context updates without causing cascading useEffect renders
@@ -23,6 +25,9 @@ const PharmacySettings = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -32,7 +37,7 @@ const PharmacySettings = () => {
 
     // Validate image format
     if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file (PNG, JPG, etc.)');
+      setStatusMessage({ type: 'error', text: 'Please upload an image file (PNG, JPG, etc.)' });
       return;
     }
 
@@ -49,11 +54,38 @@ const PharmacySettings = () => {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const validate = () => {
+    const errs = {};
+    if (!formData.name?.trim()) errs.name = 'Pharmacy name is required';
+    if (!formData.owner?.trim()) errs.owner = 'Owner name is required';
+    if (!formData.registrationNo?.trim()) errs.registrationNo = 'Registration number is required';
+    if (!formData.drugLicenseNo?.trim()) errs.drugLicenseNo = 'Drug license number is required';
+    if (!formData.gstin?.trim()) errs.gstin = 'GSTIN is required';
+    if (!formData.phone?.trim()) {
+      errs.phone = 'Phone number is required';
+    } else if (!/^[0-9+\-\s()]{7,20}$/.test(formData.phone.trim())) {
+      errs.phone = 'Valid phone number required';
+    }
+    if (!formData.email?.trim()) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errs.email = 'Valid email address required';
+    }
+    if (!formData.address?.trim()) errs.address = 'Street address is required';
+    if (!formData.city?.trim()) errs.city = 'City is required';
+    if (!formData.state?.trim()) errs.state = 'State is required';
+    if (!formData.pincode?.trim()) errs.pincode = 'Pincode is required';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSave = async () => {
+    setStatusMessage(null);
+    if (!validate()) return;
     setSaving(true);
     await updateCategorySettings('pharmacy', formData);
     setSaving(false);
-    alert('Pharmacy settings saved successfully!');
+    setStatusMessage({ type: 'success', text: 'Pharmacy settings saved successfully!' });
   };
 
   return (
@@ -67,6 +99,16 @@ const PharmacySettings = () => {
         hasUnsavedChanges={hasUnsavedChanges}
       />
 
+      {statusMessage && (
+        <div className={`mb-6 p-4 rounded-lg border text-sm ${
+          statusMessage.type === 'error'
+            ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
+        }`}>
+          {statusMessage.text}
+        </div>
+      )}
+
       <div className="flex flex-col lg:flex-row gap-7 items-start">
         {/* Left: Main Form Fields — Expanded with comfortable breathing room */}
         <div className="flex-1 w-full min-w-0 space-y-6">
@@ -78,6 +120,7 @@ const PharmacySettings = () => {
                 value={formData.name || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.name}
               />
               <Input 
                 label="Owner Name" 
@@ -85,6 +128,7 @@ const PharmacySettings = () => {
                 value={formData.owner || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.owner}
               />
               <Input 
                 label="Registration Number" 
@@ -92,6 +136,7 @@ const PharmacySettings = () => {
                 value={formData.registrationNo || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.registrationNo}
               />
               <Input 
                 label="Drug License Number" 
@@ -99,6 +144,7 @@ const PharmacySettings = () => {
                 value={formData.drugLicenseNo || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.drugLicenseNo}
               />
               <div className="sm:col-span-2">
                 <Input 
@@ -107,6 +153,7 @@ const PharmacySettings = () => {
                   value={formData.gstin || ''} 
                   onChange={handleChange} 
                   required 
+                  error={errors.gstin}
                 />
               </div>
             </div>
@@ -120,6 +167,7 @@ const PharmacySettings = () => {
                 value={formData.phone || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.phone}
               />
               <Input 
                 label="Email Address" 
@@ -128,6 +176,7 @@ const PharmacySettings = () => {
                 value={formData.email || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.email}
               />
               <div className="sm:col-span-2">
                 <Input 
@@ -149,6 +198,7 @@ const PharmacySettings = () => {
                 value={formData.address || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.address}
               />
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Input 
@@ -157,6 +207,7 @@ const PharmacySettings = () => {
                   value={formData.city || ''} 
                   onChange={handleChange} 
                   required 
+                  error={errors.city}
                 />
                 <Input 
                   label="State" 
@@ -164,6 +215,7 @@ const PharmacySettings = () => {
                   value={formData.state || ''} 
                   onChange={handleChange} 
                   required 
+                  error={errors.state}
                 />
                 <Input 
                   label="Pincode" 
@@ -171,6 +223,7 @@ const PharmacySettings = () => {
                   value={formData.pincode || ''} 
                   onChange={handleChange} 
                   required 
+                  error={errors.pincode}
                 />
               </div>
             </div>

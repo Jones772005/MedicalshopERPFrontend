@@ -15,6 +15,12 @@ export const getPrescriptionById = async (id) => {
 };
 
 export const createPrescription = async (data) => {
+  if (!data?.customerId && !data?.customerName) {
+    throw new Error('Customer information is required');
+  }
+  if (!data?.medicines || !Array.isArray(data.medicines) || data.medicines.length === 0) {
+    throw new Error('Prescription must contain at least one medicine');
+  }
   await new Promise(resolve => setTimeout(resolve, 500));
   const newPrescription = localDb.insert(KEYS.PRESCRIPTIONS, {
     ...data,
@@ -22,7 +28,7 @@ export const createPrescription = async (data) => {
     date: new Date().toISOString()
   });
   
-  await recordAuditEvent('CREATE', 'Prescriptions', `Created prescription for ${data.patientName}`, newPrescription.id);
+  await recordAuditEvent('CREATE', 'Prescriptions', `Created prescription for ${data.customerName || data.patientName || 'Customer'}`, newPrescription.id);
   return { data: newPrescription };
 };
 

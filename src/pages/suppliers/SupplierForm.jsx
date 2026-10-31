@@ -10,14 +10,14 @@ import Button from '../../components/common/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 
 const supplierSchema = z.object({
-  supplierName: z.string().min(2, 'Supplier Name is required'),
-  companyName: z.string().min(2, 'Company Name is required'),
-  contactPerson: z.string().min(2, 'Contact Person is required'),
-  phoneNumber: z.string().min(10, 'Valid phone number is required'),
-  email: z.string().email('Invalid email address').optional().or(z.literal('')),
-  address: z.string().optional(),
-  gstNumber: z.string().optional(),
-  paymentTerms: z.string().optional(),
+  supplierName: z.string().trim().min(2, 'Supplier Name is required'),
+  companyName: z.string().trim().min(2, 'Company Name is required'),
+  contactPerson: z.string().trim().min(2, 'Contact Person is required'),
+  phoneNumber: z.string().trim().min(7, 'Phone number must be at least 7 digits').regex(/^[0-9+\-\s()]+$/, 'Valid phone number is required'),
+  email: z.string().trim().email('Invalid email address').optional().or(z.literal('')),
+  address: z.string().trim().optional(),
+  gstNumber: z.string().trim().optional(),
+  paymentTerms: z.string().trim().optional(),
 });
 
 const SupplierForm = () => {
@@ -48,16 +48,31 @@ const SupplierForm = () => {
     }
   }, [id, reset, isEdit, navigate]);
 
+  const [saveError, setSaveError] = useState('');
+
   const onSubmit = async (data) => {
+    setSaveError('');
     try {
+      const sanitized = {
+        ...data,
+        supplierName: data.supplierName?.trim(),
+        companyName: data.companyName?.trim(),
+        contactPerson: data.contactPerson?.trim(),
+        phoneNumber: data.phoneNumber?.trim(),
+        email: data.email?.trim() || '',
+        address: data.address?.trim() || '',
+        gstNumber: data.gstNumber?.trim() || '',
+        paymentTerms: data.paymentTerms?.trim() || '',
+      };
       if (isEdit) {
-        await updateSupplier(id, data);
+        await updateSupplier(id, sanitized);
       } else {
-        await createSupplier(data);
+        await createSupplier(sanitized);
       }
       navigate('/suppliers');
     } catch (error) {
       console.error(error);
+      setSaveError(error.message || 'Failed to save supplier. Please try again.');
     }
   };
 
@@ -73,11 +88,16 @@ const SupplierForm = () => {
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
+        {saveError && (
+          <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
+            {saveError}
+          </div>
+        )}
         <Card>
           <CardHeader><CardTitle>Business Information</CardTitle></CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Input label="Supplier Name (Display Name)" error={errors.supplierName?.message} {...register('supplierName')} />
-            <Input label="Company Name (Legal Name)" error={errors.companyName?.message} {...register('companyName')} />
+            <Input label="Supplier Name (Display Name)" required error={errors.supplierName?.message} {...register('supplierName')} />
+            <Input label="Company Name (Legal Name)" required error={errors.companyName?.message} {...register('companyName')} />
             <Input label="GST Number" error={errors.gstNumber?.message} {...register('gstNumber')} />
             <div className="lg:col-span-1">
               <Input label="Payment Terms" placeholder="e.g. Net 30" error={errors.paymentTerms?.message} {...register('paymentTerms')} />
@@ -89,8 +109,8 @@ const SupplierForm = () => {
           <CardHeader><CardTitle>Contact Information</CardTitle></CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Input label="Contact Person" error={errors.contactPerson?.message} {...register('contactPerson')} />
-              <Input label="Phone Number" error={errors.phoneNumber?.message} {...register('phoneNumber')} />
+              <Input label="Contact Person" required error={errors.contactPerson?.message} {...register('contactPerson')} />
+              <Input label="Phone Number" required error={errors.phoneNumber?.message} {...register('phoneNumber')} />
               <Input label="Email Address" type="email" error={errors.email?.message} {...register('email')} />
             </div>
             <div className="w-full">

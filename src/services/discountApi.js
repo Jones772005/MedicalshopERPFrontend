@@ -15,6 +15,16 @@ export const getDiscountById = async (id) => {
 };
 
 export const createDiscount = async (data) => {
+  if (!data?.name || !data.name.trim()) throw new Error('Discount name is required');
+  if (!data?.medicineId) throw new Error('Medicine is required');
+  if (data?.discountValue === undefined || isNaN(Number(data.discountValue)) || Number(data.discountValue) <= 0) {
+    throw new Error('Valid positive discount value is required');
+  }
+  if (!data?.validFrom || !data?.validUntil) throw new Error('Valid From and Valid Until dates are required');
+  if (new Date(data.validUntil) < new Date(data.validFrom)) {
+    throw new Error('Valid Until date must be on or after Valid From date');
+  }
+
   await new Promise(resolve => setTimeout(resolve, 500));
   
   const existing = (localDb.get(KEYS.DISCOUNTS) || []).filter(d => 

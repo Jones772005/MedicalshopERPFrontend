@@ -10,6 +10,8 @@ const InvoiceSettings = () => {
   const [formData, setFormData] = useState(settings.invoice || {});
   const [prevSettings, setPrevSettings] = useState(settings.invoice);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [statusMessage, setStatusMessage] = useState(null);
 
   if (prevSettings !== settings.invoice) {
     setPrevSettings(settings.invoice);
@@ -20,17 +22,35 @@ const InvoiceSettings = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setFormData(prev => ({ 
       ...prev, 
       [name]: type === 'checkbox' ? checked : value 
     }));
   };
 
+  const validate = () => {
+    const errs = {};
+    if (!formData.prefix?.trim()) {
+      errs.prefix = 'Invoice prefix is required';
+    }
+    const startingNum = Number(formData.startingNumber);
+    if (!formData.startingNumber || isNaN(startingNum) || startingNum < 1) {
+      errs.startingNumber = 'Starting number must be at least 1';
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSave = async () => {
+    setStatusMessage(null);
+    if (!validate()) return;
     setSaving(true);
     await updateCategorySettings('invoice', formData);
     setSaving(false);
-    alert('Invoice settings saved successfully!');
+    setStatusMessage({ type: 'success', text: 'Invoice settings saved successfully!' });
   };
 
   const displayToggles = [
@@ -53,6 +73,16 @@ const InvoiceSettings = () => {
         hasUnsavedChanges={hasUnsavedChanges}
       />
 
+      {statusMessage && (
+        <div className={`mb-6 p-4 rounded-lg border text-sm ${
+          statusMessage.type === 'error'
+            ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
+        }`}>
+          {statusMessage.text}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column: Numbering & Terms */}
         <div className="space-y-6">
@@ -64,14 +94,17 @@ const InvoiceSettings = () => {
                 value={formData.prefix || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.prefix}
               />
               <Input 
                 label="Starting Number" 
                 type="number" 
+                min="1"
                 name="startingNumber" 
                 value={formData.startingNumber || ''} 
                 onChange={handleChange} 
                 required 
+                error={errors.startingNumber}
               />
             </div>
             <div>

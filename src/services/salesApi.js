@@ -16,6 +16,13 @@ export const getSaleById = async (id) => {
 };
 
 export const createSale = async (saleData) => {
+  if (!saleData || !saleData.items || !Array.isArray(saleData.items) || saleData.items.length === 0) {
+    throw new Error('Sale must contain at least one valid item');
+  }
+  if (!saleData.paymentMethod) {
+    throw new Error('Payment method is required');
+  }
+
   // We use runLocalTransaction to make the sale and inventory deduction atomic
   let finalSale = null;
 

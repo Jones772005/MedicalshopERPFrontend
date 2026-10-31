@@ -234,10 +234,11 @@ const POS = () => {
   const totalTax = calculateCartTaxWithOverallDiscount(cartItems, effectiveOverallDiscount);
   const grandTotal = calculateGrandTotalWithOverallDiscount(cartItems, effectiveOverallDiscount);
 
-  const isGenerateDisabled = cartItems.length === 0 || isSubmitting || (cartRequiresPrescription && !prescriptionVerified);
+  const isCashUnderpaid = paymentMethod === 'Cash' && amountReceived < grandTotal && grandTotal > 0;
+  const isGenerateDisabled = cartItems.length === 0 || isSubmitting || (cartRequiresPrescription && !prescriptionVerified) || isCashUnderpaid;
 
   const handleGenerateBill = async () => {
-    if (isGenerateDisabled) return;
+    if (isGenerateDisabled || isCashUnderpaid) return;
     setIsSubmitting(true);
 
     try {

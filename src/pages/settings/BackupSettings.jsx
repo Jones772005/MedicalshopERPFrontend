@@ -13,6 +13,7 @@ const BackupSettings = () => {
   const [saving, setSaving] = useState(false);
   const [backingUp, setBackingUp] = useState(false);
   const [restoring, setRestoring] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
   const fileInputRef = useRef(null);
   const [lastBackupDetails, setLastBackupDetails] = useState({
     date: settings.backup?.lastBackup,
@@ -35,13 +36,15 @@ const BackupSettings = () => {
   };
 
   const handleSave = async () => {
+    setStatusMessage(null);
     setSaving(true);
     await updateCategorySettings('backup', formData);
     setSaving(false);
-    alert('Backup settings saved successfully!');
+    setStatusMessage({ type: 'success', text: 'Backup settings saved successfully!' });
   };
 
   const handleManualBackup = async () => {
+    setStatusMessage(null);
     setBackingUp(true);
     try {
       const res = await createBackup();
@@ -61,10 +64,10 @@ const BackupSettings = () => {
         date: res.data.timestamp,
         size: res.data.size
       });
-      alert(`Backup created successfully: ${res.data.filename}`);
+      setStatusMessage({ type: 'success', text: `Backup created successfully: ${res.data.filename}` });
     } catch (err) {
       console.error(err);
-      alert('Backup failed.');
+      setStatusMessage({ type: 'error', text: 'Backup creation failed.' });
     } finally {
       setBackingUp(false);
     }
@@ -106,6 +109,16 @@ const BackupSettings = () => {
         saving={saving}
         hasUnsavedChanges={hasUnsavedChanges}
       />
+
+      {statusMessage && (
+        <div className={`mb-6 p-4 rounded-lg border text-sm ${
+          statusMessage.type === 'error'
+            ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
+        }`}>
+          {statusMessage.text}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
         {/* Left Column: Automated Backups */}

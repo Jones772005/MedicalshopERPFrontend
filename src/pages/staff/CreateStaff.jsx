@@ -18,6 +18,7 @@ const CreateStaff = () => {
   
   const [roles, setRoles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     getRoles().then(res => setRoles(res.data));
@@ -25,24 +26,67 @@ const CreateStaff = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // eslint-disable-next-line react/set-state-in-effect
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const validate = () => {
+    const errs = {};
+    if (!formData.firstName.trim()) errs.firstName = 'First name is required';
+    if (!formData.lastName.trim()) errs.lastName = 'Last name is required';
+    if (!formData.email.trim()) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errs.email = 'Valid email address required';
+    }
+    if (!formData.phone.trim()) {
+      errs.phone = 'Phone number is required';
+    } else if (!/^[0-9+\-\s()]{7,20}$/.test(formData.phone.trim())) {
+      errs.phone = 'Valid phone number required';
+    }
+    if (!formData.dob) errs.dob = 'Date of birth is required';
+    if (!formData.employeeId.trim()) errs.employeeId = 'Employee ID is required';
+    if (!formData.joiningDate) errs.joiningDate = 'Joining date is required';
+    if (!formData.designation.trim()) errs.designation = 'Designation is required';
+    if (!formData.username.trim()) errs.username = 'Username is required';
+    if (!formData.password) {
+      errs.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      errs.password = 'Password must be at least 6 characters';
+    }
+    if (!formData.confirmPassword) {
+      errs.confirmPassword = 'Confirm password is required';
+    } else if (formData.password !== formData.confirmPassword) {
+      errs.confirmPassword = 'Passwords do not match';
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+    if (!validate()) return;
 
     setIsSubmitting(true);
     try {
-      const payload = { ...formData, name: `${formData.firstName} ${formData.lastName}` };
+      const payload = {
+        ...formData,
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        employeeId: formData.employeeId.trim(),
+        designation: formData.designation.trim(),
+        username: formData.username.trim(),
+        name: `${formData.firstName.trim()} ${formData.lastName.trim()}`
+      };
       await createStaff(payload);
       navigate('/staff');
     } catch (err) {
       console.error(err);
+      setErrors(prev => ({ ...prev, form: err.message || 'Failed to register staff.' }));
       setIsSubmitting(false);
     }
   };
@@ -57,18 +101,25 @@ const CreateStaff = () => {
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        {errors.form && (
+          <div className="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
+            {errors.form}
+          </div>
+        )}
         <form className="space-y-6" onSubmit={handleSubmit}>
           
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white border-b border-gray-200 dark:border-slate-700 pb-2 mb-4">Personal Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="First Name" name="firstName" value={formData.firstName} onChange={handleChange} required />
-              <Input label="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} required />
-              <Input label="Email Address" type="email" name="email" value={formData.email} onChange={handleChange} required />
-              <Input label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} required />
-              <Input label="Date of Birth" type="date" name="dob" value={formData.dob} onChange={handleChange} required />
+              <Input label="First Name" name="firstName" value={formData.firstName} onChange={handleChange} required error={errors.firstName} />
+              <Input label="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} required error={errors.lastName} />
+              <Input label="Email Address" type="email" name="email" value={formData.email} onChange={handleChange} required error={errors.email} />
+              <Input label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} required error={errors.phone} />
+              <Input label="Date of Birth" type="date" name="dob" value={formData.dob} onChange={handleChange} required error={errors.dob} />
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gender</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Gender <span className="text-red-500">*</span>
+                </label>
                 <select name="gender" value={formData.gender} onChange={handleChange} className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100">
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -85,11 +136,13 @@ const CreateStaff = () => {
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white border-b border-gray-200 dark:border-slate-700 pb-2 mb-4 mt-6">Employment Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="Employee ID" name="employeeId" placeholder="e.g. EMP-1005" value={formData.employeeId} onChange={handleChange} required />
-              <Input label="Joining Date" type="date" name="joiningDate" value={formData.joiningDate} onChange={handleChange} required />
+              <Input label="Employee ID" name="employeeId" placeholder="e.g. EMP-1005" value={formData.employeeId} onChange={handleChange} required error={errors.employeeId} />
+              <Input label="Joining Date" type="date" name="joiningDate" value={formData.joiningDate} onChange={handleChange} required error={errors.joiningDate} />
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Department</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Department <span className="text-red-500">*</span>
+                </label>
                 <select name="department" value={formData.department} onChange={handleChange} className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100">
                   <option value="Pharmacy">Pharmacy</option>
                   <option value="Sales">Sales (Billing)</option>
@@ -98,10 +151,12 @@ const CreateStaff = () => {
                 </select>
               </div>
               
-              <Input label="Designation" name="designation" placeholder="e.g. Junior Pharmacist" value={formData.designation} onChange={handleChange} required />
+              <Input label="Designation" name="designation" placeholder="e.g. Junior Pharmacist" value={formData.designation} onChange={handleChange} required error={errors.designation} />
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">System Role</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  System Role <span className="text-red-500">*</span>
+                </label>
                 <select name="role" value={formData.role} onChange={handleChange} className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100">
                   {roles.map(r => <option key={r.id} value={r.name}>{r.name}</option>)}
                 </select>
@@ -112,10 +167,10 @@ const CreateStaff = () => {
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white border-b border-gray-200 dark:border-slate-700 pb-2 mb-4 mt-6">Account Credentials</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="Username" name="username" value={formData.username} onChange={handleChange} required />
+              <Input label="Username" name="username" value={formData.username} onChange={handleChange} required error={errors.username} />
               <div></div>
-              <Input label="Password" type="password" name="password" value={formData.password} onChange={handleChange} required />
-              <Input label="Confirm Password" type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
+              <Input label="Password" type="password" name="password" value={formData.password} onChange={handleChange} required error={errors.password} />
+              <Input label="Confirm Password" type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required error={errors.confirmPassword} />
             </div>
             <p className="mt-2 text-xs text-gray-500 dark:text-slate-400">Passwords are hashed before saving. We simulate this by not persisting plain text.</p>
           </div>

@@ -15,16 +15,40 @@ const Profile = () => {
   });
 
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [statusMessage, setStatusMessage] = useState(null);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setPasswordData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const validate = () => {
+    const errs = {};
+    if (!passwordData.currentPassword) {
+      errs.currentPassword = 'Current password is required.';
+    }
+    if (!passwordData.newPassword) {
+      errs.newPassword = 'New password is required.';
+    } else if (passwordData.newPassword.length < 6) {
+      errs.newPassword = 'New password must be at least 6 characters.';
+    }
+    if (!passwordData.confirmPassword) {
+      errs.confirmPassword = 'Confirm password is required.';
+    } else if (passwordData.newPassword !== passwordData.confirmPassword) {
+      errs.confirmPassword = 'New passwords do not match.';
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleUpdatePassword = (e) => {
     e.preventDefault();
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("New passwords do not match.");
+    setStatusMessage(null);
+    if (!validate()) {
       return;
     }
     
@@ -33,8 +57,8 @@ const Profile = () => {
     setTimeout(() => {
       setSaving(false);
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      alert("Password updated successfully.");
-    }, 1000);
+      setStatusMessage({ type: 'success', text: 'Password updated successfully.' });
+    }, 600);
   };
 
   if (!currentUser) return null;
@@ -108,6 +132,11 @@ const Profile = () => {
             <h3 className="text-lg font-medium text-gray-900 dark:text-white border-b border-gray-200 dark:border-slate-700 pb-2 mb-4 flex items-center">
               <Lock className="w-5 h-5 mr-2 text-primary-500" /> Change Password
             </h3>
+            {statusMessage && (
+              <div className="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-sm text-green-700 dark:text-green-300">
+                {statusMessage.text}
+              </div>
+            )}
             <form onSubmit={handleUpdatePassword} className="space-y-4">
               <Input 
                 label="Current Password" 
@@ -116,6 +145,7 @@ const Profile = () => {
                 value={passwordData.currentPassword} 
                 onChange={handlePasswordChange} 
                 required 
+                error={errors.currentPassword}
               />
               <Input 
                 label="New Password" 
@@ -124,6 +154,7 @@ const Profile = () => {
                 value={passwordData.newPassword} 
                 onChange={handlePasswordChange} 
                 required 
+                error={errors.newPassword}
               />
               <Input 
                 label="Confirm New Password" 
@@ -132,6 +163,7 @@ const Profile = () => {
                 value={passwordData.confirmPassword} 
                 onChange={handlePasswordChange} 
                 required 
+                error={errors.confirmPassword}
               />
               
               <div className="pt-2">

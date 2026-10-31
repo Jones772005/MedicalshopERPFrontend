@@ -9,6 +9,7 @@ const NotificationSettings = () => {
   const [formData, setFormData] = useState(settings.notifications || {});
   const [prevSettings, setPrevSettings] = useState(settings.notifications);
   const [saving, setSaving] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
 
   if (prevSettings !== settings.notifications) {
     setPrevSettings(settings.notifications);
@@ -23,10 +24,11 @@ const NotificationSettings = () => {
   };
 
   const handleSave = async () => {
+    setStatusMessage(null);
     setSaving(true);
     await updateCategorySettings('notifications', formData);
     setSaving(false);
-    alert('Notification settings saved successfully!');
+    setStatusMessage({ type: 'success', text: 'Notification settings saved successfully!' });
   };
 
   const alertGroups = [
@@ -71,6 +73,16 @@ const NotificationSettings = () => {
         saving={saving}
         hasUnsavedChanges={hasUnsavedChanges}
       />
+
+      {statusMessage && (
+        <div className={`mb-6 p-4 rounded-lg border text-sm ${
+          statusMessage.type === 'error'
+            ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
+        }`}>
+          {statusMessage.text}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {alertGroups.map((group, idx) => (

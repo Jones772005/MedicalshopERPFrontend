@@ -15,9 +15,17 @@ export const getCustomerById = async (id) => {
 };
 
 export const createCustomer = async (data) => {
+  if (!data?.name || !data.name.trim()) {
+    throw new Error('Customer name is required');
+  }
+  if (!data?.phoneNumber || !data.phoneNumber.trim()) {
+    throw new Error('Customer phone number is required');
+  }
   await new Promise(resolve => setTimeout(resolve, 500));
   const newCustomer = localDb.insert(KEYS.CUSTOMERS, {
     ...data,
+    name: data.name.trim(),
+    phoneNumber: data.phoneNumber.trim(),
     status: data.status || 'Active'
   });
   
@@ -26,8 +34,18 @@ export const createCustomer = async (data) => {
 };
 
 export const updateCustomer = async (id, data) => {
+  if (data?.name !== undefined && !data.name.trim()) {
+    throw new Error('Customer name cannot be empty');
+  }
+  if (data?.phoneNumber !== undefined && !data.phoneNumber.trim()) {
+    throw new Error('Customer phone number cannot be empty');
+  }
   await new Promise(resolve => setTimeout(resolve, 400));
-  const updatedCustomer = localDb.update(KEYS.CUSTOMERS, id, data);
+  const updatedCustomer = localDb.update(KEYS.CUSTOMERS, id, {
+    ...data,
+    ...(data.name ? { name: data.name.trim() } : {}),
+    ...(data.phoneNumber ? { phoneNumber: data.phoneNumber.trim() } : {})
+  });
   await recordAuditEvent('UPDATE', 'Customers', `Updated customer ${updatedCustomer.name}`, id);
   return { data: updatedCustomer };
 };

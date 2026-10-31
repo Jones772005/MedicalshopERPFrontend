@@ -9,6 +9,7 @@ const TaxSettings = () => {
   const [formData, setFormData] = useState(settings.tax || {});
   const [prevSettings, setPrevSettings] = useState(settings.tax);
   const [saving, setSaving] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
 
   if (prevSettings !== settings.tax) {
     setPrevSettings(settings.tax);
@@ -26,10 +27,11 @@ const TaxSettings = () => {
   };
 
   const handleSave = async () => {
+    setStatusMessage(null);
     setSaving(true);
     await updateCategorySettings('tax', formData);
     setSaving(false);
-    alert('Tax settings saved successfully!');
+    setStatusMessage({ type: 'success', text: 'Tax settings saved successfully!' });
   };
 
   return (
@@ -42,6 +44,16 @@ const TaxSettings = () => {
         saving={saving}
         hasUnsavedChanges={hasUnsavedChanges}
       />
+
+      {statusMessage && (
+        <div className={`mb-6 p-4 rounded-lg border text-sm ${
+          statusMessage.type === 'error'
+            ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
+        }`}>
+          {statusMessage.text}
+        </div>
+      )}
 
       <div className="w-full space-y-6">
         <SettingsSection title="GST System Configuration">

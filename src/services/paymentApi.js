@@ -20,6 +20,9 @@ export const createPayment = async (data) => {
   // Guard: referenceId must be provided
   const referenceId = data.referenceId;
   if (!referenceId) throw new Error('referenceId is required and must be a valid ID');
+  if (!data?.amount || isNaN(Number(data.amount)) || Number(data.amount) <= 0) {
+    throw new Error('Payment amount must be greater than 0');
+  }
 
   let newPayment = null;
 

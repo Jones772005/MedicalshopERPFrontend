@@ -14,16 +14,16 @@ import { createPrescription } from '../../services/prescriptionApi';
 
 const prescriptionSchema = z.object({
   customerId: z.string().min(1, 'Customer is required'),
-  doctorName: z.string().min(1, 'Doctor name is required'),
-  doctorContact: z.string().optional(),
+  doctorName: z.string().trim().min(1, 'Doctor name is required'),
+  doctorContact: z.string().trim().optional(),
   prescriptionDate: z.string().min(1, 'Date is required'),
   medicines: z.array(z.object({
     medicineId: z.string().min(1, 'Medicine is required'),
-    quantity: z.number().min(1, 'Quantity is required'),
-    dosage: z.string().min(1, 'Dosage is required'),
-    frequency: z.string().min(1, 'Frequency is required'),
-    duration: z.string().min(1, 'Duration is required'),
-    instructions: z.string().optional()
+    quantity: z.number().min(1, 'Quantity must be at least 1'),
+    dosage: z.string().trim().min(1, 'Dosage is required'),
+    frequency: z.string().trim().min(1, 'Frequency is required'),
+    duration: z.string().trim().min(1, 'Duration is required'),
+    instructions: z.string().trim().optional()
   })).min(1, 'At least one medicine is required')
 });
 
@@ -109,7 +109,9 @@ const CreatePrescription = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Customer <span className="text-red-500">*</span>
+                </label>
                 <select 
                   {...register('customerId')}
                   className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 ${errors.customerId ? 'border-red-500' : ''}`}
@@ -120,13 +122,15 @@ const CreatePrescription = () => {
                 {errors.customerId && <span className="text-xs text-red-500">{errors.customerId.message}</span>}
               </div>
               <Input 
-                label="Date *" 
+                label="Date" 
+                required
                 type="date"
                 {...register('prescriptionDate')} 
                 error={errors.prescriptionDate?.message}
               />
               <Input 
-                label="Doctor Name *" 
+                label="Doctor Name" 
+                required
                 {...register('doctorName')} 
                 error={errors.doctorName?.message}
               />
@@ -167,7 +171,9 @@ const CreatePrescription = () => {
               <div key={field.id} className="p-4 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-900/30 relative">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Medicine *</label>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Medicine <span className="text-red-500">*</span>
+                    </label>
                     <select 
                       {...register(`medicines.${index}.medicineId`)}
                       className={`block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 ${errors.medicines?.[index]?.medicineId ? 'border-red-500' : ''}`}
@@ -175,42 +181,65 @@ const CreatePrescription = () => {
                       <option value="">Select Medicine...</option>
                       {medicines.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                     </select>
+                    {errors.medicines?.[index]?.medicineId && (
+                      <p className="text-xs text-red-500 mt-1">{errors.medicines[index].medicineId.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Total Qty *</label>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Total Qty <span className="text-red-500">*</span>
+                    </label>
                     <input 
                       type="number"
                       min="1"
                       {...register(`medicines.${index}.quantity`, { valueAsNumber: true })}
-                      className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100"
+                      className={`block w-full rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 border ${errors.medicines?.[index]?.quantity ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'}`}
                     />
+                    {errors.medicines?.[index]?.quantity && (
+                      <p className="text-xs text-red-500 mt-1">{errors.medicines[index].quantity.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Dosage *</label>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Dosage <span className="text-red-500">*</span>
+                    </label>
                     <input 
                       type="text"
                       placeholder="e.g. 500mg"
                       {...register(`medicines.${index}.dosage`)}
-                      className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100"
+                      className={`block w-full rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 border ${errors.medicines?.[index]?.dosage ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'}`}
                     />
+                    {errors.medicines?.[index]?.dosage && (
+                      <p className="text-xs text-red-500 mt-1">{errors.medicines[index].dosage.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Frequency *</label>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Frequency <span className="text-red-500">*</span>
+                    </label>
                     <input 
                       type="text"
                       placeholder="e.g. Twice a day"
                       {...register(`medicines.${index}.frequency`)}
-                      className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100"
+                      className={`block w-full rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 border ${errors.medicines?.[index]?.frequency ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'}`}
                     />
+                    {errors.medicines?.[index]?.frequency && (
+                      <p className="text-xs text-red-500 mt-1">{errors.medicines[index].frequency.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Duration *</label>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Duration <span className="text-red-500">*</span>
+                    </label>
                     <input 
                       type="text"
                       placeholder="e.g. 5 days"
                       {...register(`medicines.${index}.duration`)}
-                      className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100"
+                      className={`block w-full rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 border ${errors.medicines?.[index]?.duration ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'}`}
                     />
+                    {errors.medicines?.[index]?.duration && (
+                      <p className="text-xs text-red-500 mt-1">{errors.medicines[index].duration.message}</p>
+                    )}
                   </div>
                   <div className="md:col-span-3">
                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Instructions</label>

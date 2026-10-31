@@ -15,9 +15,14 @@ export const getRoleById = async (id) => {
 };
 
 export const createRole = async (roleData) => {
+  if (!roleData?.name || !roleData.name.trim()) throw new Error('Role name is required');
+  if (!roleData?.description || !roleData.description.trim()) throw new Error('Role description is required');
+
   await new Promise(resolve => setTimeout(resolve, 400));
   const newRole = localDb.insert(KEYS.ROLES, {
     ...roleData,
+    name: roleData.name.trim(),
+    description: roleData.description.trim(),
     userCount: 0,
   });
   await recordAuditEvent('CREATE', 'Roles', `Created role ${newRole.name}`, newRole.id);

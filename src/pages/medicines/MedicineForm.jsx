@@ -10,26 +10,34 @@ import Button from '../../components/common/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 
 const medicineSchema = z.object({
-  name: z.string().min(2, 'Medicine name is required'),
-  genericName: z.string().min(2, 'Generic name is required'),
+  name: z.string().trim().min(1, 'Medicine name is required'),
+  genericName: z.string().trim().min(1, 'Generic name is required'),
   brandName: z.string().optional(),
-  category: z.string().min(1, 'Category is required'),
-  manufacturer: z.string().min(1, 'Manufacturer is required'),
-  batchNumber: z.string().min(1, 'Batch number is required'),
-  manufacturingDate: z.string().min(1, 'Required'),
-  expiryDate: z.string().min(1, 'Required'),
-  purchasePrice: z.coerce.number().min(0, 'Must be positive'),
-  sellingPrice: z.coerce.number().min(0, 'Must be positive'),
-  mrp: z.coerce.number().min(0, 'Must be positive'),
-  gst: z.coerce.number().min(0, 'Must be positive'),
-  quantity: z.coerce.number().min(0, 'Must be positive'),
-  minimumStockLevel: z.coerce.number().min(0, 'Must be positive'),
-  maximumStockLevel: z.coerce.number().min(0, 'Must be positive'),
+  category: z.string().trim().min(1, 'Category is required'),
+  manufacturer: z.string().trim().min(1, 'Manufacturer is required'),
+  batchNumber: z.string().trim().min(1, 'Batch number is required'),
+  manufacturingDate: z.string().min(1, 'Manufacturing date is required'),
+  expiryDate: z.string().min(1, 'Expiry date is required'),
+  purchasePrice: z.coerce.number({ invalid_type_error: 'Valid purchase price is required' }).min(0, 'Purchase price cannot be negative'),
+  sellingPrice: z.coerce.number({ invalid_type_error: 'Valid selling price is required' }).min(0, 'Selling price cannot be negative'),
+  mrp: z.coerce.number({ invalid_type_error: 'Valid MRP is required' }).min(0, 'MRP cannot be negative'),
+  gst: z.coerce.number({ invalid_type_error: 'Valid GST is required' }).min(0, 'GST cannot be negative').max(100, 'GST cannot exceed 100%'),
+  quantity: z.coerce.number({ invalid_type_error: 'Valid quantity is required' }).int('Quantity must be an integer').min(0, 'Quantity cannot be negative'),
+  minimumStockLevel: z.coerce.number({ invalid_type_error: 'Valid stock level is required' }).int('Must be an integer').min(0, 'Cannot be negative'),
+  maximumStockLevel: z.coerce.number({ invalid_type_error: 'Valid stock level is required' }).int('Must be an integer').min(0, 'Cannot be negative'),
   rackNumber: z.string().optional(),
-  supplierId: z.coerce.number().min(1, 'Supplier is required'),
+  supplierId: z.coerce.number({ invalid_type_error: 'Valid supplier ID is required' }).min(1, 'Supplier is required'),
   prescriptionRequired: z.boolean().default(false),
   barcode: z.string().optional(),
   description: z.string().optional(),
+}).refine(data => {
+  if (data.manufacturingDate && data.expiryDate) {
+    return new Date(data.expiryDate) >= new Date(data.manufacturingDate);
+  }
+  return true;
+}, {
+  message: 'Expiry date must be on or after manufacturing date',
+  path: ['expiryDate']
 });
 
 const MedicineForm = () => {
@@ -90,11 +98,11 @@ const MedicineForm = () => {
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Basic Information</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-5">
-            <Input label="Medicine Name" error={errors.name?.message} {...register('name')} />
-            <Input label="Generic Name" error={errors.genericName?.message} {...register('genericName')} />
+            <Input label="Medicine Name" required error={errors.name?.message} {...register('name')} />
+            <Input label="Generic Name" required error={errors.genericName?.message} {...register('genericName')} />
             <Input label="Brand Name" error={errors.brandName?.message} {...register('brandName')} />
-            <Input label="Category" error={errors.category?.message} {...register('category')} />
-            <Input label="Manufacturer" error={errors.manufacturer?.message} {...register('manufacturer')} />
+            <Input label="Category" required error={errors.category?.message} {...register('category')} />
+            <Input label="Manufacturer" required error={errors.manufacturer?.message} {...register('manufacturer')} />
           </CardContent>
         </Card>
 
@@ -103,9 +111,9 @@ const MedicineForm = () => {
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Batch & Dates</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5">
-            <Input label="Batch Number" error={errors.batchNumber?.message} {...register('batchNumber')} />
-            <Input label="Manufacturing Date" type="date" error={errors.manufacturingDate?.message} {...register('manufacturingDate')} />
-            <Input label="Expiry Date" type="date" error={errors.expiryDate?.message} {...register('expiryDate')} />
+            <Input label="Batch Number" required error={errors.batchNumber?.message} {...register('batchNumber')} />
+            <Input label="Manufacturing Date" type="date" required error={errors.manufacturingDate?.message} {...register('manufacturingDate')} />
+            <Input label="Expiry Date" type="date" required error={errors.expiryDate?.message} {...register('expiryDate')} />
           </CardContent>
         </Card>
 
@@ -114,10 +122,10 @@ const MedicineForm = () => {
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Pricing Information</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-5">
-            <Input label="Purchase Price" type="number" step="0.01" error={errors.purchasePrice?.message} {...register('purchasePrice')} />
-            <Input label="Selling Price" type="number" step="0.01" error={errors.sellingPrice?.message} {...register('sellingPrice')} />
-            <Input label="MRP" type="number" step="0.01" error={errors.mrp?.message} {...register('mrp')} />
-            <Input label="GST (%)" type="number" step="0.01" error={errors.gst?.message} {...register('gst')} />
+            <Input label="Purchase Price" type="number" step="0.01" required error={errors.purchasePrice?.message} {...register('purchasePrice')} />
+            <Input label="Selling Price" type="number" step="0.01" required error={errors.sellingPrice?.message} {...register('sellingPrice')} />
+            <Input label="MRP" type="number" step="0.01" required error={errors.mrp?.message} {...register('mrp')} />
+            <Input label="GST (%)" type="number" step="0.01" required error={errors.gst?.message} {...register('gst')} />
           </CardContent>
         </Card>
 
@@ -126,14 +134,14 @@ const MedicineForm = () => {
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Inventory & Supplier</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-5">
-            <Input label="Opening Quantity" type="number" error={errors.quantity?.message} {...register('quantity')} />
+            <Input label="Opening Quantity" type="number" required error={errors.quantity?.message} {...register('quantity')} />
             <div>
-              <Input label="Low Stock Alert At" type="number" error={errors.minimumStockLevel?.message} {...register('minimumStockLevel')} />
+              <Input label="Low Stock Alert At" type="number" required error={errors.minimumStockLevel?.message} {...register('minimumStockLevel')} />
               <p className="text-[11px] font-medium text-[#94A3B8] dark:text-slate-400 mt-1 ml-1 leading-snug">Alert when available stock reaches this quantity or below.</p>
             </div>
-            <Input label="Max Stock Level" type="number" error={errors.maximumStockLevel?.message} {...register('maximumStockLevel')} />
+            <Input label="Max Stock Level" type="number" required error={errors.maximumStockLevel?.message} {...register('maximumStockLevel')} />
             <Input label="Rack Number" error={errors.rackNumber?.message} {...register('rackNumber')} />
-            <Input label="Supplier ID" type="number" error={errors.supplierId?.message} {...register('supplierId')} />
+            <Input label="Supplier ID" type="number" required error={errors.supplierId?.message} {...register('supplierId')} />
           </CardContent>
         </Card>
 

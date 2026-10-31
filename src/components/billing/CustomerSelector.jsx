@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
 import { Search, Plus, X } from 'lucide-react';
 import { getCustomers, createCustomer } from '../../services/customerApi';
+import { isValidPhone } from '../../utils/validation';
 import Input from '../common/Input';
 import Button from '../common/Button';
 
@@ -14,6 +15,7 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ name: '', phoneNumber: '' });
+  const [modalErrors, setModalErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const internalInputRef = useRef(null);
@@ -141,17 +143,39 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
   const handleCloseModal = () => {
     setShowModal(false);
     setNewCustomer({ name: '', phoneNumber: '' });
+    setModalErrors({});
     // Restore focus back to the button that opened modal
     newCustomerBtnRef.current?.focus();
   };
 
   const handleCreateCustomer = async (e) => {
     e.preventDefault();
-    if (!newCustomer.name || !newCustomer.phoneNumber) return;
+    const errors = {};
+    const trimmedName = (newCustomer.name || '').trim();
+    const trimmedPhone = (newCustomer.phoneNumber || '').trim();
+
+    if (!trimmedName) {
+      errors.name = 'Customer name is required';
+    } else if (trimmedName.length < 2) {
+      errors.name = 'Customer name must be at least 2 characters';
+    }
+
+    if (!trimmedPhone) {
+      errors.phoneNumber = 'Phone number is required';
+    } else if (!isValidPhone(trimmedPhone)) {
+      errors.phoneNumber = 'Enter a valid phone number (e.g., 9876543210)';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setModalErrors(errors);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const res = await createCustomer({ 
-        ...newCustomer, 
+        name: trimmedName,
+        phoneNumber: trimmedPhone, 
         type: 'New', 
         loyaltyPoints: 0, 
         outstandingPayment: 0, 
@@ -161,8 +185,10 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
       handleSelect(res.data);
       setShowModal(false);
       setNewCustomer({ name: '', phoneNumber: '' });
+      setModalErrors({});
     } catch (err) {
       console.error('Failed to create customer', err);
+      setModalErrors({ submit: err.message || 'Failed to create customer' });
     } finally {
       setIsSubmitting(false);
     }
@@ -289,24 +315,37 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
               </button>
             </div>
             <form onSubmit={handleCreateCustomer} className="space-y-4">
+              {modalErrors.submit && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  {modalErrors.submit}
+                </div>
+              )}
               <Input 
                 ref={modalNameInputRef}
-                label="Name *" 
+                label="Name" 
                 value={newCustomer.name}
-                onChange={(e) => setNewCustomer({...newCustomer, name: e.target.value})}
+                error={modalErrors.name}
+                onChange={(e) => {
+                  setNewCustomer({ ...newCustomer, name: e.target.value });
+                  if (modalErrors.name) setModalErrors(prev => ({ ...prev, name: '' }));
+                }}
                 required
               />
               <Input 
-                label="Phone Number *" 
+                label="Phone Number" 
                 value={newCustomer.phoneNumber}
-                onChange={(e) => setNewCustomer({...newCustomer, phoneNumber: e.target.value})}
+                error={modalErrors.phoneNumber}
+                onChange={(e) => {
+                  setNewCustomer({ ...newCustomer, phoneNumber: e.target.value });
+                  if (modalErrors.phoneNumber) setModalErrors(prev => ({ ...prev, phoneNumber: '' }));
+                }}
                 required
               />
               <div className="pt-2 flex justify-end space-x-2">
                 <Button type="button" variant="secondary" onClick={handleCloseModal}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting || !newCustomer.name || !newCustomer.phoneNumber}>
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Saving...' : 'Save Customer'}
                 </Button>
               </div>

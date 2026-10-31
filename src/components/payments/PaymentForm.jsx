@@ -108,7 +108,9 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div>
-            <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Payment For</label>
+            <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+              Payment For <span className="text-red-500">*</span>
+            </label>
             <select 
               {...register('type')}
               className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
@@ -120,7 +122,9 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
 
           {paymentType === 'Purchase' ? (
             <div>
-              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Supplier *</label>
+              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+                Supplier <span className="text-red-500">*</span>
+              </label>
               <select 
                 {...register('supplierId')}
                 className={`block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED] ${errors.supplierId ? 'border-red-500' : ''}`}
@@ -132,7 +136,9 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
             </div>
           ) : (
             <div>
-              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Customer *</label>
+              <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+                Customer <span className="text-red-500">*</span>
+              </label>
               <select 
                 {...register('customerId')}
                 className={`block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED] ${errors.customerId ? 'border-red-500' : ''}`}
@@ -145,20 +151,23 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
           )}
 
           <Input 
-            label="PO / Invoice ID *" 
+            label="PO / Invoice ID" 
+            required
             {...register('referenceId')} 
             error={errors.referenceId?.message}
           />
 
           <Input 
-            label="Payment Date *" 
+            label="Payment Date" 
+            required
             type="date"
             {...register('date')} 
             error={errors.date?.message}
           />
 
           <Input 
-            label="Amount (₹) *" 
+            label="Amount (₹)" 
+            required
             type="number"
             step="0.01"
             min="0"
@@ -167,7 +176,9 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
           />
 
           <div>
-            <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Payment Method</label>
+            <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+              Payment Method <span className="text-red-500">*</span>
+            </label>
             <select 
               {...register('method')}
               className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"

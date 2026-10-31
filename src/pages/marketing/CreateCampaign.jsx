@@ -13,15 +13,27 @@ const CreateCampaign = () => {
     targetAudience: 'All Customers',
     message: ''
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // eslint-disable-next-line react/set-state-in-effect
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const validate = () => {
+    const errs = {};
+    if (!formData.name.trim()) errs.name = 'Campaign name is required.';
+    if (!formData.message.trim()) errs.message = 'Message template is required.';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = (e, asDraft = false) => {
     e.preventDefault();
+    if (!validate()) return;
     console.log("Saving campaign", formData, asDraft ? "Draft" : "Active");
     navigate('/marketing/campaigns');
   };
@@ -46,10 +58,13 @@ const CreateCampaign = () => {
               value={formData.name}
               onChange={handleChange}
               required
+              error={errors.name}
             />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Channel</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Channel <span className="text-red-500">*</span>
+              </label>
               <select 
                 name="type"
                 value={formData.type}
@@ -64,7 +79,9 @@ const CreateCampaign = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Audience</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Target Audience <span className="text-red-500">*</span>
+            </label>
             <select 
               name="targetAudience"
               value={formData.targetAudience}
@@ -79,16 +96,18 @@ const CreateCampaign = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message Template</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Message Template <span className="text-red-500">*</span>
+            </label>
             <textarea 
               name="message"
               rows={5}
               placeholder="Type your message here... Use {name} for customer name."
               value={formData.message}
               onChange={handleChange}
-              className="block w-full rounded-md border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100"
-              required
+              className={`block w-full rounded-md border ${errors.message ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'} bg-white dark:bg-slate-800 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 text-slate-900 dark:text-slate-100`}
             />
+            {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
             <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">Character count: {formData.message.length}</p>
           </div>
 

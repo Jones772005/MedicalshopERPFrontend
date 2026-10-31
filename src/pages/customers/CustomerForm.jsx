@@ -11,12 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/commo
 
 
 const customerSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  phoneNumber: z.string().min(10, 'Valid phone number required'),
-  email: z.string().email('Valid email required').optional().or(z.literal('')),
-  address: z.string().optional(),
+  name: z.string().trim().min(2, 'Name must be at least 2 characters'),
+  phoneNumber: z.string().trim().min(7, 'Phone number must be at least 7 digits').regex(/^[0-9+\-\s()]+$/, 'Valid phone number required'),
+  email: z.string().trim().email('Valid email required').optional().or(z.literal('')),
+  address: z.string().trim().optional(),
   type: z.enum(['Regular', 'Wholesale', 'New']),
-  notes: z.string().optional()
+  notes: z.string().trim().optional()
 });
 
 const CustomerForm = () => {
@@ -55,11 +55,19 @@ const CustomerForm = () => {
     setSubmitting(true);
     setSaveError('');
     try {
+      const sanitized = {
+        ...data,
+        name: data.name?.trim(),
+        phoneNumber: data.phoneNumber?.trim(),
+        email: data.email?.trim() || '',
+        address: data.address?.trim() || '',
+        notes: data.notes?.trim() || '',
+      };
       if (isEdit) {
-        await updateCustomer(id, data);
+        await updateCustomer(id, sanitized);
       } else {
         await createCustomer({
-          ...data,
+          ...sanitized,
           loyaltyPoints: 0,
           outstandingPayment: 0,
           status: 'Active'
@@ -68,7 +76,7 @@ const CustomerForm = () => {
       navigate('/customers');
     } catch (error) {
       console.error('Failed to save customer', error);
-      setSaveError('Failed to save. Please try again.');
+      setSaveError(error.message || 'Failed to save. Please try again.');
       setSubmitting(false);
     }
   };
@@ -89,11 +97,13 @@ const CustomerForm = () => {
           <CardHeader><CardTitle>Customer Information</CardTitle></CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Input label="Full Name" error={errors.name?.message} {...register('name')} />
-              <Input label="Phone Number" error={errors.phoneNumber?.message} {...register('phoneNumber')} />
+              <Input label="Full Name" required error={errors.name?.message} {...register('name')} />
+              <Input label="Phone Number" required error={errors.phoneNumber?.message} {...register('phoneNumber')} />
               <Input label="Email Address" type="email" error={errors.email?.message} {...register('email')} />
               <div className="lg:col-span-1">
-                <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">Customer Type</label>
+                <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">
+                  Customer Type <span className="text-red-500">*</span>
+                </label>
                 <select
                   {...register('type')}
                   className="block w-full h-10 rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm text-[#162033] dark:text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#2482ED]"

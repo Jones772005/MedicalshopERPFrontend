@@ -209,6 +209,7 @@ const SalesReturns = () => {
             <div className="flex-1">
               <Input
                 label="Invoice Number or ID"
+                required
                 value={searchInvoiceId}
                 onChange={e => setSearchInvoiceId(e.target.value)}
                 placeholder="e.g. INV-2026-001 or numeric ID"
@@ -238,14 +239,18 @@ const SalesReturns = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">Return Reason</label>
+                  <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">
+                    Return Reason <span className="text-red-500">*</span>
+                  </label>
                   <select value={globalReason} onChange={e => setGlobalReason(e.target.value)}
                     className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm text-[#162033] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#2482ED]">
                     {RETURN_REASONS.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">Refund Method</label>
+                  <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">
+                    Refund Method <span className="text-red-500">*</span>
+                  </label>
                   <select value={refundMethod} onChange={e => setRefundMethod(e.target.value)}
                     className="block w-full rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm text-[#162033] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#2482ED]">
                     <option value="Cash">Cash</option>

@@ -19,9 +19,17 @@ import { receiveStock } from './inventoryApi';
 export const createMedicine = async (data) => {
   await new Promise(resolve => setTimeout(resolve, 500));
   
+  if (!data || !data.name || !String(data.name).trim()) {
+    throw new Error('Medicine name is required');
+  }
+
   // Set default properties
   const medicineData = { 
     ...data, 
+    name: String(data.name).trim(),
+    genericName: data.genericName ? String(data.genericName).trim() : '',
+    category: data.category ? String(data.category).trim() : '',
+    manufacturer: data.manufacturer ? String(data.manufacturer).trim() : '',
     status: data.status || 'Available',
     stock: Number(data.quantity || data.stock || 0) // Deprecated in favor of inventory batches, but keeping for compatibility if UI needs it
   };
@@ -47,7 +55,12 @@ export const createMedicine = async (data) => {
 
 export const updateMedicine = async (id, data) => {
   await new Promise(resolve => setTimeout(resolve, 500));
-  const updatedMedicine = localDb.update(KEYS.MEDICINES, id, data);
+  if (data && data.name !== undefined && !String(data.name).trim()) {
+    throw new Error('Medicine name cannot be empty');
+  }
+  const cleanData = { ...data };
+  if (cleanData.name) cleanData.name = String(cleanData.name).trim();
+  const updatedMedicine = localDb.update(KEYS.MEDICINES, id, cleanData);
   await recordAuditEvent('UPDATE', 'Medicines', `Updated medicine ${updatedMedicine.name}`, id);
   return { data: updatedMedicine };
 };

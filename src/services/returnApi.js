@@ -14,6 +14,15 @@ export const getPurchaseReturns = async () => {
 };
 
 export const createSalesReturn = async (returnData) => {
+  if (!returnData?.saleId) {
+    throw new Error('Sale reference ID is required');
+  }
+  if (!returnData?.items || !Array.isArray(returnData.items) || returnData.items.length === 0) {
+    throw new Error('Return must contain at least one valid item');
+  }
+  if (!returnData?.reason || !returnData.reason.trim()) {
+    throw new Error('Return reason is required');
+  }
   let finalReturn = null;
   await localDb.runLocalTransaction(async (tx) => {
     // Validate quantities against original sale
@@ -58,6 +67,15 @@ export const createSalesReturn = async (returnData) => {
 };
 
 export const createPurchaseReturn = async (returnData) => {
+  if (!returnData?.purchaseId && !returnData?.purchaseOrderNumber) {
+    throw new Error('Purchase reference is required');
+  }
+  if (!returnData?.items || !Array.isArray(returnData.items) || returnData.items.length === 0) {
+    throw new Error('Return must contain at least one valid item');
+  }
+  if (!returnData?.reason || !returnData.reason.trim()) {
+    throw new Error('Return reason is required');
+  }
   let finalReturn = null;
   await localDb.runLocalTransaction(async (tx) => {
     

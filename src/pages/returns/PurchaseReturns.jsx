@@ -268,7 +268,9 @@ const PurchaseReturns = () => {
           <div className="flex gap-3 items-end">
             {location.state?.prefill && !location.state.prefill.sourcePurchaseId && !originalPurchase ? (
               <div className="flex-1">
-                <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">Original Purchase</label>
+                <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">
+                  Original Purchase <span className="text-red-500">*</span>
+                </label>
                 <select 
                   value={searchPurchaseId} 
                   onChange={e => setSearchPurchaseId(e.target.value)}
@@ -284,7 +286,7 @@ const PurchaseReturns = () => {
               </div>
             ) : (
               <div className="flex-1">
-                <Input label="Purchase ID" value={searchPurchaseId} onChange={e => setSearchPurchaseId(e.target.value)} placeholder="Enter Purchase ID (e.g., PUR-000001)" />
+                <Input label="Purchase ID" required value={searchPurchaseId} onChange={e => setSearchPurchaseId(e.target.value)} placeholder="Enter Purchase ID (e.g., PUR-000001)" />
               </div>
             )}
             <Button onClick={() => loadPurchase(searchPurchaseId)} disabled={searching || !searchPurchaseId.trim()}>
@@ -310,7 +312,9 @@ const PurchaseReturns = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">Return Reason</label>
+                <label className="block text-sm font-medium text-[#64748B] dark:text-slate-300 mb-1">
+                  Return Reason <span className="text-red-500">*</span>
+                </label>
                 <select value={globalReason} onChange={e => setGlobalReason(e.target.value)}
                   className="block w-full md:w-80 rounded-md border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#0B1A2A] px-3 py-2 text-sm text-[#162033] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#2482ED]">
                   {RETURN_REASONS.map(r => <option key={r} value={r}>{r}</option>)}

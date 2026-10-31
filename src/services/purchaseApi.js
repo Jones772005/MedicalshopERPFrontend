@@ -17,9 +17,15 @@ export const getPurchaseById = async (id) => {
 
 export const createPurchase = async (purchaseData) => {
   await new Promise(resolve => setTimeout(resolve, 500));
+  if (!purchaseData || !purchaseData.supplierId) {
+    throw new Error('Supplier is required for purchase order');
+  }
+  if (!purchaseData.items || !purchaseData.items.length) {
+    throw new Error('At least one purchase item is required');
+  }
   const newPurchase = localDb.insert(KEYS.PURCHASES, {
     ...purchaseData,
-    status: 'Ordered',
+    status: purchaseData.status || 'Ordered',
     paymentStatus: 'Pending',
     paidAmount: 0,
   });

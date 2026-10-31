@@ -20,12 +20,12 @@ import {
 import { getCustomers } from '../../services/customerApi'; 
 
 const requestSchema = z.object({
-  medicineName: z.string().min(2, 'Medicine name is required'),
-  customerName: z.string().min(2, 'Customer name is required'),
-  customerPhone: z.string().optional(),
-  requestedQuantity: z.coerce.number().int('Must be a whole number').positive('Must be positive'),
+  medicineName: z.string().trim().min(2, 'Medicine name is required'),
+  customerName: z.string().trim().min(2, 'Customer name is required'),
+  customerPhone: z.string().trim().optional(),
+  requestedQuantity: z.coerce.number().int('Must be a whole number').positive('Quantity must be greater than 0'),
   requestedDate: z.string().min(1, 'Date is required'),
-  notes: z.string().optional(),
+  notes: z.string().trim().optional(),
   status: z.enum(['Pending', 'Fulfilled', 'Cancelled']).default('Pending'),
 });
 
@@ -262,11 +262,13 @@ const MedicineRequests = () => {
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-slate-800 pb-2">Customer Information</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-[#162033] dark:text-[#D9E6F2] mb-1">Customer Name</label>
+                      <label className="block text-sm font-medium text-[#162033] dark:text-[#D9E6F2] mb-1">
+                        Customer Name <span className="text-red-500">*</span>
+                      </label>
                       <input 
                         type="text"
                         list="customer-list"
-                        className="flex h-10 w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
+                        className={`flex h-10 w-full rounded-lg border ${errors.customerName ? 'border-red-500' : 'border-[#DDE6F0] dark:border-[#263B50]'} bg-white dark:bg-[#132B42] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2482ED]`}
                         placeholder="Search or enter name..."
                         {...register('customerName')}
                         onChange={(e) => {
@@ -290,14 +292,16 @@ const MedicineRequests = () => {
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-slate-800 pb-2">Request Information</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <Input label="Medicine Name" placeholder="e.g. Azithromycin 500mg" error={errors.medicineName?.message} {...register('medicineName')} />
-                    <Input label="Quantity" type="number" min="1" step="1" error={errors.requestedQuantity?.message} {...register('requestedQuantity')} />
+                    <Input label="Medicine Name" required placeholder="e.g. Azithromycin 500mg" error={errors.medicineName?.message} {...register('medicineName')} />
+                    <Input label="Quantity" required type="number" min="1" step="1" error={errors.requestedQuantity?.message} {...register('requestedQuantity')} />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <Input label="Requested Date" type="date" error={errors.requestedDate?.message} {...register('requestedDate')} />
+                    <Input label="Requested Date" required type="date" error={errors.requestedDate?.message} {...register('requestedDate')} />
                     <div className="lg:col-span-1">
-                      <label className="block text-sm font-medium text-[#162033] dark:text-[#D9E6F2] mb-1">Status</label>
+                      <label className="block text-sm font-medium text-[#162033] dark:text-[#D9E6F2] mb-1">
+                        Status <span className="text-red-500">*</span>
+                      </label>
                       <select
                         {...register('status')}
                         className="flex h-10 w-full rounded-lg border border-[#DDE6F0] dark:border-[#263B50] bg-white dark:bg-[#132B42] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2482ED]"

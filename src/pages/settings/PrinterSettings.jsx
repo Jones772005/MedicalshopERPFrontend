@@ -11,6 +11,8 @@ const PrinterSettings = () => {
   const [formData, setFormData] = useState(settings.printer || {});
   const [prevSettings, setPrevSettings] = useState(settings.printer);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [statusMessage, setStatusMessage] = useState(null);
 
   if (prevSettings !== settings.printer) {
     setPrevSettings(settings.printer);
@@ -21,17 +23,32 @@ const PrinterSettings = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setFormData(prev => ({ 
       ...prev, 
       [name]: type === 'checkbox' ? checked : value 
     }));
   };
 
+  const validate = () => {
+    const errs = {};
+    const c = Number(formData.copies);
+    if (!formData.copies || isNaN(c) || c < 1 || c > 5) {
+      errs.copies = 'Number of copies must be between 1 and 5';
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSave = async () => {
+    setStatusMessage(null);
+    if (!validate()) return;
     setSaving(true);
     await updateCategorySettings('printer', formData);
     setSaving(false);
-    alert('Printer settings saved successfully!');
+    setStatusMessage({ type: 'success', text: 'Printer settings saved successfully!' });
   };
 
   return (
@@ -44,6 +61,16 @@ const PrinterSettings = () => {
         saving={saving}
         hasUnsavedChanges={hasUnsavedChanges}
       />
+
+      {statusMessage && (
+        <div className={`mb-6 p-4 rounded-lg border text-sm ${
+          statusMessage.type === 'error'
+            ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
+        }`}>
+          {statusMessage.text}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
         {/* Left Column: Printer Hardware */}
@@ -113,6 +140,8 @@ const PrinterSettings = () => {
                   onChange={handleChange} 
                   min="1" 
                   max="5" 
+                  required
+                  error={errors.copies}
                 />
               </div>
             </div>

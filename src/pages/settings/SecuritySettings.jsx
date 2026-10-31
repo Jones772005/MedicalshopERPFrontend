@@ -10,6 +10,8 @@ const SecuritySettings = () => {
   const [formData, setFormData] = useState(settings.security || {});
   const [prevSettings, setPrevSettings] = useState(settings.security);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [statusMessage, setStatusMessage] = useState(null);
 
   if (prevSettings !== settings.security) {
     setPrevSettings(settings.security);
@@ -20,17 +22,36 @@ const SecuritySettings = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
     setFormData(prev => ({ 
       ...prev, 
       [name]: type === 'checkbox' ? checked : value 
     }));
   };
 
+  const validate = () => {
+    const errs = {};
+    const minLen = Number(formData.minPasswordLength);
+    if (!formData.minPasswordLength || isNaN(minLen) || minLen < 6 || minLen > 32) {
+      errs.minPasswordLength = 'Length must be between 6 and 32';
+    }
+    const expiry = Number(formData.passwordExpiryDays);
+    if (formData.passwordExpiryDays !== '' && (isNaN(expiry) || expiry < 0)) {
+      errs.passwordExpiryDays = 'Must be 0 or a positive number';
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleSave = async () => {
+    setStatusMessage(null);
+    if (!validate()) return;
     setSaving(true);
     await updateCategorySettings('security', formData);
     setSaving(false);
-    alert('Security settings saved successfully!');
+    setStatusMessage({ type: 'success', text: 'Security settings saved successfully!' });
   };
 
   return (
@@ -43,6 +64,16 @@ const SecuritySettings = () => {
         saving={saving}
         hasUnsavedChanges={hasUnsavedChanges}
       />
+
+      {statusMessage && (
+        <div className={`mb-6 p-4 rounded-lg border text-sm ${
+          statusMessage.type === 'error'
+            ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400'
+            : 'bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
+        }`}>
+          {statusMessage.text}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
         {/* Left Column: Password & Operational Security */}
@@ -58,6 +89,8 @@ const SecuritySettings = () => {
                   onChange={handleChange} 
                   min="6"
                   max="32"
+                  required
+                  error={errors.minPasswordLength}
                 />
                 <Input 
                   label="Password Expiry (Days)" 
@@ -65,6 +98,7 @@ const SecuritySettings = () => {
                   name="passwordExpiryDays" 
                   value={formData.passwordExpiryDays || 90} 
                   onChange={handleChange} 
+                  error={errors.passwordExpiryDays}
                 />
               </div>
               
