@@ -43,3 +43,79 @@ export const isDateAfterOrEqual = (dateAfter, dateBefore) => {
   if (!isValidDate(dateAfter) || !isValidDate(dateBefore)) return false;
   return new Date(dateAfter).getTime() >= new Date(dateBefore).getTime();
 };
+
+/**
+ * Triggers a compact amber validation toast notification and scrolls/focuses to the first invalid field.
+ * @param {number|Array|Object} fieldCountOrErrors - Number of invalid fields, array of field names, or error object
+ * @param {Object} [options] - Optional overrides { title, message, firstField }
+ */
+export const notifyValidationError = (fieldCountOrErrors, options = {}) => {
+  let count = 0;
+  let firstFieldName = options.firstField || null;
+
+  if (typeof fieldCountOrErrors === 'number') {
+    count = fieldCountOrErrors;
+  } else if (Array.isArray(fieldCountOrErrors)) {
+    count = fieldCountOrErrors.length;
+    if (count > 0 && !firstFieldName) {
+      firstFieldName = fieldCountOrErrors[0];
+    }
+  } else if (fieldCountOrErrors && typeof fieldCountOrErrors === 'object') {
+    const keys = Object.keys(fieldCountOrErrors).filter(k => fieldCountOrErrors[k]);
+    count = keys.length;
+    if (count > 0 && !firstFieldName) {
+      firstFieldName = keys[0];
+    }
+  }
+
+  const message = options.message || (
+    count > 1
+      ? `${count} required fields need attention.`
+      : count === 1
+      ? '1 required field needs attention.'
+      : 'Please fill in all required fields before saving.'
+  );
+
+  const title = options.title || 'Required fields missing';
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('erp:validation-toast', {
+        detail: {
+          title,
+          message,
+          count,
+        },
+      })
+    );
+  }
+
+  // Automatically focus and scroll to the first invalid field
+  focusFirstInvalidField(firstFieldName);
+};
+
+export const focusFirstInvalidField = (firstKey) => {
+  if (typeof document === 'undefined') return;
+
+  setTimeout(() => {
+    if (firstKey && typeof firstKey === 'string') {
+      const escapedKey = firstKey.replace(/[[\]]/g, '\\$&');
+      const el = document.querySelector(
+        `[name="${escapedKey}"], #${firstKey}, [data-name="${firstKey}"], [aria-label*="${firstKey}" i]`
+      );
+      if (el && typeof el.focus === 'function') {
+        el.focus();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+
+    const invalidEl = document.querySelector(
+      '.border-red-500, [aria-invalid="true"], input:invalid, select:invalid, textarea:invalid'
+    );
+    if (invalidEl && typeof invalidEl.focus === 'function') {
+      invalidEl.focus();
+      invalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 60);
+};

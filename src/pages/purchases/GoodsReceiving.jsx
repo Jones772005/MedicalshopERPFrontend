@@ -11,6 +11,7 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import { getPurchaseById, receivePurchase } from '../../services/purchaseApi';
 import { getMedicines } from '../../services/medicineApi';
+import { notifyValidationError } from '../../utils/validation';
 
 const receivingSchema = z.object({
   items: z.array(z.object({
@@ -150,7 +151,7 @@ const GoodsReceiving = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Verify and Receive Items</CardTitle>

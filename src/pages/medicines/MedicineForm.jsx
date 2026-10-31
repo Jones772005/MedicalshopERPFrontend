@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { getMedicine, createMedicine, updateMedicine } from '../../services/medicineApi';
+import { notifyValidationError } from '../../utils/validation';
 import PageHeader from '../../components/common/PageHeader';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
@@ -92,7 +93,7 @@ const MedicineForm = () => {
         description="Enter medicine details, pricing, and stock information."
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
+      <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6 w-full">
         <Card className="shadow-sm border border-[#DDE6F0] dark:border-slate-700/50">
           <CardHeader className="border-b border-[#DDE6F0] dark:border-slate-700/50 bg-[#F5F8FC] dark:bg-slate-900/50 pb-3">
             <CardTitle className="text-[15px] text-[#162033] dark:text-white">Basic Information</CardTitle>

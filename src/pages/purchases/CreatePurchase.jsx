@@ -15,6 +15,7 @@ import { getSuppliers } from '../../services/supplierApi';
 import { getMedicines } from '../../services/medicineApi';
 import { createPurchase } from '../../services/purchaseApi';
 import { calculateItemAmount } from '../../utils/billingCalculations';
+import { notifyValidationError } from '../../utils/validation';
 
 const purchaseSchema = z.object({
   supplierId: z.string().min(1, 'Supplier is required'),
@@ -378,11 +379,11 @@ const CreatePurchase = () => {
           <Button type="button" variant="secondary" onClick={() => navigate('/purchases')} disabled={submitting}>
             Cancel
           </Button>
-          <Button type="button" variant="outline" onClick={handleSubmit((data) => onSubmit(data, 'Draft'))} disabled={submitting}>
+          <Button type="button" variant="outline" onClick={handleSubmit((data) => onSubmit(data, 'Draft'), (errs) => notifyValidationError(errs))} disabled={submitting}>
             <Save className="w-4 h-4 mr-2" />
             Save Draft
           </Button>
-          <Button type="button" onClick={handleSubmit((data) => onSubmit(data, 'Ordered'))} disabled={submitting}>
+          <Button type="button" onClick={handleSubmit((data) => onSubmit(data, 'Ordered'), (errs) => notifyValidationError(errs))} disabled={submitting}>
             <Send className="w-4 h-4 mr-2" />
             Create Purchase Order
           </Button>

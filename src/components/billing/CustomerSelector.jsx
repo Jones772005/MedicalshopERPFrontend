@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
 import { Search, Plus, X } from 'lucide-react';
 import { getCustomers, createCustomer } from '../../services/customerApi';
-import { isValidPhone } from '../../utils/validation';
+import { isValidPhone, notifyValidationError } from '../../utils/validation';
 import Input from '../common/Input';
 import Button from '../common/Button';
 
@@ -168,6 +168,7 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
 
     if (Object.keys(errors).length > 0) {
       setModalErrors(errors);
+      notifyValidationError(errors);
       return;
     }
 
