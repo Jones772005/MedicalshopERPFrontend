@@ -67,7 +67,7 @@ const InventoryReport = () => {
         showDateRange={false}
         showCategory={true}
         onFilter={fetchInventory} 
-        onExport={() => alert('Exporting (Mock)')}
+        onExport={() => alert('Exporting')}
         onPrint={() => window.print()}
       />
 

@@ -152,6 +152,9 @@ export const initializeDatabase = (force = false) => {
     seedKey(KEYS.AUDIT_LOGS, auditLogsData);
 
     seedKey(KEYS.BATCHES, []);
+    seedKey(KEYS.DISCOUNTS, []);
+    seedKey(KEYS.MEDICINE_REQUESTS, []);
+    seedKey(KEYS.QR, []);
     
     // Update version
     localStorage.setItem(KEYS.VERSION, CURRENT_DB_VERSION);

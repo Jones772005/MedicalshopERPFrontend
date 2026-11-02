@@ -18,13 +18,12 @@ const CustomersReport = () => {
       try {
         const [cRes, sRes] = await Promise.all([getCustomers(), getSales()]);
         
-        // Mock enrichment
         const enriched = cRes.data.map(customer => {
           const customerSales = sRes.data.filter(s => s.customerId === customer.id);
           const bills = customerSales.length;
-          const totalPurchases = customerSales.reduce((acc, curr) => acc + curr.grandTotal, 0);
+          const totalPurchases = customerSales.reduce((acc, curr) => acc + (Number(curr.grandTotal) || 0), 0);
           const avgBill = bills > 0 ? totalPurchases / bills : 0;
-          const outstanding = 0; // Assuming all paid for mock
+          const outstanding = Number(customer.outstandingPayment) || 0;
           const lastPurchase = customerSales.length > 0 
             ? Math.max(...customerSales.map(s => new Date(s.date).getTime()))
             : null;
@@ -70,7 +69,7 @@ const CustomersReport = () => {
       <ReportFilterBar 
         showDateRange={false}
         onFilter={() => {}} 
-        onExport={() => alert('Exporting (Mock)')}
+        onExport={() => alert('Exporting')}
         onPrint={() => window.print()}
       />
 

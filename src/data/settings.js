@@ -89,7 +89,7 @@ export const mockSettings = {
     autoBackup: true,
     frequency: 'Daily',
     retentionDays: 30,
-    lastBackup: '2024-03-15T02:00:00Z',
-    backupSize: '45.2 MB'
+    lastBackup: null,
+    backupSize: null
   }
 };

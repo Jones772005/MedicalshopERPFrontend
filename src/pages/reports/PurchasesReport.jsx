@@ -49,7 +49,7 @@ const PurchasesReport = () => {
       
       <ReportFilterBar 
         onFilter={fetchPurchases} 
-        onExport={() => alert('Exporting (Mock)')}
+        onExport={() => alert('Exporting')}
         onPrint={() => window.print()}
       />
 

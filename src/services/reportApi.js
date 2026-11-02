@@ -25,7 +25,7 @@ export const getReports = async (type, filters = {}) => {
             data = [];
         }
 
-        // Apply basic mock filtering (very rudimentary for demonstration)
+        // Apply date range filtering
         if (filters.startDate) {
           data = data.filter(item => new Date(item.date || item.orderDate) >= new Date(filters.startDate));
         }

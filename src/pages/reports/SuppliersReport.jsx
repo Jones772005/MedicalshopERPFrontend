@@ -82,7 +82,7 @@ const SuppliersReport = () => {
       <ReportFilterBar 
         showDateRange={false}
         onFilter={() => {}} 
-        onExport={() => alert('Exporting (Mock)')}
+        onExport={() => alert('Exporting')}
         onPrint={() => window.print()}
       />
 

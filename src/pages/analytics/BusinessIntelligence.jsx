@@ -15,7 +15,7 @@ const StatCard = ({ title, value, icon, trend }) => (
     <div>
       <p className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">{title}</p>
       <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{value}</h3>
-      {trend && (
+      {trend > 0 && (
         <p className="text-sm mt-1 text-green-600 dark:text-green-400 flex items-center">
           <TrendingUp className="w-3 h-3 mr-1" /> {trend}% vs last month
         </p>
@@ -46,7 +46,7 @@ const BusinessIntelligence = () => {
   }, []);
 
   if (loading) return <LoadingSpinner />;
-  if (!data) return <div>Failed to load BI data.</div>;
+  if (!data) return <div className="p-8 text-center text-gray-500 dark:text-slate-400">Failed to load BI data.</div>;
 
   const { salesPerformance, customerPerformance, inventoryPerformance, productPerformance } = data;
 
@@ -61,23 +61,23 @@ const BusinessIntelligence = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard 
           title="Total Revenue" 
-          value={`₹${salesPerformance.totalRevenue.toLocaleString()}`} 
+          value={`₹${(salesPerformance?.totalRevenue || 0).toLocaleString()}`} 
           icon={<Activity className="w-6 h-6" />}
-          trend={salesPerformance.monthlyGrowth}
+          trend={salesPerformance?.monthlyGrowth || 0}
         />
         <StatCard 
           title="Total Sales" 
-          value={salesPerformance.totalSales} 
+          value={salesPerformance?.totalSales || 0} 
           icon={<ShoppingCart className="w-6 h-6" />}
         />
         <StatCard 
           title="Total Customers" 
-          value={customerPerformance.totalCustomers} 
+          value={customerPerformance?.totalCustomers || 0} 
           icon={<Users className="w-6 h-6" />}
         />
         <StatCard 
           title="Inventory Value" 
-          value={`₹${inventoryPerformance.inventoryValue.toLocaleString()}`} 
+          value={`₹${(inventoryPerformance?.inventoryValue || 0).toLocaleString()}`} 
           icon={<Package className="w-6 h-6" />}
         />
       </div>
@@ -87,61 +87,79 @@ const BusinessIntelligence = () => {
         {/* Sales Trend Chart */}
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Revenue Trend</h3>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={salesPerformance.revenueTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
-                <Tooltip contentStyle={{backgroundColor: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px'}} />
-                <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} dot={{r: 4, fill: '#3b82f6'}} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="h-72 flex items-center justify-center">
+            {salesPerformance?.revenueTrend && salesPerformance.revenueTrend.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={salesPerformance.revenueTrend}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="name" stroke="#64748b" />
+                  <YAxis stroke="#64748b" />
+                  <Tooltip contentStyle={{backgroundColor: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px'}} />
+                  <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} dot={{r: 4, fill: '#3b82f6'}} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-sm text-gray-400 dark:text-slate-500">
+                No revenue trend data available.
+              </div>
+            )}
           </div>
         </div>
 
         {/* Category Sales Chart */}
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Sales by Category</h3>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <RechartsPieChart>
-                <Pie
-                  data={salesPerformance.categorySales}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  paddingAngle={5}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                >
-                  {salesPerformance.categorySales.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{backgroundColor: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px'}} />
-              </RechartsPieChart>
-            </ResponsiveContainer>
+          <div className="h-72 flex items-center justify-center">
+            {salesPerformance?.categorySales && salesPerformance.categorySales.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsPieChart>
+                  <Pie
+                    data={salesPerformance.categorySales}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {salesPerformance.categorySales.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{backgroundColor: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px'}} />
+                </RechartsPieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-sm text-gray-400 dark:text-slate-500">
+                No category sales data available.
+              </div>
+            )}
           </div>
         </div>
 
         {/* Customer Growth Chart */}
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Customer Growth</h3>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={customerPerformance.customerGrowth}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
-                <Tooltip contentStyle={{backgroundColor: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px'}} />
-                <Legend />
-                <Bar dataKey="new" name="New Customers" fill="#10b981" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="returning" name="Returning Customers" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="h-72 flex items-center justify-center">
+            {customerPerformance?.customerGrowth && customerPerformance.customerGrowth.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={customerPerformance.customerGrowth}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="name" stroke="#64748b" />
+                  <YAxis stroke="#64748b" />
+                  <Tooltip contentStyle={{backgroundColor: '#1e293b', color: '#fff', border: 'none', borderRadius: '8px'}} />
+                  <Legend />
+                  <Bar dataKey="new" name="New Customers" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="returning" name="Returning Customers" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-sm text-gray-400 dark:text-slate-500">
+                No customer growth data available.
+              </div>
+            )}
           </div>
         </div>
 
@@ -158,13 +176,21 @@ const BusinessIntelligence = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
-                {productPerformance.topSelling.map(product => (
-                  <tr key={product.id}>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{product.name}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-slate-400 text-right">{product.soldQuantity.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400 text-right">₹{product.revenue.toLocaleString()}</td>
+                {productPerformance?.topSelling && productPerformance.topSelling.length > 0 ? (
+                  productPerformance.topSelling.map(product => (
+                    <tr key={product.id}>
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{product.name}</td>
+                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-slate-400 text-right">{product.soldQuantity.toLocaleString()}</td>
+                      <td className="px-4 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400 text-right">₹{product.revenue.toLocaleString()}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="px-4 py-8 text-center text-sm text-gray-500 dark:text-slate-400">
+                      No sales records found.
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

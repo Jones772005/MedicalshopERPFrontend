@@ -17,12 +17,12 @@ export const mockStaff = [
     joiningDate: '2023-01-01',
     status: 'Active',
     username: 'admin',
-    lastLogin: '2024-03-15T09:00:00Z',
+    lastLogin: null,
     metrics: {
-      sales: 152,
-      invoices: 152,
-      purchases: 45,
-      returns: 12,
+      sales: 0,
+      invoices: 0,
+      purchases: 0,
+      returns: 0,
       prescriptions: 0
     }
   },
@@ -44,13 +44,13 @@ export const mockStaff = [
     joiningDate: '2023-02-15',
     status: 'Active',
     username: 'johndoe',
-    lastLogin: '2024-03-15T08:30:00Z',
+    lastLogin: null,
     metrics: {
-      sales: 845,
-      invoices: 845,
-      purchases: 10,
-      returns: 25,
-      prescriptions: 450
+      sales: 0,
+      invoices: 0,
+      purchases: 0,
+      returns: 0,
+      prescriptions: 0
     }
   },
   {
@@ -71,12 +71,12 @@ export const mockStaff = [
     joiningDate: '2023-06-01',
     status: 'Active',
     username: 'sarahs',
-    lastLogin: '2024-03-15T08:45:00Z',
+    lastLogin: null,
     metrics: {
-      sales: 1250,
-      invoices: 1250,
+      sales: 0,
+      invoices: 0,
       purchases: 0,
-      returns: 5,
+      returns: 0,
       prescriptions: 0
     }
   },
@@ -98,7 +98,7 @@ export const mockStaff = [
     joiningDate: '2023-03-10',
     status: 'Inactive',
     username: 'michaelb',
-    lastLogin: '2024-02-28T10:00:00Z',
+    lastLogin: null,
     metrics: {
       sales: 0,
       invoices: 0,

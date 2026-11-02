@@ -5,7 +5,6 @@ import {
 } from 'lucide-react';
 import StatCard from '../../components/common/StatCard';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/common/Card';
-import { dashboardData } from '../../data/dashboard';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
@@ -28,15 +27,30 @@ import { getSuppliers } from '../../services/supplierApi';
 import { calculateProfit } from '../../utils/financialCalculations';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
+const initialKpis = {
+  todaySales: 0,
+  todayPurchases: 0,
+  todayProfit: 0,
+  availableStock: 0,
+  lowStock: 0,
+  outOfStock: 0,
+  expiredMedicines: 0,
+  nearExpiryMedicines: 0,
+  pendingPayments: 0,
+  customers: 0,
+  suppliers: 0,
+  totalBills: 0
+};
+
 const Dashboard = () => {
   const { theme } = useTheme();
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [sales, setSales] = useState([]);
-  const [dynamicKpis, setDynamicKpis] = useState(dashboardData.kpis);
-  const [dynamicLowStock, setDynamicLowStock] = useState(dashboardData.lowStockAlerts);
+  const [dynamicKpis, setDynamicKpis] = useState(initialKpis);
+  const [dynamicLowStock, setDynamicLowStock] = useState([]);
   const [paymentMixData, setPaymentMixData] = useState([]);
-  const { salesTrend } = dashboardData;
+  const [salesTrend, setSalesTrend] = useState([]);
   const PIE_COLORS = ['#2482ED', '#24C9A0', '#F59E0B', '#6366F1', '#EC4899'];
 
   useEffect(() => {
@@ -117,6 +131,30 @@ const Dashboard = () => {
         const pmixArray = Object.keys(pmix).map(k => ({ name: k, value: pmix[k] })).sort((a, b) => b.value - a.value);
         setPaymentMixData(pmixArray);
 
+        // Calculate 7-day sales and profit trend from actual sales
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const last7Days = [];
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const dayKey = d.toLocaleDateString('en-CA');
+          const dayName = days[d.getDay()];
+          last7Days.push({ dateKey: dayKey, name: dayName, sales: 0, profit: 0 });
+        }
+
+        sales.forEach(s => {
+          if (s.status !== 'Cancelled') {
+            const saleDate = new Date(s.date).toLocaleDateString('en-CA');
+            const dayEntry = last7Days.find(d => d.dateKey === saleDate);
+            if (dayEntry) {
+              const saleTotal = Number(s.grandTotal) || 0;
+              dayEntry.sales += saleTotal;
+              dayEntry.profit += calculateProfit([s], inventory);
+            }
+          }
+        });
+        setSalesTrend(last7Days);
+
         setDynamicKpis(prev => ({
           ...prev,
           todaySales,
@@ -180,24 +218,18 @@ const Dashboard = () => {
           title="Today's Sales" 
           value={`₹${dynamicKpis.todaySales.toLocaleString()}`}
           icon={DollarSign}
-          trend="up"
-          trendValue="12.5%"
           color="success"
         />
         <StatCard 
           title="Today's Purchases" 
           value={`₹${dynamicKpis.todayPurchases.toLocaleString()}`}
           icon={ShoppingCart}
-          trend="down"
-          trendValue="2.4%"
           color="warning"
         />
         <StatCard 
           title="Today's Profit" 
           value={`₹${dynamicKpis.todayProfit.toLocaleString()}`}
           icon={TrendingUp}
-          trend="up"
-          trendValue="5.2%"
           color="primary"
         />
         <StatCard 
@@ -237,20 +269,24 @@ const Dashboard = () => {
             <CardTitle>Sales & Profit Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={salesTrend} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#334155' : '#e5e7eb'} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: theme === 'dark' ? '#94a3b8' : '#64748B', fontSize: 11 }} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: theme === 'dark' ? '#94a3b8' : '#64748B', fontSize: 11 }} dx={-10} />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff', color: theme === 'dark' ? '#f8fafc' : '#0f172a', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
-                    formatter={(value) => `₹${value}`}
-                  />
-                  <Line type="monotone" dataKey="sales" stroke="#24C9A0" strokeWidth={3} dot={{ r: 3, strokeWidth: 2, fill: theme === 'dark' ? '#1e293b' : '#ffffff' }} activeDot={{ r: 5 }} />
-                  <Line type="monotone" dataKey="profit" stroke="#2482ED" strokeWidth={3} dot={{ r: 3, strokeWidth: 2 }} activeDot={{ r: 5 }} />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="h-64 w-full flex items-center justify-center">
+              {salesTrend.some(d => d.sales > 0 || d.profit > 0) ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={salesTrend} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#334155' : '#e5e7eb'} />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: theme === 'dark' ? '#94a3b8' : '#64748B', fontSize: 11 }} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: theme === 'dark' ? '#94a3b8' : '#64748B', fontSize: 11 }} dx={-10} />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff', color: theme === 'dark' ? '#f8fafc' : '#0f172a', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
+                      formatter={(value) => `₹${value}`}
+                    />
+                    <Line type="monotone" dataKey="sales" stroke="#24C9A0" strokeWidth={3} dot={{ r: 3, strokeWidth: 2, fill: theme === 'dark' ? '#1e293b' : '#ffffff' }} activeDot={{ r: 5 }} />
+                    <Line type="monotone" dataKey="profit" stroke="#2482ED" strokeWidth={3} dot={{ r: 3, strokeWidth: 2 }} activeDot={{ r: 5 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-[#94A3B8] text-sm">No sales trend data available</div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -384,7 +420,13 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-[#102A43] divide-y divide-[#DDE6F0] dark:divide-slate-700/50">
-                  {sales.slice(-5).reverse().map((inv) => (
+                  {sales.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500 dark:text-slate-400">
+                        No recent invoices found.
+                      </td>
+                    </tr>
+                  ) : sales.slice(-5).reverse().map((inv) => (
                     <tr key={inv.id} className="hover:bg-[#F5F8FC] dark:hover:bg-slate-750/50 transition-colors">
                       <td className="px-6 py-3 whitespace-nowrap text-sm font-medium text-[#2482ED] dark:text-primary-400">{inv.invoiceNumber || `INV-${inv.id}`}</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-[#162033] dark:text-slate-100">{inv.customerName || 'Walk-in'}</td>

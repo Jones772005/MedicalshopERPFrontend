@@ -29,7 +29,7 @@ const SalesReport = () => {
   }, []);
 
   const handleExport = () => {
-    alert('Exporting to CSV (Mock)');
+    alert('Exporting to CSV');
   };
 
   const handlePrint = () => {

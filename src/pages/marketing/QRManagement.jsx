@@ -3,8 +3,10 @@ import { QrCode, Download, Link as LinkIcon, Printer } from 'lucide-react';
 import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 
-// Mock QR Codes. In a real app we'd use qrcode.react
+import { useSettings } from '../../context/SettingsContext';
+
 const QRManagement = () => {
+  const { settings } = useSettings();
   const [activeTab, setActiveTab] = useState('store');
 
   const tabs = [
@@ -62,9 +64,9 @@ const QRManagement = () => {
                     type="text"
                     readOnly
                     value={
-                      activeTab === 'store' ? 'https://medierp.shop/feedback/123' : 
-                      activeTab === 'payment' ? 'upi://pay?pa=medierp@bank&pn=Medical Shop ERP' : 
-                      'https://medierp.shop/download-app'
+                      activeTab === 'store' ? (settings?.pharmacy?.website || (typeof window !== 'undefined' ? `${window.location.origin}/feedback` : '')) : 
+                      activeTab === 'payment' ? (settings?.qr?.upiId ? `upi://pay?pa=${settings.qr.upiId}&pn=${encodeURIComponent(settings?.pharmacy?.name || 'Medical Shop ERP')}` : 'UPI ID not configured') : 
+                      (settings?.qr?.websiteUrl ? `${settings.qr.websiteUrl}/download` : 'App URL not configured')
                     }
                     className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 sm:text-sm"
                   />

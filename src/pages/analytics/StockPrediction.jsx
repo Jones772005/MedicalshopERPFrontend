@@ -30,7 +30,23 @@ const StockPrediction = () => {
   }, []);
 
   if (loading) return <LoadingSpinner />;
-  if (!selectedMed) return <div>No prediction data available.</div>;
+  if (!selectedMed || predictions.length === 0) {
+    return (
+      <div className="space-y-6 pb-12">
+        <PageHeader 
+          title="Smart Stock Prediction" 
+          description="Demand forecasting based on historical sales trends."
+        />
+        <div className="bg-white dark:bg-slate-800 p-12 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm text-center">
+          <Lightbulb className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">No Prediction Data Available</h3>
+          <p className="text-sm text-gray-500 dark:text-slate-400 max-w-md mx-auto">
+            Stock demand predictions will be generated automatically once medicines and inventory records are added.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-12">
