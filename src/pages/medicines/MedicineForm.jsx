@@ -11,34 +11,64 @@ import Button from '../../components/common/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 
 const medicineSchema = z.object({
-  name: z.string().trim().min(1, 'Medicine name is required'),
-  genericName: z.string().trim().min(1, 'Generic name is required'),
-  brandName: z.string().optional(),
-  category: z.string().trim().min(1, 'Category is required'),
-  manufacturer: z.string().trim().min(1, 'Manufacturer is required'),
-  batchNumber: z.string().trim().min(1, 'Batch number is required'),
+  name: z.string().trim().min(2, 'Medicine name must be at least 2 characters').max(100, 'Medicine name cannot exceed 100 characters'),
+  genericName: z.string().trim().min(2, 'Generic name must be at least 2 characters').max(100, 'Generic name cannot exceed 100 characters'),
+  brandName: z.string().trim().max(100, 'Brand name cannot exceed 100 characters').optional().or(z.literal('')),
+  category: z.string().trim().min(2, 'Category must be at least 2 characters').max(50, 'Category cannot exceed 50 characters'),
+  manufacturer: z.string().trim().min(2, 'Manufacturer must be at least 2 characters').max(100, 'Manufacturer cannot exceed 100 characters'),
+  batchNumber: z.string().trim().min(2, 'Batch number must be at least 2 characters').max(30, 'Batch number cannot exceed 30 characters'),
   manufacturingDate: z.string().min(1, 'Manufacturing date is required'),
   expiryDate: z.string().min(1, 'Expiry date is required'),
-  purchasePrice: z.coerce.number({ invalid_type_error: 'Valid purchase price is required' }).min(0, 'Purchase price cannot be negative'),
-  sellingPrice: z.coerce.number({ invalid_type_error: 'Valid selling price is required' }).min(0, 'Selling price cannot be negative'),
-  mrp: z.coerce.number({ invalid_type_error: 'Valid MRP is required' }).min(0, 'MRP cannot be negative'),
-  gst: z.coerce.number({ invalid_type_error: 'Valid GST is required' }).min(0, 'GST cannot be negative').max(100, 'GST cannot exceed 100%'),
-  quantity: z.coerce.number({ invalid_type_error: 'Valid quantity is required' }).int('Quantity must be an integer').min(0, 'Quantity cannot be negative'),
-  minimumStockLevel: z.coerce.number({ invalid_type_error: 'Valid stock level is required' }).int('Must be an integer').min(0, 'Cannot be negative'),
-  maximumStockLevel: z.coerce.number({ invalid_type_error: 'Valid stock level is required' }).int('Must be an integer').min(0, 'Cannot be negative'),
-  rackNumber: z.string().optional(),
+  purchasePrice: z.coerce.number({ invalid_type_error: 'Valid purchase price is required' })
+    .min(0, 'Purchase price cannot be negative')
+    .refine(val => /^\d+(\.\d{1,2})?$/.test(String(val)), 'Purchase price can have at most 2 decimal places'),
+  sellingPrice: z.coerce.number({ invalid_type_error: 'Valid selling price is required' })
+    .min(0, 'Selling price cannot be negative')
+    .refine(val => /^\d+(\.\d{1,2})?$/.test(String(val)), 'Selling price can have at most 2 decimal places'),
+  mrp: z.coerce.number({ invalid_type_error: 'Valid MRP is required' })
+    .min(0, 'MRP cannot be negative')
+    .refine(val => /^\d+(\.\d{1,2})?$/.test(String(val)), 'MRP can have at most 2 decimal places'),
+  gst: z.coerce.number({ invalid_type_error: 'Valid GST is required' })
+    .min(0, 'GST cannot be negative')
+    .max(100, 'GST cannot exceed 100%'),
+  quantity: z.coerce.number({ invalid_type_error: 'Valid quantity is required' })
+    .int('Quantity must be a whole number')
+    .min(0, 'Quantity cannot be negative'),
+  minimumStockLevel: z.coerce.number({ invalid_type_error: 'Valid minimum stock level is required' })
+    .int('Minimum stock level must be a whole number')
+    .min(0, 'Minimum stock cannot be negative'),
+  maximumStockLevel: z.coerce.number({ invalid_type_error: 'Valid maximum stock level is required' })
+    .int('Maximum stock level must be a whole number')
+    .min(0, 'Maximum stock cannot be negative'),
+  rackNumber: z.string().trim().max(20, 'Rack number cannot exceed 20 characters').optional().or(z.literal('')),
   supplierId: z.coerce.number({ invalid_type_error: 'Valid supplier ID is required' }).min(1, 'Supplier is required'),
   prescriptionRequired: z.boolean().default(false),
-  barcode: z.string().optional(),
-  description: z.string().optional(),
-}).refine(data => {
+  barcode: z.string().trim().regex(/^[A-Za-z0-9-]{4,20}$/, 'Barcode must be 4 to 20 alphanumeric characters').optional().or(z.literal('')),
+  description: z.string().trim().max(500, 'Description cannot exceed 500 characters').optional().or(z.literal('')),
+}).superRefine((data, ctx) => {
   if (data.manufacturingDate && data.expiryDate) {
-    return new Date(data.expiryDate) >= new Date(data.manufacturingDate);
+    if (new Date(data.expiryDate) < new Date(data.manufacturingDate)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Expiry date must be on or after manufacturing date',
+        path: ['expiryDate']
+      });
+    }
   }
-  return true;
-}, {
-  message: 'Expiry date must be on or after manufacturing date',
-  path: ['expiryDate']
+  if (data.sellingPrice > data.mrp) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Selling price cannot exceed Maximum Retail Price (MRP)',
+      path: ['sellingPrice']
+    });
+  }
+  if (data.maximumStockLevel < data.minimumStockLevel) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Maximum stock level cannot be less than low stock alert level',
+      path: ['maximumStockLevel']
+    });
+  }
 });
 
 const MedicineForm = () => {

@@ -12,6 +12,7 @@ import { Card, CardHeader, CardTitle } from '../../components/common/Card';
 import { getSalesReturns, createSalesReturn } from '../../services/returnApi';
 import { getSaleById } from '../../services/salesApi';
 import { calculateItemAmount } from '../../utils/billingCalculations';
+import { notifyValidationError } from '../../utils/validation';
 
 const RETURN_REASONS = ['Customer Return', 'Damaged', 'Defective', 'Wrong Medicine', 'Expiry Issue', 'Other'];
 
@@ -96,8 +97,13 @@ const SalesReturns = () => {
 
   const handleSubmitReturn = async () => {
     const itemsToReturn = returnItems.filter(i => i.returnQty > 0);
+    if (!originalSale) {
+      notifyValidationError(1, { title: 'Invoice required', message: 'Please search and select an invoice before creating return.' });
+      return;
+    }
     if (itemsToReturn.length === 0) {
       setFormError('Enter a return quantity for at least one item.');
+      notifyValidationError(1, { title: 'Return items missing', message: 'Enter a return quantity for at least one item.' });
       return;
     }
     setFormError('');

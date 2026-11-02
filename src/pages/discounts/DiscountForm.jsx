@@ -9,6 +9,7 @@ import { getMedicines } from '../../services/medicineApi';
 import { getInventory } from '../../services/inventoryApi';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
+import { notifyValidationError } from '../../utils/validation';
 
 const DiscountForm = () => {
   const { id } = useParams();
@@ -120,7 +121,11 @@ const DiscountForm = () => {
     }
 
     setFieldErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {

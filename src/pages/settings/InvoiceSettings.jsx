@@ -4,6 +4,7 @@ import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
 import SettingsHeader from '../../components/settings/SettingsHeader';
 import SettingsSection from '../../components/settings/SettingsSection';
+import { notifyValidationError } from '../../utils/validation';
 
 const InvoiceSettings = () => {
   const { settings, updateCategorySettings } = useSettings();
@@ -35,13 +36,19 @@ const InvoiceSettings = () => {
     const errs = {};
     if (!formData.prefix?.trim()) {
       errs.prefix = 'Invoice prefix is required';
+    } else if (!/^[A-Za-z0-9\-_]{1,15}$/.test(formData.prefix.trim())) {
+      errs.prefix = 'Invoice prefix must be 1-15 letters, numbers, or hyphens';
     }
     const startingNum = Number(formData.startingNumber);
-    if (!formData.startingNumber || isNaN(startingNum) || startingNum < 1) {
-      errs.startingNumber = 'Starting number must be at least 1';
+    if (!formData.startingNumber || isNaN(startingNum) || !Number.isInteger(startingNum) || startingNum < 1) {
+      errs.startingNumber = 'Starting number must be a whole number of at least 1';
     }
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSave = async () => {

@@ -2,6 +2,8 @@ import localDb from './localDb';
 import { KEYS } from '../data/storageKeys';
 import { recordAuditEvent } from './auditApi';
 
+import { isValidIndianMobile, normalizeIndianMobile, isValidEmail } from '../utils/validation';
+
 export const getCustomers = async () => {
   await new Promise(resolve => setTimeout(resolve, 300));
   return { data: localDb.get(KEYS.CUSTOMERS) };
@@ -15,17 +17,35 @@ export const getCustomerById = async (id) => {
 };
 
 export const createCustomer = async (data) => {
-  if (!data?.name || !data.name.trim()) {
+  const name = data?.name ? data.name.trim() : '';
+  if (!name) {
     throw new Error('Customer name is required');
   }
-  if (!data?.phoneNumber || !data.phoneNumber.trim()) {
+  if (name.length < 2) {
+    throw new Error('Customer name must be at least 2 characters');
+  }
+  if (name.length > 100) {
+    throw new Error('Customer name cannot exceed 100 characters');
+  }
+
+  const phone = data?.phoneNumber ? data.phoneNumber.trim() : '';
+  if (!phone) {
     throw new Error('Customer phone number is required');
   }
+  if (!isValidIndianMobile(phone)) {
+    throw new Error('Customer phone number must be a valid 10-digit Indian mobile number');
+  }
+
+  if (data?.email && data.email.trim() && !isValidEmail(data.email.trim())) {
+    throw new Error('Customer email format is invalid');
+  }
+
   await new Promise(resolve => setTimeout(resolve, 500));
   const newCustomer = localDb.insert(KEYS.CUSTOMERS, {
     ...data,
-    name: data.name.trim(),
-    phoneNumber: data.phoneNumber.trim(),
+    name,
+    phoneNumber: normalizeIndianMobile(phone),
+    email: data?.email ? data.email.trim() : '',
     status: data.status || 'Active'
   });
   
@@ -34,17 +54,29 @@ export const createCustomer = async (data) => {
 };
 
 export const updateCustomer = async (id, data) => {
-  if (data?.name !== undefined && !data.name.trim()) {
-    throw new Error('Customer name cannot be empty');
+  if (data?.name !== undefined) {
+    const name = data.name.trim();
+    if (!name) throw new Error('Customer name cannot be empty');
+    if (name.length < 2) throw new Error('Customer name must be at least 2 characters');
+    if (name.length > 100) throw new Error('Customer name cannot exceed 100 characters');
   }
-  if (data?.phoneNumber !== undefined && !data.phoneNumber.trim()) {
-    throw new Error('Customer phone number cannot be empty');
+  if (data?.phoneNumber !== undefined) {
+    const phone = data.phoneNumber.trim();
+    if (!phone) throw new Error('Customer phone number cannot be empty');
+    if (!isValidIndianMobile(phone)) {
+      throw new Error('Customer phone number must be a valid 10-digit Indian mobile number');
+    }
   }
+  if (data?.email && data.email.trim() && !isValidEmail(data.email.trim())) {
+    throw new Error('Customer email format is invalid');
+  }
+
   await new Promise(resolve => setTimeout(resolve, 400));
   const updatedCustomer = localDb.update(KEYS.CUSTOMERS, id, {
     ...data,
     ...(data.name ? { name: data.name.trim() } : {}),
-    ...(data.phoneNumber ? { phoneNumber: data.phoneNumber.trim() } : {})
+    ...(data.phoneNumber ? { phoneNumber: normalizeIndianMobile(data.phoneNumber) } : {}),
+    ...(data.email !== undefined ? { email: data.email.trim() } : {})
   });
   await recordAuditEvent('UPDATE', 'Customers', `Updated customer ${updatedCustomer.name}`, id);
   return { data: updatedCustomer };

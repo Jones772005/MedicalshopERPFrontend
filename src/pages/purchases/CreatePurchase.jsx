@@ -21,15 +21,18 @@ const purchaseSchema = z.object({
   supplierId: z.string().min(1, 'Supplier is required'),
   orderDate: z.string().min(1, 'Order date is required'),
   expectedDeliveryDate: z.string().min(1, 'Expected delivery date is required'),
-  notes: z.string().optional(),
+  notes: z.string().max(500, 'Notes cannot exceed 500 characters').optional(),
   items: z.array(z.object({
     medicineId: z.string().min(1, 'Medicine is required'),
-    quantity: z.coerce.number({ invalid_type_error: 'Quantity is required' }).positive('Quantity must be greater than 0'),
-    purchasePrice: z.coerce.number({ invalid_type_error: 'Valid price is required' }).min(0, 'Invalid price'),
-    sellingPrice: z.coerce.number({ invalid_type_error: 'Valid price is required' }).min(0, 'Invalid selling price'),
-    mrp: z.coerce.number({ invalid_type_error: 'Valid MRP is required' }).min(0, 'Invalid MRP'),
-    gst: z.coerce.number({ invalid_type_error: 'Valid GST is required' }).min(0, 'Invalid GST'),
-    discount: z.coerce.number({ invalid_type_error: 'Valid discount is required' }).min(0, 'Invalid discount').max(100, 'Cannot exceed 100%')
+    quantity: z.coerce.number({ invalid_type_error: 'Quantity is required' }).int('Quantity must be a whole number').positive('Quantity must be greater than 0'),
+    purchasePrice: z.coerce.number({ invalid_type_error: 'Valid price is required' }).min(0, 'Purchase price cannot be negative'),
+    sellingPrice: z.coerce.number({ invalid_type_error: 'Valid price is required' }).min(0, 'Selling price cannot be negative'),
+    mrp: z.coerce.number({ invalid_type_error: 'Valid MRP is required' }).min(0, 'MRP cannot be negative'),
+    gst: z.coerce.number({ invalid_type_error: 'Valid GST is required' }).min(0, 'GST cannot be negative').max(100, 'GST cannot exceed 100%'),
+    discount: z.coerce.number({ invalid_type_error: 'Valid discount is required' }).min(0, 'Discount cannot be negative').max(100, 'Cannot exceed 100%')
+  }).refine(item => Number(item.sellingPrice) <= Number(item.mrp), {
+    message: 'Selling price cannot exceed Maximum Retail Price (MRP)',
+    path: ['sellingPrice']
   })).min(1, 'At least one item is required')
 }).refine(data => {
   if (data.orderDate && data.expectedDeliveryDate) {

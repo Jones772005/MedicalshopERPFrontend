@@ -12,6 +12,7 @@ import { Card, CardHeader, CardTitle } from '../../components/common/Card';
 import { getPurchaseReturns, createPurchaseReturn } from '../../services/returnApi';
 import { getPurchaseById, getPurchases } from '../../services/purchaseApi';
 import { getMedicines } from '../../services/medicineApi';
+import { notifyValidationError } from '../../utils/validation';
 
 const RETURN_REASONS = ['Damaged', 'Quality Issue', 'Wrong Item', 'Overstock', 'Expiry Issue', 'Other'];
 
@@ -133,12 +134,18 @@ const PurchaseReturns = () => {
 
   const handleSubmitReturn = async () => {
     const itemsToReturn = returnItems.filter(i => i.returnQty > 0);
+    if (!originalPurchase) {
+      notifyValidationError(1, { title: 'Purchase required', message: 'Please search and select a purchase order before creating return.' });
+      return;
+    }
     if (itemsToReturn.length === 0) {
       setFormError('Enter a return quantity for at least one item.');
+      notifyValidationError(1, { title: 'Return items missing', message: 'Enter a return quantity for at least one item.' });
       return;
     }
     if (itemsToReturn.some(i => (Number(i.purchasePrice) || 0) <= 0)) {
       setFormError('Cannot return items with a zero or missing purchase price. Check original purchase data.');
+      notifyValidationError(1, { title: 'Invalid purchase price', message: 'Cannot return items with a zero or missing purchase price.' });
       return;
     }
     const totalAmount = itemsToReturn.reduce(

@@ -22,6 +22,7 @@ import {
 } from '../../utils/billingCalculations';
 import { createSale } from '../../services/salesApi';
 import { getDiscountForMedicine } from '../../services/discountApi';
+import { notifyValidationError } from '../../utils/validation';
 
 const POS = () => {
   const navigate = useNavigate();
@@ -238,8 +239,20 @@ const POS = () => {
   const isGenerateDisabled = cartItems.length === 0 || isSubmitting || (cartRequiresPrescription && !prescriptionVerified) || isCashUnderpaid;
 
   const handleGenerateBill = async () => {
-    if (isGenerateDisabled || isCashUnderpaid) return;
-    setIsSubmitting(true);
+    if (cartItems.length === 0) {
+      notifyValidationError(1, { title: 'Cart is empty', message: 'Add at least one medicine to the bill before generating.' });
+      medicineSearchRef.current?.focus();
+      return;
+    }
+    if (cartRequiresPrescription && !prescriptionVerified) {
+      notifyValidationError(1, { title: 'Prescription required', message: 'Please verify prescription before generating bill.' });
+      return;
+    }
+    if (isCashUnderpaid) {
+      notifyValidationError(1, { title: 'Insufficient payment', message: `Amount received must be at least ₹${grandTotal.toFixed(2)}.` });
+      return;
+    }
+    if (isSubmitting) return;
 
     try {
       const formattedItems = cartItems.map(item => ({

@@ -6,6 +6,7 @@ import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import { getRoles } from '../../services/rolesApi';
 import { createStaff } from '../../services/staffApi';
+import { isValidIndianMobile, normalizeIndianMobile, isValidEmail, notifyValidationError } from '../../utils/validation';
 
 const CreateStaff = () => {
   const navigate = useNavigate();
@@ -34,35 +35,72 @@ const CreateStaff = () => {
 
   const validate = () => {
     const errs = {};
-    if (!formData.firstName.trim()) errs.firstName = 'First name is required';
-    if (!formData.lastName.trim()) errs.lastName = 'Last name is required';
+    if (!formData.firstName.trim()) {
+      errs.firstName = 'First name is required';
+    } else if (formData.firstName.trim().length < 2) {
+      errs.firstName = 'First name must be at least 2 characters';
+    }
+
+    if (!formData.lastName.trim()) {
+      errs.lastName = 'Last name is required';
+    }
+
     if (!formData.email.trim()) {
       errs.email = 'Email address is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errs.email = 'Valid email address required';
+    } else if (!isValidEmail(formData.email.trim())) {
+      errs.email = 'Enter a valid email address';
     }
+
     if (!formData.phone.trim()) {
       errs.phone = 'Phone number is required';
-    } else if (!/^[0-9+\-\s()]{7,20}$/.test(formData.phone.trim())) {
-      errs.phone = 'Valid phone number required';
+    } else if (!isValidIndianMobile(formData.phone.trim())) {
+      errs.phone = 'Enter a valid 10-digit Indian mobile number (e.g., 9876543210)';
     }
-    if (!formData.dob) errs.dob = 'Date of birth is required';
-    if (!formData.employeeId.trim()) errs.employeeId = 'Employee ID is required';
-    if (!formData.joiningDate) errs.joiningDate = 'Joining date is required';
-    if (!formData.designation.trim()) errs.designation = 'Designation is required';
-    if (!formData.username.trim()) errs.username = 'Username is required';
+
+    if (!formData.dob) {
+      errs.dob = 'Date of birth is required';
+    }
+
+    if (!formData.employeeId.trim()) {
+      errs.employeeId = 'Employee ID is required';
+    } else if (formData.employeeId.trim().length < 2) {
+      errs.employeeId = 'Employee ID must be at least 2 characters';
+    }
+
+    if (!formData.joiningDate) {
+      errs.joiningDate = 'Joining date is required';
+    }
+
+    if (!formData.designation.trim()) {
+      errs.designation = 'Designation is required';
+    } else if (formData.designation.trim().length < 2) {
+      errs.designation = 'Designation must be at least 2 characters';
+    }
+
+    if (!formData.username.trim()) {
+      errs.username = 'Username is required';
+    } else if (!/^[a-zA-Z0-9._]{3,20}$/.test(formData.username.trim())) {
+      errs.username = 'Username must be 3-20 characters (letters, numbers, dot, underscore)';
+    }
+
     if (!formData.password) {
       errs.password = 'Password is required';
     } else if (formData.password.length < 6) {
       errs.password = 'Password must be at least 6 characters';
     }
+
     if (!formData.confirmPassword) {
       errs.confirmPassword = 'Confirm password is required';
     } else if (formData.password !== formData.confirmPassword) {
       errs.confirmPassword = 'Passwords do not match';
     }
+
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -76,7 +114,7 @@ const CreateStaff = () => {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
         email: formData.email.trim(),
-        phone: formData.phone.trim(),
+        phone: normalizeIndianMobile(formData.phone),
         employeeId: formData.employeeId.trim(),
         designation: formData.designation.trim(),
         username: formData.username.trim(),

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, forwardRef, useCallback } from 'react';
 import { Search, Plus, X } from 'lucide-react';
 import { getCustomers, createCustomer } from '../../services/customerApi';
-import { isValidPhone, notifyValidationError } from '../../utils/validation';
+import { isValidIndianMobile, normalizeIndianMobile, notifyValidationError } from '../../utils/validation';
 import Input from '../common/Input';
 import Button from '../common/Button';
 
@@ -162,8 +162,8 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
 
     if (!trimmedPhone) {
       errors.phoneNumber = 'Phone number is required';
-    } else if (!isValidPhone(trimmedPhone)) {
-      errors.phoneNumber = 'Enter a valid phone number (e.g., 9876543210)';
+    } else if (!isValidIndianMobile(trimmedPhone)) {
+      errors.phoneNumber = 'Enter a valid 10-digit Indian mobile number (e.g., 9876543210)';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -176,7 +176,7 @@ const CustomerSelector = forwardRef(({ onSelect, onSelectComplete }, ref) => {
     try {
       const res = await createCustomer({ 
         name: trimmedName,
-        phoneNumber: trimmedPhone, 
+        phoneNumber: normalizeIndianMobile(trimmedPhone), 
         type: 'New', 
         loyaltyPoints: 0, 
         outstandingPayment: 0, 

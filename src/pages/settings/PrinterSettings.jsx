@@ -5,6 +5,7 @@ import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
 import SettingsHeader from '../../components/settings/SettingsHeader';
 import SettingsSection from '../../components/settings/SettingsSection';
+import { notifyValidationError } from '../../utils/validation';
 
 const PrinterSettings = () => {
   const { settings, updateCategorySettings } = useSettings();
@@ -39,7 +40,11 @@ const PrinterSettings = () => {
       errs.copies = 'Number of copies must be between 1 and 5';
     }
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSave = async () => {

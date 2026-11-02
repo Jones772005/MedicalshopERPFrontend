@@ -19,8 +19,26 @@ import { receiveStock } from './inventoryApi';
 export const createMedicine = async (data) => {
   await new Promise(resolve => setTimeout(resolve, 500));
   
-  if (!data || !data.name || !String(data.name).trim()) {
-    throw new Error('Medicine name is required');
+  if (!data || !data.name || String(data.name).trim().length < 2) {
+    throw new Error('Medicine name must be at least 2 characters');
+  }
+
+  const pPrice = Number(data.purchasePrice ?? 0);
+  const sPrice = Number(data.sellingPrice ?? 0);
+  const mrp = Number(data.mrp ?? 0);
+
+  if (pPrice < 0 || sPrice < 0 || mrp < 0) {
+    throw new Error('Prices cannot be negative');
+  }
+
+  if (sPrice > mrp && mrp > 0) {
+    throw new Error('Selling price cannot exceed Maximum Retail Price (MRP)');
+  }
+
+  if (data.manufacturingDate && data.expiryDate) {
+    if (new Date(data.expiryDate) < new Date(data.manufacturingDate)) {
+      throw new Error('Expiry date must be on or after manufacturing date');
+    }
   }
 
   // Set default properties
@@ -30,7 +48,11 @@ export const createMedicine = async (data) => {
     genericName: data.genericName ? String(data.genericName).trim() : '',
     category: data.category ? String(data.category).trim() : '',
     manufacturer: data.manufacturer ? String(data.manufacturer).trim() : '',
+    batchNumber: data.batchNumber ? String(data.batchNumber).trim() : '',
     status: data.status || 'Available',
+    purchasePrice: pPrice,
+    sellingPrice: sPrice,
+    mrp: mrp,
     stock: Number(data.quantity || data.stock || 0) // Deprecated in favor of inventory batches, but keeping for compatibility if UI needs it
   };
   
@@ -55,11 +77,27 @@ export const createMedicine = async (data) => {
 
 export const updateMedicine = async (id, data) => {
   await new Promise(resolve => setTimeout(resolve, 500));
-  if (data && data.name !== undefined && !String(data.name).trim()) {
-    throw new Error('Medicine name cannot be empty');
+  if (data && data.name !== undefined && String(data.name).trim().length < 2) {
+    throw new Error('Medicine name must be at least 2 characters');
   }
+
+  if (data && data.sellingPrice !== undefined && data.mrp !== undefined) {
+    if (Number(data.sellingPrice) > Number(data.mrp)) {
+      throw new Error('Selling price cannot exceed Maximum Retail Price (MRP)');
+    }
+  }
+
+  if (data && data.manufacturingDate && data.expiryDate) {
+    if (new Date(data.expiryDate) < new Date(data.manufacturingDate)) {
+      throw new Error('Expiry date must be on or after manufacturing date');
+    }
+  }
+
   const cleanData = { ...data };
   if (cleanData.name) cleanData.name = String(cleanData.name).trim();
+  if (cleanData.genericName) cleanData.genericName = String(cleanData.genericName).trim();
+  if (cleanData.batchNumber) cleanData.batchNumber = String(cleanData.batchNumber).trim();
+  
   const updatedMedicine = localDb.update(KEYS.MEDICINES, id, cleanData);
   await recordAuditEvent('UPDATE', 'Medicines', `Updated medicine ${updatedMedicine.name}`, id);
   return { data: updatedMedicine };

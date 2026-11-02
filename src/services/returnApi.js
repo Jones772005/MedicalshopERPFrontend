@@ -29,6 +29,10 @@ export const createSalesReturn = async (returnData) => {
     const sale = tx.getById(KEYS.SALES, returnData.saleId);
     if (sale) {
       for (const item of returnData.items) {
+        const qty = Number(item.quantity);
+        if (!Number.isInteger(qty) || qty <= 0) {
+          throw new Error('Return quantity must be a positive whole number');
+        }
         const originalItem = sale.items.find(i => i.medicineId === item.medicineId && (i.batchNumber === item.batchNumber || i.batch === item.batchNumber));
         if (!originalItem) throw new Error(`Item ${item.medicineId} batch ${item.batchNumber} was not in original sale.`);
         
@@ -39,8 +43,8 @@ export const createSalesReturn = async (returnData) => {
           return acc + (rItem ? rItem.quantity : 0);
         }, 0);
 
-        if (pastReturnedQty + item.quantity > originalItem.quantity) {
-          throw new Error(`Cannot return more than originally sold. Sold: ${originalItem.quantity}, Previously returned: ${pastReturnedQty}, Trying to return: ${item.quantity}`);
+        if (pastReturnedQty + qty > originalItem.quantity) {
+          throw new Error(`Cannot return more than originally sold. Sold: ${originalItem.quantity}, Previously returned: ${pastReturnedQty}, Trying to return: ${qty}`);
         }
       }
     }
@@ -83,6 +87,10 @@ export const createPurchaseReturn = async (returnData) => {
       const purchase = tx.getById(KEYS.PURCHASES, returnData.purchaseId);
       if (purchase) {
         for (const item of returnData.items) {
+          const qty = Number(item.quantity);
+          if (!Number.isInteger(qty) || qty <= 0) {
+            throw new Error('Return quantity must be a positive whole number');
+          }
           // The source of truth for batches is receivedItems. Fallback to items only if receivedItems doesn't exist.
           const sourceItems = (purchase.receivedItems && purchase.receivedItems.length > 0) ? purchase.receivedItems : (purchase.items || []);
           const originalItem = sourceItems.find(i => String(i.medicineId) === String(item.medicineId) && (i.batchNumber === item.batchNumber || i.batch === item.batchNumber));
@@ -100,8 +108,8 @@ export const createPurchaseReturn = async (returnData) => {
           // Available to return is the received quantity, or ordered quantity if received is not populated
           const availableToReturn = Number(originalItem.receivedQuantity ?? originalItem.quantity ?? 0);
 
-          if (pastReturnedQty + Number(item.quantity || 0) > availableToReturn) {
-            throw new Error(`Cannot return more than originally received. Received: ${availableToReturn}, Previously returned: ${pastReturnedQty}, Trying to return: ${item.quantity}`);
+          if (pastReturnedQty + qty > availableToReturn) {
+            throw new Error(`Cannot return more than originally received. Received: ${availableToReturn}, Previously returned: ${pastReturnedQty}, Trying to return: ${qty}`);
           }
         }
       }

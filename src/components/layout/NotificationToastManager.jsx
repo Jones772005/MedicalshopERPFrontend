@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Info, AlertTriangle, AlertCircle, CalendarClock, CircleAlert, CircleCheck, Bell } from 'lucide-react';
 import { getNotifications, markNotificationRead, syncDynamicNotifications } from '../../services/notificationApi';
@@ -34,12 +34,12 @@ const ToastItem = ({ notification, onClose, onClick }) => {
   const [isExiting, setIsExiting] = useState(false);
   const timerRef = useRef(null);
 
-  const triggerExit = () => {
+  const triggerExit = useCallback(() => {
     setIsExiting(true);
     setTimeout(() => {
       onClose(notification.id);
     }, 300); // Wait for exit animation
-  };
+  }, [notification.id, onClose]);
 
   useEffect(() => {
     const enterTimer = setTimeout(() => setIsEntering(false), 10);
@@ -56,7 +56,7 @@ const ToastItem = ({ notification, onClose, onClick }) => {
         if (timerRef.current) clearTimeout(timerRef.current);
       };
     }
-  }, [notification.id, notification.timestamp, notification.duration]);
+  }, [notification.id, notification.timestamp, notification.duration, triggerExit]);
 
   const handleClose = (e) => {
     e.stopPropagation();

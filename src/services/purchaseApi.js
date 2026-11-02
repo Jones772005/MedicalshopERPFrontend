@@ -23,6 +23,27 @@ export const createPurchase = async (purchaseData) => {
   if (!purchaseData.items || !purchaseData.items.length) {
     throw new Error('At least one purchase item is required');
   }
+  if (purchaseData.orderDate && purchaseData.expectedDeliveryDate) {
+    if (new Date(purchaseData.expectedDeliveryDate) < new Date(purchaseData.orderDate)) {
+      throw new Error('Expected delivery date cannot be before order date');
+    }
+  }
+  for (const item of purchaseData.items) {
+    const qty = Number(item.quantity);
+    if (!Number.isInteger(qty) || qty <= 0) {
+      throw new Error('Purchase item quantity must be a positive whole number');
+    }
+    const pPrice = Number(item.purchasePrice);
+    if (isNaN(pPrice) || pPrice < 0) {
+      throw new Error('Purchase price must be a valid non-negative number');
+    }
+    const mrp = Number(item.mrp);
+    const sPrice = Number(item.sellingPrice);
+    if (!isNaN(mrp) && !isNaN(sPrice) && sPrice > mrp) {
+      throw new Error('Selling price cannot exceed Maximum Retail Price (MRP)');
+    }
+  }
+
   const newPurchase = localDb.insert(KEYS.PURCHASES, {
     ...purchaseData,
     status: purchaseData.status || 'Ordered',
@@ -44,6 +65,29 @@ export const updatePurchase = async (id, purchaseData) => {
 export const receivePurchase = async (id, receivedData) => {
   // We use runLocalTransaction to make the status update and stock receiving atomic
   await new Promise(resolve => setTimeout(resolve, 500));
+
+  if (receivedData.receivedItems) {
+    for (const item of receivedData.receivedItems) {
+      const recQty = Number(item.receivedQuantity);
+      if (!Number.isInteger(recQty) || recQty < 0) {
+        throw new Error('Received quantity must be a non-negative whole number');
+      }
+      if (item.orderedQuantity !== undefined && recQty > Number(item.orderedQuantity)) {
+        throw new Error(`Received quantity cannot exceed ordered quantity (${item.orderedQuantity})`);
+      }
+      if (recQty > 0) {
+        if (!item.batchNumber || !item.batchNumber.trim()) {
+          throw new Error('Batch number is required for received items');
+        }
+        if (!item.expiryDate) {
+          throw new Error('Expiry date is required for received items');
+        }
+        if (item.manufacturingDate && new Date(item.expiryDate) <= new Date(item.manufacturingDate)) {
+          throw new Error('Expiry date must be after manufacturing date');
+        }
+      }
+    }
+  }
 
   let finalPurchase = null;
   await localDb.runLocalTransaction(async (tx) => {

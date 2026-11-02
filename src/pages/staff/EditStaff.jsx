@@ -5,8 +5,8 @@ import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import { getRoles } from '../../services/rolesApi';
 import { getStaffById, updateStaff } from '../../services/staffApi';
+import { isValidIndianMobile, normalizeIndianMobile, isValidEmail, notifyValidationError } from '../../utils/validation';
 
 const EditStaff = () => {
   const { id } = useParams();
@@ -70,22 +70,44 @@ const EditStaff = () => {
 
   const validate = () => {
     const errs = {};
-    if (!formData.firstName.trim()) errs.firstName = 'First name is required';
-    if (!formData.lastName.trim()) errs.lastName = 'Last name is required';
+    if (!formData.firstName.trim()) {
+      errs.firstName = 'First name is required';
+    } else if (formData.firstName.trim().length < 2) {
+      errs.firstName = 'First name must be at least 2 characters';
+    }
+
+    if (!formData.lastName.trim()) {
+      errs.lastName = 'Last name is required';
+    }
+
     if (!formData.email.trim()) {
       errs.email = 'Email address is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errs.email = 'Valid email address required';
+    } else if (!isValidEmail(formData.email.trim())) {
+      errs.email = 'Enter a valid email address';
     }
+
     if (!formData.phone.trim()) {
       errs.phone = 'Phone number is required';
-    } else if (!/^[0-9+\-\s()]{7,20}$/.test(formData.phone.trim())) {
-      errs.phone = 'Valid phone number required';
+    } else if (!isValidIndianMobile(formData.phone.trim())) {
+      errs.phone = 'Enter a valid 10-digit Indian mobile number (e.g., 9876543210)';
     }
-    if (!formData.dob) errs.dob = 'Date of birth is required';
-    if (!formData.designation.trim()) errs.designation = 'Designation is required';
+
+    if (!formData.dob) {
+      errs.dob = 'Date of birth is required';
+    }
+
+    if (!formData.designation.trim()) {
+      errs.designation = 'Designation is required';
+    } else if (formData.designation.trim().length < 2) {
+      errs.designation = 'Designation must be at least 2 characters';
+    }
+
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -99,7 +121,7 @@ const EditStaff = () => {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
         email: formData.email.trim(),
-        phone: formData.phone.trim(),
+        phone: normalizeIndianMobile(formData.phone),
         designation: formData.designation.trim(),
         name: `${formData.firstName.trim()} ${formData.lastName.trim()}`
       };

@@ -18,6 +18,7 @@ import {
   deleteMedicineRequest 
 } from '../../services/medicineRequestApi';
 import { getCustomers } from '../../services/customerApi'; 
+import { notifyValidationError } from '../../utils/validation'; 
 
 const requestSchema = z.object({
   medicineName: z.string().trim().min(2, 'Medicine name is required'),
@@ -255,7 +256,7 @@ const MedicineRequests = () => {
             </div>
             
             <div className="p-6 overflow-y-auto">
-              <form id="requestForm" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form id="requestForm" onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6">
                 
                 {/* Customer Information */}
                 <div>

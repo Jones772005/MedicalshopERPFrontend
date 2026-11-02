@@ -4,6 +4,7 @@ import { User, Shield, Lock, Save } from 'lucide-react';
 import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
+import { notifyValidationError } from '../../utils/validation';
 
 const Profile = () => {
   const { currentUser } = useAuth();
@@ -42,7 +43,11 @@ const Profile = () => {
       errs.confirmPassword = 'New passwords do not match.';
     }
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleUpdatePassword = (e) => {

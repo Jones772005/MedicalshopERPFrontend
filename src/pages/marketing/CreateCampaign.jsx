@@ -4,6 +4,7 @@ import { Send, Save, ArrowLeft } from 'lucide-react';
 import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
+import { notifyValidationError } from '../../utils/validation';
 
 const CreateCampaign = () => {
   const navigate = useNavigate();
@@ -28,7 +29,11 @@ const CreateCampaign = () => {
     if (!formData.name.trim()) errs.name = 'Campaign name is required.';
     if (!formData.message.trim()) errs.message = 'Message template is required.';
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = (e, asDraft = false) => {

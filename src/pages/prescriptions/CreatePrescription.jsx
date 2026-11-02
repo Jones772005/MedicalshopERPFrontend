@@ -11,19 +11,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/commo
 import { getCustomers } from '../../services/customerApi';
 import { getMedicines } from '../../services/medicineApi';
 import { createPrescription } from '../../services/prescriptionApi';
+import { isValidIndianMobile, notifyValidationError } from '../../utils/validation';
 
 const prescriptionSchema = z.object({
   customerId: z.string().min(1, 'Customer is required'),
-  doctorName: z.string().trim().min(1, 'Doctor name is required'),
-  doctorContact: z.string().trim().optional(),
+  doctorName: z.string().trim().min(2, 'Doctor name must be at least 2 characters').max(100, 'Doctor name cannot exceed 100 characters'),
+  doctorContact: z.string().trim().refine(val => !val || isValidIndianMobile(val), {
+    message: 'Enter a valid 10-digit Indian mobile number'
+  }).optional(),
   prescriptionDate: z.string().min(1, 'Date is required'),
   medicines: z.array(z.object({
     medicineId: z.string().min(1, 'Medicine is required'),
-    quantity: z.number().min(1, 'Quantity must be at least 1'),
-    dosage: z.string().trim().min(1, 'Dosage is required'),
-    frequency: z.string().trim().min(1, 'Frequency is required'),
-    duration: z.string().trim().min(1, 'Duration is required'),
-    instructions: z.string().trim().optional()
+    quantity: z.coerce.number().int('Quantity must be a whole number').positive('Quantity must be at least 1'),
+    dosage: z.string().trim().min(1, 'Dosage is required').max(50, 'Dosage cannot exceed 50 characters'),
+    frequency: z.string().trim().min(1, 'Frequency is required').max(50, 'Frequency cannot exceed 50 characters'),
+    duration: z.string().trim().min(1, 'Duration is required').max(50, 'Duration cannot exceed 50 characters'),
+    instructions: z.string().trim().max(300, 'Instructions cannot exceed 300 characters').optional()
   })).min(1, 'At least one medicine is required')
 });
 
@@ -101,7 +104,7 @@ const CreatePrescription = () => {
         description="Enter prescription details and submit for verification."
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Prescription Info</CardTitle>

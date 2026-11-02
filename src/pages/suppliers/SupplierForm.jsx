@@ -4,20 +4,27 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useState, useEffect } from 'react';
 import { createSupplier, updateSupplier, getSupplierById } from '../../services/supplierApi';
+import { isValidIndianMobile, normalizeIndianMobile, isValidGSTIN, isValidEmail, notifyValidationError } from '../../utils/validation';
 import PageHeader from '../../components/common/PageHeader';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 
 const supplierSchema = z.object({
-  supplierName: z.string().trim().min(2, 'Supplier Name is required'),
-  companyName: z.string().trim().min(2, 'Company Name is required'),
-  contactPerson: z.string().trim().min(2, 'Contact Person is required'),
-  phoneNumber: z.string().trim().min(7, 'Phone number must be at least 7 digits').regex(/^[0-9+\-\s()]+$/, 'Valid phone number is required'),
-  email: z.string().trim().email('Invalid email address').optional().or(z.literal('')),
-  address: z.string().trim().optional(),
-  gstNumber: z.string().trim().optional(),
-  paymentTerms: z.string().trim().optional(),
+  supplierName: z.string().trim().min(2, 'Supplier display name must be at least 2 characters').max(100, 'Supplier name cannot exceed 100 characters'),
+  companyName: z.string().trim().min(2, 'Company legal name must be at least 2 characters').max(100, 'Company name cannot exceed 100 characters'),
+  contactPerson: z.string().trim().min(2, 'Contact person must be at least 2 characters').max(100, 'Contact person cannot exceed 100 characters'),
+  phoneNumber: z.string().trim().refine(isValidIndianMobile, {
+    message: 'Enter a valid 10-digit Indian mobile number (e.g., 9876543210)'
+  }),
+  email: z.string().trim().refine(val => !val || isValidEmail(val), {
+    message: 'Enter a valid email address'
+  }).optional(),
+  address: z.string().trim().max(300, 'Address cannot exceed 300 characters').optional(),
+  gstNumber: z.string().trim().refine(val => !val || isValidGSTIN(val), {
+    message: 'GSTIN must contain 15 valid characters (e.g., 29ABCDE1234F1Z5)'
+  }).optional(),
+  paymentTerms: z.string().trim().max(50, 'Payment terms cannot exceed 50 characters').optional(),
 });
 
 const SupplierForm = () => {
@@ -58,10 +65,10 @@ const SupplierForm = () => {
         supplierName: data.supplierName?.trim(),
         companyName: data.companyName?.trim(),
         contactPerson: data.contactPerson?.trim(),
-        phoneNumber: data.phoneNumber?.trim(),
+        phoneNumber: normalizeIndianMobile(data.phoneNumber),
         email: data.email?.trim() || '',
         address: data.address?.trim() || '',
-        gstNumber: data.gstNumber?.trim() || '',
+        gstNumber: data.gstNumber?.trim() ? data.gstNumber.trim().toUpperCase() : '',
         paymentTerms: data.paymentTerms?.trim() || '',
       };
       if (isEdit) {
@@ -87,7 +94,7 @@ const SupplierForm = () => {
         description="Enter supplier contact and business information."
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
+      <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6 w-full">
         {saveError && (
           <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
             {saveError}

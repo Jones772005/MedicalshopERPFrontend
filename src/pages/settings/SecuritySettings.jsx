@@ -4,6 +4,7 @@ import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
 import SettingsHeader from '../../components/settings/SettingsHeader';
 import SettingsSection from '../../components/settings/SettingsSection';
+import { notifyValidationError } from '../../utils/validation';
 
 const SecuritySettings = () => {
   const { settings, updateCategorySettings } = useSettings();
@@ -34,15 +35,19 @@ const SecuritySettings = () => {
   const validate = () => {
     const errs = {};
     const minLen = Number(formData.minPasswordLength);
-    if (!formData.minPasswordLength || isNaN(minLen) || minLen < 6 || minLen > 32) {
-      errs.minPasswordLength = 'Length must be between 6 and 32';
+    if (!formData.minPasswordLength || isNaN(minLen) || !Number.isInteger(minLen) || minLen < 6 || minLen > 32) {
+      errs.minPasswordLength = 'Minimum password length must be a whole number between 6 and 32';
     }
     const expiry = Number(formData.passwordExpiryDays);
-    if (formData.passwordExpiryDays !== '' && (isNaN(expiry) || expiry < 0)) {
-      errs.passwordExpiryDays = 'Must be 0 or a positive number';
+    if (formData.passwordExpiryDays !== '' && (isNaN(expiry) || !Number.isInteger(expiry) || expiry < 0)) {
+      errs.passwordExpiryDays = 'Password expiry days must be a non-negative whole number';
     }
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSave = async () => {

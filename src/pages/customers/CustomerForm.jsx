@@ -4,19 +4,23 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { createCustomer, getCustomerById, updateCustomer } from "../../services/customerApi"; // Mocked creation/updating in a real app
+import { isValidIndianMobile, isValidEmail, normalizeIndianMobile, notifyValidationError } from '../../utils/validation';
 import PageHeader from '../../components/common/PageHeader';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 
-
 const customerSchema = z.object({
-  name: z.string().trim().min(2, 'Name must be at least 2 characters'),
-  phoneNumber: z.string().trim().min(7, 'Phone number must be at least 7 digits').regex(/^[0-9+\-\s()]+$/, 'Valid phone number required'),
-  email: z.string().trim().email('Valid email required').optional().or(z.literal('')),
-  address: z.string().trim().optional(),
+  name: z.string().trim().min(2, 'Customer name must be at least 2 characters').max(100, 'Customer name cannot exceed 100 characters'),
+  phoneNumber: z.string().trim().refine(isValidIndianMobile, {
+    message: 'Enter a valid 10-digit Indian mobile number (e.g., 9876543210)'
+  }),
+  email: z.string().trim().refine(val => !val || isValidEmail(val), {
+    message: 'Enter a valid email address'
+  }).optional(),
+  address: z.string().trim().max(300, 'Address cannot exceed 300 characters').optional(),
   type: z.enum(['Regular', 'Wholesale', 'New']),
-  notes: z.string().trim().optional()
+  notes: z.string().trim().max(500, 'Notes cannot exceed 500 characters').optional()
 });
 
 const CustomerForm = () => {
@@ -58,7 +62,7 @@ const CustomerForm = () => {
       const sanitized = {
         ...data,
         name: data.name?.trim(),
-        phoneNumber: data.phoneNumber?.trim(),
+        phoneNumber: normalizeIndianMobile(data.phoneNumber),
         email: data.email?.trim() || '',
         address: data.address?.trim() || '',
         notes: data.notes?.trim() || '',
@@ -92,7 +96,7 @@ const CustomerForm = () => {
         description="Enter customer contact information and details."
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
+      <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6 w-full">
         <Card>
           <CardHeader><CardTitle>Customer Information</CardTitle></CardHeader>
           <CardContent className="space-y-6">

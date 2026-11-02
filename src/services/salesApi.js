@@ -19,6 +19,12 @@ export const createSale = async (saleData) => {
   if (!saleData || !saleData.items || !Array.isArray(saleData.items) || saleData.items.length === 0) {
     throw new Error('Sale must contain at least one valid item');
   }
+  for (const item of saleData.items) {
+    const qty = Number(item.quantity);
+    if (!Number.isInteger(qty) || qty <= 0) {
+      throw new Error('Sale item quantity must be a positive whole number');
+    }
+  }
   if (!saleData.paymentMethod) {
     throw new Error('Payment method is required');
   }

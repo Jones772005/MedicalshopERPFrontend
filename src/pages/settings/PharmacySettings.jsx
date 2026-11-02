@@ -5,6 +5,15 @@ import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
 import SettingsHeader from '../../components/settings/SettingsHeader';
 import SettingsSection from '../../components/settings/SettingsSection';
+import { 
+  isValidIndianMobile, 
+  normalizeIndianMobile, 
+  isValidGSTIN, 
+  isValidDrugLicense, 
+  isValidPincode, 
+  isValidEmail, 
+  notifyValidationError 
+} from '../../utils/validation';
 
 const PharmacySettings = () => {
   const { settings, updateCategorySettings } = useSettings();
@@ -56,34 +65,94 @@ const PharmacySettings = () => {
 
   const validate = () => {
     const errs = {};
-    if (!formData.name?.trim()) errs.name = 'Pharmacy name is required';
-    if (!formData.owner?.trim()) errs.owner = 'Owner name is required';
-    if (!formData.registrationNo?.trim()) errs.registrationNo = 'Registration number is required';
-    if (!formData.drugLicenseNo?.trim()) errs.drugLicenseNo = 'Drug license number is required';
-    if (!formData.gstin?.trim()) errs.gstin = 'GSTIN is required';
+    if (!formData.name?.trim()) {
+      errs.name = 'Pharmacy name is required';
+    } else if (formData.name.trim().length < 2) {
+      errs.name = 'Pharmacy name must be at least 2 characters';
+    }
+
+    if (!formData.owner?.trim()) {
+      errs.owner = 'Owner name is required';
+    } else if (formData.owner.trim().length < 2) {
+      errs.owner = 'Owner name must be at least 2 characters';
+    }
+
+    if (!formData.registrationNo?.trim()) {
+      errs.registrationNo = 'Registration number is required';
+    }
+
+    if (!formData.drugLicenseNo?.trim()) {
+      errs.drugLicenseNo = 'Drug license number is required';
+    } else if (!isValidDrugLicense(formData.drugLicenseNo)) {
+      errs.drugLicenseNo = 'Enter a valid Drug License Number (5-35 characters)';
+    }
+
+    if (!formData.gstin?.trim()) {
+      errs.gstin = 'GSTIN is required';
+    } else if (!isValidGSTIN(formData.gstin)) {
+      errs.gstin = 'GSTIN must contain 15 valid characters (e.g., 29ABCDE1234F1Z5)';
+    }
+
     if (!formData.phone?.trim()) {
       errs.phone = 'Phone number is required';
-    } else if (!/^[0-9+\-\s()]{7,20}$/.test(formData.phone.trim())) {
-      errs.phone = 'Valid phone number required';
+    } else if (!isValidIndianMobile(formData.phone)) {
+      errs.phone = 'Enter a valid 10-digit Indian mobile number (e.g., 9876543210)';
     }
+
     if (!formData.email?.trim()) {
       errs.email = 'Email address is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errs.email = 'Valid email address required';
+    } else if (!isValidEmail(formData.email)) {
+      errs.email = 'Enter a valid email address';
     }
-    if (!formData.address?.trim()) errs.address = 'Street address is required';
-    if (!formData.city?.trim()) errs.city = 'City is required';
-    if (!formData.state?.trim()) errs.state = 'State is required';
-    if (!formData.pincode?.trim()) errs.pincode = 'Pincode is required';
+
+    if (!formData.address?.trim()) {
+      errs.address = 'Street address is required';
+    } else if (formData.address.trim().length < 3) {
+      errs.address = 'Address must be at least 3 characters';
+    }
+
+    if (!formData.city?.trim()) {
+      errs.city = 'City is required';
+    }
+
+    if (!formData.state?.trim()) {
+      errs.state = 'State is required';
+    }
+
+    if (!formData.pincode?.trim()) {
+      errs.pincode = 'Pincode is required';
+    } else if (!isValidPincode(formData.pincode)) {
+      errs.pincode = 'Pincode must contain exactly 6 digits';
+    }
+
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSave = async () => {
     setStatusMessage(null);
     if (!validate()) return;
     setSaving(true);
-    await updateCategorySettings('pharmacy', formData);
+    const sanitized = {
+      ...formData,
+      name: formData.name.trim(),
+      owner: formData.owner.trim(),
+      registrationNo: formData.registrationNo.trim(),
+      drugLicenseNo: formData.drugLicenseNo.trim(),
+      gstin: formData.gstin.trim().toUpperCase(),
+      phone: normalizeIndianMobile(formData.phone),
+      email: formData.email.trim(),
+      address: formData.address.trim(),
+      city: formData.city.trim(),
+      state: formData.state.trim(),
+      pincode: formData.pincode.trim(),
+      website: formData.website ? formData.website.trim() : ''
+    };
+    await updateCategorySettings('pharmacy', sanitized);
     setSaving(false);
     setStatusMessage({ type: 'success', text: 'Pharmacy settings saved successfully!' });
   };

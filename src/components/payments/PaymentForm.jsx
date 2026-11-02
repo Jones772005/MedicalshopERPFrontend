@@ -8,6 +8,7 @@ import Input from '../common/Input';
 import { getSuppliers } from '../../services/supplierApi';
 import { getCustomers } from '../../services/customerApi';
 import { createPayment } from '../../services/paymentApi';
+import { notifyValidationError } from '../../utils/validation';
 import { Card, CardContent, CardHeader, CardTitle } from '../common/Card';
 
 const paymentSchema = z.object({
@@ -105,7 +106,7 @@ const PaymentForm = ({ initialData, onSuccess, onCancel }) => {
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div>
             <label className="block text-[13px] font-bold text-[#162033] dark:text-white mb-1">

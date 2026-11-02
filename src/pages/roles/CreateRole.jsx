@@ -5,6 +5,7 @@ import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import { createRole } from '../../services/rolesApi';
 import { buildDefaultPermissions } from '../../data/screenPermissions';
+import { notifyValidationError } from '../../utils/validation';
 import PermissionMatrix from './components/PermissionMatrix';
 
 const CreateRole = () => {
@@ -22,14 +23,31 @@ const CreateRole = () => {
 
   const validate = () => {
     const e = {};
-    if (!name.trim()) e.name = 'Role name is required.';
-    if (!description.trim()) e.description = 'Description is required.';
+    if (!name.trim()) {
+      e.name = 'Role name is required.';
+    } else if (name.trim().length < 2) {
+      e.name = 'Role name must be at least 2 characters.';
+    } else if (name.trim().length > 50) {
+      e.name = 'Role name cannot exceed 50 characters.';
+    }
+
+    if (!description.trim()) {
+      e.description = 'Description is required.';
+    } else if (description.trim().length < 5) {
+      e.description = 'Description must be at least 5 characters.';
+    } else if (description.trim().length > 300) {
+      e.description = 'Description cannot exceed 300 characters.';
+    }
     return e;
   };
 
   const handleSave = async () => {
     const e = validate();
-    if (Object.keys(e).length > 0) { setErrors(e); return; }
+    if (Object.keys(e).length > 0) { 
+      setErrors(e); 
+      notifyValidationError(e);
+      return; 
+    }
     setSaving(true);
     try {
       const res = await createRole({ name: name.trim(), description: description.trim(), permissions });

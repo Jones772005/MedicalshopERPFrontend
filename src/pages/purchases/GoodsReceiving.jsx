@@ -18,25 +18,41 @@ const receivingSchema = z.object({
     id: z.any().optional(), // PO item id
     medicineId: z.number(),
     orderedQuantity: z.number(),
-    receivedQuantity: z.number().min(0, 'Cannot be negative'),
+    receivedQuantity: z.number({ invalid_type_error: 'Received quantity must be a whole number' })
+      .int('Received quantity must be a whole number')
+      .min(0, 'Received quantity cannot be negative'),
     batchNumber: z.string().optional(),
     rackNumber: z.string().optional(),
     manufacturingDate: z.string().optional(),
     expiryDate: z.string().optional()
   })).superRefine((items, ctx) => {
     items.forEach((item, index) => {
+      if (item.receivedQuantity > item.orderedQuantity) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Received quantity cannot exceed ordered (${item.orderedQuantity})`,
+          path: [index, 'receivedQuantity']
+        });
+      }
       if (item.receivedQuantity > 0) {
-        if (!item.batchNumber) {
+        const batch = (item.batchNumber || '').trim();
+        if (!batch) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Batch is required when receiving',
+            message: 'Batch number is required when receiving',
+            path: [index, 'batchNumber']
+          });
+        } else if (batch.length < 2 || batch.length > 30) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Batch number must be between 2 and 30 characters',
             path: [index, 'batchNumber']
           });
         }
         if (!item.expiryDate) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Expiry is required when receiving',
+            message: 'Expiry date is required when receiving',
             path: [index, 'expiryDate']
           });
         }
@@ -44,7 +60,7 @@ const receivingSchema = z.object({
           if (new Date(item.expiryDate) <= new Date(item.manufacturingDate)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: 'Expiry must be after Mfg Date',
+              message: 'Expiry date must be after manufacturing date',
               path: [index, 'expiryDate']
             });
           }
@@ -186,8 +202,9 @@ const GoodsReceiving = () => {
                         type="number" 
                         min="0"
                         {...register(`items.${index}.receivedQuantity`, { valueAsNumber: true })} 
-                        className="block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white"
+                        className={`block w-full rounded-md border-[#DDE6F0] dark:border-slate-700 bg-white dark:bg-[#102A43] px-2 py-1.5 text-[13px] text-[#162033] dark:text-white ${errors.items?.[index]?.receivedQuantity ? 'border-red-500' : ''}`}
                       />
+                      {errors.items?.[index]?.receivedQuantity && <span className="text-[12px] text-red-500">{errors.items[index].receivedQuantity.message}</span>}
                     </td>
                     <td className="px-4 py-2">
                       <input 

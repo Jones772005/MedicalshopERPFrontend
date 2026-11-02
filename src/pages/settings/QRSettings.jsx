@@ -4,6 +4,7 @@ import Input from '../../components/common/Input';
 import { useSettings } from '../../context/SettingsContext';
 import SettingsHeader from '../../components/settings/SettingsHeader';
 import SettingsSection from '../../components/settings/SettingsSection';
+import { isValidUPI, notifyValidationError } from '../../utils/validation';
 
 const QRSettings = () => {
   const { settings, updateCategorySettings } = useSettings();
@@ -33,11 +34,19 @@ const QRSettings = () => {
 
   const validate = () => {
     const errs = {};
-    if (formData.enableUpiQr && !formData.upiId?.trim()) {
-      errs.upiId = 'UPI ID (VPA) is required when UPI QR is enabled';
+    if (formData.enableUpiQr) {
+      if (!formData.upiId?.trim()) {
+        errs.upiId = 'UPI ID (VPA) is required when UPI QR is enabled';
+      } else if (!isValidUPI(formData.upiId.trim())) {
+        errs.upiId = 'Enter a valid UPI Virtual Payment Address (e.g., pharmacy@okhdfcbank)';
+      }
     }
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) {
+      notifyValidationError(errs);
+      return false;
+    }
+    return true;
   };
 
   const handleSave = async () => {
