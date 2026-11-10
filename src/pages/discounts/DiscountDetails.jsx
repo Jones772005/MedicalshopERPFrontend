@@ -82,39 +82,47 @@ const DiscountDetails = () => {
   if (!discount) return <div className="p-8 text-center">Discount not found.</div>;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <Button variant="ghost" onClick={() => navigate('/discounts')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
-          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Discounts
-        </Button>
+    <div className="space-y-6 w-full pb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" onClick={() => navigate('/discounts')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            <span className="text-xs font-semibold">Back to Discounts</span>
+          </Button>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
+            {discount.name}
+          </span>
+          <StatusBadge status={getDisplayStatus(discount)} />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto">
+          {hasPermission(user, 'discounts.manage') && (
+            <Button variant="outline" size="sm" onClick={() => navigate(`/discounts/${id}/edit`)}>
+              <Edit className="w-3.5 h-3.5 mr-1.5" /> Edit
+            </Button>
+          )}
+          {hasPermission(user, 'discounts.activate') && (
+            discount.status === 'active' ? (
+              <Button variant="outline" size="sm" onClick={handleDeactivate} className="text-orange-500 border-orange-200 hover:bg-orange-50">
+                <PowerOff className="w-3.5 h-3.5 mr-1.5" /> Deactivate
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" onClick={handleActivate} className="text-green-600 border-green-200 hover:bg-green-50">
+                <Power className="w-3.5 h-3.5 mr-1.5" /> Activate
+              </Button>
+            )
+          )}
+          {hasPermission(user, 'discounts.manage') && (
+            <Button variant="outline" size="sm" onClick={handleDelete} className="text-red-500 border-red-200 hover:bg-red-50">
+              <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Archive
+            </Button>
+          )}
+        </div>
       </div>
 
-      <div className="max-w-5xl bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 flex flex-wrap justify-between items-center gap-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Discount Overview</h2>
-          <div className="flex space-x-2">
-            {hasPermission(user, 'discounts.manage') && (
-              <Button variant="outline" size="sm" onClick={() => navigate(`/discounts/${id}/edit`)}>
-                <Edit className="w-4 h-4 mr-2" /> Edit
-              </Button>
-            )}
-            {hasPermission(user, 'discounts.activate') && (
-              discount.status === 'active' ? (
-                <Button variant="outline" size="sm" onClick={handleDeactivate} className="text-orange-500 border-orange-200 hover:bg-orange-50">
-                  <PowerOff className="w-4 h-4 mr-2" /> Deactivate
-                </Button>
-              ) : (
-                <Button variant="outline" size="sm" onClick={handleActivate} className="text-green-600 border-green-200 hover:bg-green-50">
-                  <Power className="w-4 h-4 mr-2" /> Activate
-                </Button>
-              )
-            )}
-            {hasPermission(user, 'discounts.manage') && (
-              <Button variant="outline" size="sm" onClick={handleDelete} className="text-red-500 border-red-200 hover:bg-red-50">
-                <Trash2 className="w-4 h-4 mr-2" /> Archive
-              </Button>
-            )}
-          </div>
+      <div className="w-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-slate-700 overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#DDE6F0] dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50">
+          <h2 className="text-[15px] font-bold text-[#162033] dark:text-white">Discount Overview</h2>
         </div>
 
         <div className="p-6">

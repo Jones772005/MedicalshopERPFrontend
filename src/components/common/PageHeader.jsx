@@ -23,7 +23,7 @@ const PageHeader = ({
   if (!hasLeftContent && !action) return null;
 
   return (
-    <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-5 min-h-[36px] ${className}`}>
+    <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-5 min-h-[36px] w-full ${className}`}>
       <div className="flex items-center gap-2.5 min-w-0 flex-wrap">
         {count !== undefined && count !== null && (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">

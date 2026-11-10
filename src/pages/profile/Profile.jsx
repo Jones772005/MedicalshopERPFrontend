@@ -68,7 +68,7 @@ const Profile = () => {
   if (!currentUser) return null;
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         

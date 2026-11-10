@@ -20,7 +20,7 @@ const InvoicePreview = ({ sale, medicines }) => {
   };
 
   return (
-    <div className="bg-white text-black p-8 max-w-3xl mx-auto border border-gray-300 shadow-sm invoice-print">
+    <div className="bg-white text-black p-8 sm:p-12 w-full max-w-[820px] min-h-[1050px] mx-auto shadow-lg border border-[#DDE6F0] rounded-sm invoice-print print:shadow-none print:border-none print:m-0 print:p-0 print:max-w-none print:min-h-0">
       {/* Header */}
       <div className="border-b border-gray-300 pb-4 mb-4">
         <div className="flex items-center justify-between gap-4">
@@ -154,6 +154,8 @@ const InvoicePreview = ({ sale, medicines }) => {
             border: none;
             box-shadow: none;
             padding: 0;
+            margin: 0;
+            min-height: auto;
           }
         }
       `}</style>

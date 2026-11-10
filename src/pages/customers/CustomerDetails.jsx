@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import PageHeader from '../../components/common/PageHeader';
+import { ArrowLeft, Edit } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
 import Button from '../../components/common/Button';
+import StatusBadge from '../../components/common/StatusBadge';
 import { getCustomerById } from '../../services/customerApi';
 import { getSales } from '../../services/salesApi';
 import { getSalesReturns } from '../../services/returnApi';
@@ -67,16 +68,22 @@ const CustomerDetails = () => {
   if (!customer) return null;
 
   return (
-    <div>
-      <PageHeader
-        info={<span className="font-bold text-sm text-[#162033] dark:text-white">{customer.name}</span>}
-        action={
-          <div className="space-x-2">
-            <Button variant="secondary" size="sm" onClick={() => navigate('/customers')}>Back to List</Button>
-            <Button size="sm" onClick={() => navigate(`/customers/${id}/edit`)}>Edit Customer</Button>
-          </div>
-        }
-      />
+    <div className="w-full space-y-6 pb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" onClick={() => navigate('/customers')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            <span className="text-xs font-semibold">Back to Customers</span>
+          </Button>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
+            {customer.name}
+          </span>
+          <StatusBadge status={customer.status || 'Active'} />
+        </div>
+        <Button size="sm" onClick={() => navigate(`/customers/${id}/edit`)} className="self-end sm:self-auto">
+          <Edit className="w-3.5 h-3.5 mr-1.5" /> Edit Customer
+        </Button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
 

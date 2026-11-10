@@ -53,8 +53,8 @@ const PrescriptionDetails = () => {
   const canVerify = currentUser?.role === 'Admin' || currentUser?.role === 'Pharmacist';
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-12">
-      <div className="flex items-center justify-between gap-3 mb-5">
+    <div className="space-y-6 w-full pb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
         <div className="flex items-center gap-3">
           <Button variant="ghost" onClick={() => navigate('/prescriptions')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
             <ArrowLeft className="w-4 h-4 mr-1" />
@@ -63,6 +63,7 @@ const PrescriptionDetails = () => {
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
             {prescription.prescriptionId}
           </span>
+          <PrescriptionStatusBadge status={prescription.verificationStatus} />
         </div>
       </div>
 

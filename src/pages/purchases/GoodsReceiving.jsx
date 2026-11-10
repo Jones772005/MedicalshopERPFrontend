@@ -156,7 +156,7 @@ const GoodsReceiving = () => {
   if (!purchase) return <div className="p-8 text-center text-gray-500">Purchase not found.</div>;
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
       <div className="flex items-center justify-between gap-3 mb-5">
         <div className="flex items-center gap-3">
           <Button variant="ghost" onClick={() => navigate(`/purchases/${id}`)} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">

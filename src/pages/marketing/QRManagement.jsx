@@ -17,8 +17,8 @@ const QRManagement = () => {
   return (
     <div className="space-y-6 pb-12">
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
-        <div className="border-b border-gray-200 dark:border-slate-700">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden print:border-none print:shadow-none print:p-0">
+        <div className="border-b border-gray-200 dark:border-slate-700 print:hidden">
           <nav className="flex -mb-px px-6">
             {tabs.map(tab => (
               <button
@@ -36,11 +36,11 @@ const QRManagement = () => {
           </nav>
         </div>
 
-        <div className="p-8 md:p-12">
+        <div className="p-8 md:p-12 print:p-0">
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             
             {/* QR Display */}
-            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 rounded-2xl shadow-sm">
+            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 rounded-2xl shadow-sm print:border-none print:shadow-none print:p-0">
               <div className="flex items-center gap-2.5 mb-3">
                 {(pharmacyLogo || defaultLogo) && (
                   <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center p-0.5 overflow-hidden shadow-xs">
@@ -61,7 +61,7 @@ const QRManagement = () => {
             </div>
 
             {/* QR Settings */}
-            <div className="w-full max-w-md space-y-6">
+            <div className="w-full max-w-md space-y-6 print:hidden">
               <div className="bg-gray-50 dark:bg-slate-900/50 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Destination URL / Content</label>
                 <div className="flex rounded-md shadow-sm">

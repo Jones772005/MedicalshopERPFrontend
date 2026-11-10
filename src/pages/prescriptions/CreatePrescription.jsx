@@ -97,7 +97,7 @@ const CreatePrescription = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
       <div className="flex items-center justify-between mb-4">
         <Button variant="ghost" onClick={() => navigate('/prescriptions')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
           <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Prescriptions

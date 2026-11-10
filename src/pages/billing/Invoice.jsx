@@ -37,7 +37,8 @@ const Invoice = () => {
   if (!sale) return <div className="p-8 text-center text-gray-500">Invoice not found.</div>;
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
+      {/* ── ERP PAGE TOOLBAR (FULL AVAILABLE WIDTH) ─────────────── */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5 print:hidden">
         <div className="flex items-center gap-3">
           <Button variant="ghost" onClick={() => navigate('/sales')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
@@ -46,6 +47,9 @@ const Invoice = () => {
           </Button>
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
             {sale.invoiceNumber || `INV-${sale.id}`}
+          </span>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+            {sale.paymentMethod || 'Paid'}
           </span>
         </div>
         <div className="flex items-center gap-2.5 self-end sm:self-auto">
@@ -58,7 +62,8 @@ const Invoice = () => {
         </div>
       </div>
 
-      <div className="bg-gray-100 dark:bg-slate-900 p-4 md:p-8 rounded-lg overflow-x-auto">
+      {/* ── INVOICE PREVIEW WORKSPACE (DESK CANVAS) ─────────────── */}
+      <div className="w-full bg-[#EBF0F7] dark:bg-slate-900/80 rounded-xl p-4 sm:p-8 lg:p-12 border border-[#DDE6F0] dark:border-slate-800 flex justify-center items-center overflow-x-auto print:p-0 print:border-none print:bg-transparent print:m-0">
         <InvoicePreview sale={sale} medicines={medicines} />
       </div>
     </div>
