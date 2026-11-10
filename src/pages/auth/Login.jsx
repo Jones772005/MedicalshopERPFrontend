@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { usePharmacyBranding } from '../../context/SettingsContext';
 import { usersData as demoUsers } from '../../data/users';
 
 /* ── Validation schema (unchanged) ──────────────────────────────── */
@@ -48,6 +49,7 @@ const Login = () => {
 
   const { login }              = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { name: pharmacyName, logo: pharmacyLogo, defaultLogo } = usePharmacyBranding();
   const navigate               = useNavigate();
 
   const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm({
@@ -96,8 +98,8 @@ const Login = () => {
           <div style={s.logoRow}>
             <div style={s.logoBox}>
               <img
-                src="/LOGO.jpeg"
-                alt="MEDISHOP ERP Logo"
+                src={pharmacyLogo || defaultLogo}
+                alt={`${pharmacyName} Logo`}
                 style={s.logoImg}
               />
             </div>
@@ -171,7 +173,7 @@ const Login = () => {
             <p style={s.welcomeText}>Welcome Back!</p>
             <h2 style={s.cardTitle}>
               Login to{' '}
-              <span style={s.cardTitleBlue}>MEDISHOP ERP</span>
+              <span style={s.cardTitleBlue}>{pharmacyName}</span>
             </h2>
             <p style={s.cardSubtitle}>Access your pharmacy management system</p>
 

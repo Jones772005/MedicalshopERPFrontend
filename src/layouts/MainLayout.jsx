@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import NotificationToastManager from '../components/layout/NotificationToastManager';
 import { SidebarProvider } from '../context/SidebarContext';
 
@@ -14,10 +15,13 @@ const MainLayout = () => {
           <Header />
           <NotificationToastManager />
           <main
-            className="flex-1 overflow-y-auto p-4 sm:p-6 transition-colors duration-200"
+            className="flex-1 overflow-y-auto flex flex-col transition-colors duration-200"
             style={{ backgroundColor: 'var(--page-bg)' }}
           >
-            <Outlet />
+            <div className="flex-1 p-4 sm:p-6">
+              <Outlet />
+            </div>
+            <Footer />
           </main>
         </div>
       </div>

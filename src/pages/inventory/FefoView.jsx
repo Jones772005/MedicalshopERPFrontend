@@ -47,8 +47,8 @@ const FefoView = () => {
   return (
     <div className="space-y-4">
       <PageHeader 
-        title="FEFO Recommendations" 
-        description="First-Expire, First-Out (FEFO) batch recommendations for dispensing."
+        count={inventory.length}
+        countLabel="batches"
       />
       <DataTable 
         columns={columns} 

@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { createSupplier, updateSupplier, getSupplierById } from '../../services/supplierApi';
 import { isValidIndianMobile, normalizeIndianMobile, isValidGSTIN, isValidEmail, notifyValidationError } from '../../utils/validation';
-import PageHeader from '../../components/common/PageHeader';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
@@ -89,10 +89,11 @@ const SupplierForm = () => {
 
   return (
     <div className="w-full">
-      <PageHeader 
-        title={isEdit ? "Edit Supplier" : "Add New Supplier"} 
-        description="Enter supplier contact and business information."
-      />
+      <div className="flex items-center justify-between mb-4">
+        <Button variant="ghost" onClick={() => navigate('/suppliers')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Suppliers
+        </Button>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6 w-full">
         {saveError && (

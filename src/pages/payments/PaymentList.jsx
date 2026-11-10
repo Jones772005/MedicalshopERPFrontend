@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Plus, Eye, X } from 'lucide-react';
+import { Plus, Eye, X, Printer } from 'lucide-react';
 import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import Button from '../../components/common/Button';
@@ -11,6 +11,7 @@ import PaymentForm from '../../components/payments/PaymentForm';
 import { getPayments } from '../../services/paymentApi';
 import { getSuppliers } from '../../services/supplierApi';
 import { getCustomers } from '../../services/customerApi';
+import { resolveDocumentBranding } from '../../utils/documentBranding';
 
 const PaymentList = () => {
   const [searchParams] = useSearchParams();
@@ -22,6 +23,7 @@ const PaymentList = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(!!purchaseId);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const selectedPaymentBranding = selectedPayment ? resolveDocumentBranding(selectedPayment) : null;
 
   const fetchAllData = async () => {
     // eslint-disable-next-line react/set-state-in-effect
@@ -200,8 +202,8 @@ const PaymentList = () => {
   return (
     <div className="space-y-6 w-full">
       <PageHeader 
-        title="Payments" 
-        description="Manage all incoming and outgoing payments."
+        count={payments.length}
+        countLabel="payments"
         action={
           !showForm && (
             <Button onClick={() => setShowForm(true)}>
@@ -243,11 +245,21 @@ const PaymentList = () => {
         </div>
       )}
 
-      {selectedPayment && (
+      {selectedPayment && selectedPaymentBranding && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white dark:bg-[#132B42] rounded-xl shadow-xl w-full max-w-md border border-[#DDE6F0] dark:border-[#263B50] overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-[#DDE6F0] dark:border-[#263B50] bg-gray-50/50 dark:bg-slate-800/50">
-              <h3 className="text-lg font-bold text-[#162033] dark:text-white">Payment Details</h3>
+              <div className="flex items-center gap-2.5">
+                {selectedPaymentBranding.displayLogo && (
+                  <div className="w-8 h-8 rounded bg-white p-0.5 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <img src={selectedPaymentBranding.displayLogo} alt={selectedPaymentBranding.name} className="max-h-full max-w-full object-contain" />
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-sm font-bold text-[#162033] dark:text-white leading-tight">{selectedPaymentBranding.name}</h3>
+                  <p className="text-[11px] text-[#64748B] dark:text-slate-400">Payment Receipt</p>
+                </div>
+              </div>
               <button onClick={() => setSelectedPayment(null)} className="text-[#64748B] hover:text-[#162033] transition-colors dark:text-slate-400 dark:hover:text-white">
                 <X className="w-5 h-5" />
               </button>
@@ -306,8 +318,11 @@ const PaymentList = () => {
               </div>
             </div>
             
-            <div className="p-4 border-t border-[#DDE6F0] dark:border-[#263B50] bg-gray-50/50 dark:bg-slate-800/50 flex justify-end">
-              <Button variant="secondary" onClick={() => setSelectedPayment(null)}>Close</Button>
+            <div className="p-4 border-t border-[#DDE6F0] dark:border-[#263B50] bg-gray-50/50 dark:bg-slate-800/50 flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => window.print()}>
+                <Printer className="w-4 h-4 mr-1.5" /> Print Receipt
+              </Button>
+              <Button variant="secondary" size="sm" onClick={() => setSelectedPayment(null)}>Close</Button>
             </div>
           </div>
         </div>

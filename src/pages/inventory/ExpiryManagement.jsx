@@ -137,8 +137,8 @@ const ExpiryManagement = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Expiry Management" 
-        description="Monitor medicine expirations to minimize wastage and process returns."
+        count={batches.length}
+        countLabel="batches tracked"
       />
 
       {/* Summary Cards */}

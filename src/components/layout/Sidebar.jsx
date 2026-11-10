@@ -9,6 +9,7 @@ import { useState, useRef, useEffect } from 'react';
 import { cn } from '../../utils/cn';
 import { PermissionGuard } from '../../utils/permissions';
 import { useSidebar } from '../../context/SidebarContext';
+import { usePharmacyBranding } from '../../context/SettingsContext';
 
 /* ─────────────────────────────────────────────────────────────
    PORTAL TOOLTIP  (position:fixed → escapes overflow-hidden)
@@ -266,6 +267,7 @@ const SidebarFooter = ({ isCollapsed }) => (
 ───────────────────────────────────────────────────────────── */
 const Sidebar = () => {
   const { isCollapsed, isMobileOpen, closeMobile } = useSidebar();
+  const { name: pharmacyName, logo: pharmacyLogo } = usePharmacyBranding();
 
   return (
     <>
@@ -301,18 +303,29 @@ const Sidebar = () => {
           {/* Logo icon — always visible, centred when collapsed */}
           <div
             className={cn(
-              'flex items-center justify-center w-9 h-9 rounded-[9px] bg-white flex-shrink-0 shadow-md',
+              'flex items-center justify-center w-9 h-9 rounded-[9px] bg-white flex-shrink-0 shadow-md overflow-hidden',
               isCollapsed && 'mx-auto'
             )}
           >
-            <Activity className="h-5 w-5 text-[#153FA8]" />
+            {pharmacyLogo ? (
+              <img
+                src={pharmacyLogo}
+                alt={pharmacyName}
+                className="w-full h-full object-contain p-0.5"
+              />
+            ) : (
+              <Activity className="h-5 w-5 text-[#153FA8]" />
+            )}
           </div>
 
           {/* Brand text — hidden when collapsed */}
           {!isCollapsed && (
             <div className="ml-2.5 overflow-hidden">
-              <span className="text-[15px] font-bold text-white leading-tight block whitespace-nowrap">
-                MediShop
+              <span
+                className="text-[15px] font-bold text-white leading-tight block whitespace-nowrap truncate max-w-[135px]"
+                title={pharmacyName}
+              >
+                {pharmacyName}
               </span>
               <span
                 className="text-[10px] font-semibold tracking-widest whitespace-nowrap uppercase"

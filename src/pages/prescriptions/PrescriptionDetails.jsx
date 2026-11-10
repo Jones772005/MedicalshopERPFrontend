@@ -54,13 +54,15 @@ const PrescriptionDetails = () => {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
-      <div className="flex items-center space-x-4 mb-4">
-        <Button variant="ghost" onClick={() => navigate('/prescriptions')} className="p-2">
-          <ArrowLeft className="w-5 h-5 text-gray-500" />
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Prescription Details</h1>
-          <p className="text-sm text-gray-500 dark:text-slate-400">{prescription.prescriptionId}</p>
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" onClick={() => navigate('/prescriptions')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            <span className="text-xs font-semibold">Back to Prescriptions</span>
+          </Button>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
+            {prescription.prescriptionId}
+          </span>
         </div>
       </div>
 

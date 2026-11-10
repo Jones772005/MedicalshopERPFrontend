@@ -2,6 +2,7 @@ import localDb from './localDb';
 import { KEYS } from '../data/storageKeys';
 import { deductStock } from './inventoryApi';
 import { recordAuditEvent } from './auditApi';
+import { getPharmacySnapshot } from '../utils/documentBranding';
 
 export const getSales = async () => {
   await new Promise(resolve => setTimeout(resolve, 300));
@@ -34,8 +35,12 @@ export const createSale = async (saleData) => {
 
   await localDb.runLocalTransaction(async (tx) => {
     // 1. Create Sale record
+    // Snapshot current pharmacy branding so newly generated invoices capture the exact identity at sale time
+    const pharmacySnapshot = saleData.pharmacy || getPharmacySnapshot();
+
     const newSale = tx.insert(KEYS.SALES, {
       ...saleData,
+      pharmacy: pharmacySnapshot,
       status: 'Generated',
       date: saleData.date || new Date().toISOString()
     });

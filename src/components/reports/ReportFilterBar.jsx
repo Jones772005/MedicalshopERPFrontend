@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Search, Filter, Download, Printer } from 'lucide-react';
 import Button from '../common/Button';
 import Input from '../common/Input';
+import { usePharmacyBranding } from '../../context/SettingsContext';
 
 const ReportFilterBar = ({ onFilter, onExport, onPrint, showDateRange = true, showSearch = true, showCategory = false }) => {
+  const { name: pharmacyName, logo: pharmacyLogo, defaultLogo, pharmacy } = usePharmacyBranding();
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
@@ -27,7 +29,36 @@ const ReportFilterBar = ({ onFilter, onExport, onPrint, showDateRange = true, sh
   };
 
   return (
-    <div className="bg-white dark:bg-[#132B42] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] mb-6">
+    <>
+      {/* Printable Report Header with Pharmacy Branding */}
+      <div className="hidden print:flex items-center justify-between border-b-2 border-gray-800 pb-4 mb-6">
+        <div className="flex items-center gap-4">
+          {(pharmacyLogo || defaultLogo) && (
+            <div className="w-14 h-14 flex-shrink-0 flex items-center justify-center overflow-hidden">
+              <img 
+                src={pharmacyLogo || defaultLogo} 
+                alt={`${pharmacyName} Logo`} 
+                className="max-h-full max-w-full object-contain" 
+              />
+            </div>
+          )}
+          <div>
+            <h1 className="text-xl font-bold uppercase text-gray-900">{pharmacyName}</h1>
+            <p className="text-xs text-gray-600">
+              {[pharmacy.address, pharmacy.city, pharmacy.state ? `${pharmacy.state} - ${pharmacy.pincode || ''}`.trim() : pharmacy.pincode].filter(Boolean).join(', ')}
+            </p>
+            <p className="text-xs text-gray-600">
+              {[pharmacy.phone && `Phone: ${pharmacy.phone}`, pharmacy.gstin && `GSTIN: ${pharmacy.gstin}`, pharmacy.drugLicenseNo && `DL: ${pharmacy.drugLicenseNo}`].filter(Boolean).join(' | ')}
+            </p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Official Report</p>
+          <p className="text-xs text-gray-700">Generated: {new Date().toLocaleString()}</p>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-[#132B42] p-4 rounded-xl shadow-sm border border-[#DDE6F0] dark:border-[#263B50] mb-6 print:hidden">
       <div className="flex flex-col md:flex-row md:items-end gap-4">
         
         {showDateRange && (
@@ -103,6 +134,7 @@ const ReportFilterBar = ({ onFilter, onExport, onPrint, showDateRange = true, sh
         </Button>
       </div>
     </div>
+    </>
   );
 };
 

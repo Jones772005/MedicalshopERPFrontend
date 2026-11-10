@@ -38,24 +38,17 @@ const SettingsLayout = () => {
 
   return (
     <div className="w-full space-y-4 pb-12">
-      {/* ── SETTINGS PAGE HEADER ──────────────────────────── */}
-      <div className="flex items-center space-x-3.5 pt-1 w-full">
+      {/* ── SETTINGS PAGE TOOLBAR ──────────────────────────── */}
+      <div className="flex items-center justify-between pb-1 w-full">
         <button 
           type="button"
           onClick={() => navigate('/dashboard')} 
           aria-label="Back to dashboard"
-          className="p-2 bg-white dark:bg-[#102A43] rounded-lg shadow-xs border border-[#DDE6F0] dark:border-slate-700/60 hover:bg-[#F5F8FC] dark:hover:bg-slate-800 text-[#64748B] dark:text-slate-300 hover:text-[#162033] dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
+          className="inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-[#102A43] rounded-lg shadow-xs border border-[#DDE6F0] dark:border-slate-700/60 hover:bg-[#F5F8FC] dark:hover:bg-slate-800 text-xs font-medium text-[#64748B] dark:text-slate-300 hover:text-[#162033] dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#2482ED]"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Dashboard</span>
         </button>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#162033] dark:text-white">
-            Settings
-          </h1>
-          <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
-            Manage your pharmacy, billing, tax and system configuration.
-          </p>
-        </div>
       </div>
 
       {/* ── MAIN SETTINGS CONTAINER ────────────────────────── */}

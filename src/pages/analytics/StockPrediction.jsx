@@ -3,7 +3,6 @@ import {
   ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend 
 } from 'recharts';
 import { Lightbulb, Info, AlertTriangle } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { getStockPredictions } from '../../services/analyticsApi';
 
@@ -33,10 +32,6 @@ const StockPrediction = () => {
   if (!selectedMed || predictions.length === 0) {
     return (
       <div className="space-y-6 pb-12">
-        <PageHeader 
-          title="Smart Stock Prediction" 
-          description="Demand forecasting based on historical sales trends."
-        />
         <div className="bg-white dark:bg-slate-800 p-12 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm text-center">
           <Lightbulb className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">No Prediction Data Available</h3>
@@ -50,11 +45,6 @@ const StockPrediction = () => {
 
   return (
     <div className="space-y-6 pb-12">
-      <PageHeader 
-        title="Smart Stock Prediction" 
-        description="Demand forecasting based on historical sales trends."
-      />
-
       <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-500 p-4 rounded shadow-sm">
         <div className="flex">
           <Info className="w-5 h-5 text-blue-400 dark:text-blue-500" />

@@ -2,6 +2,7 @@ import localDb from './localDb';
 import { KEYS } from '../data/storageKeys';
 import { receiveStock } from './inventoryApi';
 import { recordAuditEvent } from './auditApi';
+import { getPharmacySnapshot } from '../utils/documentBranding';
 
 export const getPurchases = async () => {
   await new Promise(resolve => setTimeout(resolve, 300));
@@ -46,6 +47,7 @@ export const createPurchase = async (purchaseData) => {
 
   const newPurchase = localDb.insert(KEYS.PURCHASES, {
     ...purchaseData,
+    pharmacy: purchaseData.pharmacy || getPharmacySnapshot(),
     status: purchaseData.status || 'Ordered',
     paymentStatus: 'Pending',
     paidAmount: 0,

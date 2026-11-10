@@ -4,7 +4,6 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend 
 } from 'recharts';
 import { TrendingUp, Users, Package, ShoppingCart, Activity } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { getAnalytics } from '../../services/analyticsApi';
 
@@ -52,10 +51,6 @@ const BusinessIntelligence = () => {
 
   return (
     <div className="space-y-6 pb-12">
-      <PageHeader 
-        title="Business Intelligence" 
-        description="High-level analytics covering sales, products, customers, and inventory."
-      />
 
       {/* KPI Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

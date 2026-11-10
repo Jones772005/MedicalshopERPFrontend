@@ -55,12 +55,11 @@ const MedicineDetails = () => {
   return (
     <div>
       <PageHeader 
-        title={medicine.name} 
-        description="Detailed medicine information and current stock status."
+        info={<span className="font-bold text-sm text-[#162033] dark:text-white">{medicine.name}</span>}
         action={
-          <div className="space-x-3">
-            <Button variant="secondary" onClick={() => navigate('/medicines')}>Back to List</Button>
-            <Button onClick={() => navigate(`/medicines/${medicine.id}/edit`)}>Edit Medicine</Button>
+          <div className="space-x-2">
+            <Button variant="secondary" size="sm" onClick={() => navigate('/medicines')}>Back to List</Button>
+            <Button size="sm" onClick={() => navigate(`/medicines/${medicine.id}/edit`)}>Edit Medicine</Button>
           </div>
         }
       />

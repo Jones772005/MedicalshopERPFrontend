@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Printer } from 'lucide-react';
 import Button from '../../components/common/Button';
 import StatusBadge from '../../components/common/StatusBadge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { getPurchaseReturns } from '../../services/returnApi';
 import { getPayments } from '../../services/paymentApi';
+import { resolveDocumentBranding } from '../../utils/documentBranding';
 
 const PurchaseReturnDetails = () => {
   const { id } = useParams();
@@ -55,18 +56,54 @@ const PurchaseReturnDetails = () => {
 
   const items = ret.items || [];
   const refundAmount = Number(ret.refundAmount) || Number(ret.amount) || 0;
+  const docBranding = resolveDocumentBranding(ret);
 
   return (
     <div className="space-y-6 pb-12">
-      {/* Back navigation */}
-      <div className="flex items-center space-x-4 mb-4">
-        <Button variant="ghost" onClick={() => navigate('/purchases/returns')} className="p-2">
-          <ArrowLeft className="w-5 h-5 text-gray-500" />
+      {/* Printable Purchase Return Slip Header */}
+      <div className="hidden print:flex items-center justify-between border-b-2 border-gray-800 pb-4 mb-6">
+        <div className="flex items-center gap-4">
+          {docBranding.displayLogo && (
+            <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center overflow-hidden">
+              <img
+                src={docBranding.displayLogo}
+                alt={`${docBranding.name} Logo`}
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+          )}
+          <div>
+            <h1 className="text-2xl font-bold uppercase text-gray-900">{docBranding.name}</h1>
+            {docBranding.fullAddress && (
+              <p className="text-xs text-gray-600">{docBranding.fullAddress}</p>
+            )}
+            {docBranding.contactLine && (
+              <p className="text-xs text-gray-600">{docBranding.contactLine}</p>
+            )}
+          </div>
+        </div>
+        <div className="text-right">
+          <h2 className="text-xl font-bold uppercase text-gray-800">Purchase Return Slip</h2>
+          <p className="text-sm font-semibold">Return ID: {ret.id}</p>
+          <p className="text-xs text-gray-500">Date: {ret.date ? new Date(ret.date).toLocaleDateString() : '-'}</p>
+        </div>
+      </div>
+
+      {/* Back navigation & Actions */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5 print:hidden">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" onClick={() => navigate('/purchases/returns')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            <span className="text-xs font-semibold">Back to Returns</span>
+          </Button>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
+            {ret.id}
+          </span>
+          <StatusBadge status={ret.status || 'Processed'} />
+        </div>
+        <Button variant="outline" size="sm" onClick={() => window.print()} className="self-end sm:self-auto">
+          <Printer className="w-3.5 h-3.5 mr-1.5" /> Print Return Slip
         </Button>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Purchase Return: {ret.id}
-        </h1>
-        <StatusBadge status={ret.status || 'Processed'} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

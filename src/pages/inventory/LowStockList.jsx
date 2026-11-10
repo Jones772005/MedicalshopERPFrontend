@@ -75,8 +75,8 @@ const LowStockList = () => {
   return (
     <div className="space-y-4">
       <PageHeader 
-        title="Low Stock" 
-        description="Medicines that have fallen below their minimum stock level."
+        count={inventory.length}
+        countLabel="low stock items"
       />
       <DataTable 
         columns={columns} 

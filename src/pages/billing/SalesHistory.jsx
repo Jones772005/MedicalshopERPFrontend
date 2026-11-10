@@ -103,8 +103,8 @@ const SalesHistory = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Sales History" 
-        description="View past invoices, print receipts, and process returns."
+        count={sales.length}
+        countLabel="invoices"
         action={
           <Button onClick={() => navigate('/billing')}>
             New Bill

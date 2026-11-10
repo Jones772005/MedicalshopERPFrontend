@@ -199,8 +199,8 @@ const MedicineRequests = () => {
   return (
     <div className="w-full">
       <PageHeader 
-        title="Medicine Requests" 
-        description="Track medicines requested by customers that are currently unavailable."
+        count={requests.length}
+        countLabel="requests"
         action={
           <Button onClick={() => handleOpenForm()}>
             <Plus className="w-4 h-4 mr-2" /> Add Medicine Request

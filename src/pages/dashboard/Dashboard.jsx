@@ -12,6 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { usePharmacyBranding } from '../../context/SettingsContext';
 import { getSales } from '../../services/salesApi';
 import { getPurchases } from '../../services/purchaseApi';
 import { 
@@ -45,6 +46,7 @@ const initialKpis = {
 const Dashboard = () => {
   const { theme } = useTheme();
   const { currentUser } = useAuth();
+  const { name: pharmacyName } = usePharmacyBranding();
   const [loading, setLoading] = useState(true);
   const [sales, setSales] = useState([]);
   const [dynamicKpis, setDynamicKpis] = useState(initialKpis);
@@ -199,7 +201,7 @@ const Dashboard = () => {
             {greetingTime}, {currentUser?.name?.split(' ')[0] || 'User'} 👋
           </h1>
           <p className="text-sm text-[#64748B] dark:text-slate-400 mt-1">
-            Medical Shop ERP · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+            {pharmacyName} · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
         </div>
         <div className="mt-4 sm:mt-0 flex gap-3">

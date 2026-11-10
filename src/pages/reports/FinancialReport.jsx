@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import PageHeader from '../../components/common/PageHeader';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
 import StatCard from '../../components/common/StatCard';
@@ -75,8 +74,6 @@ const FinancialReport = () => {
 
   return (
     <div className="space-y-6 w-full pb-12">
-      <PageHeader title="Financial Report" description="Profit & Loss, Revenue vs Expenses based on real transactions." />
-      
       <ReportFilterBar 
         showSearch={false}
         onFilter={handleFilter}

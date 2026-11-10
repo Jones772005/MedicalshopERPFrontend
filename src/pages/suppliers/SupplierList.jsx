@@ -90,8 +90,8 @@ const SupplierList = () => {
   return (
     <div>
       <PageHeader 
-        title="Suppliers" 
-        description="Manage medical suppliers, contacts, and balances."
+        count={suppliers.length}
+        countLabel="suppliers"
         action={
           <PermissionGuard permission="suppliers.create">
             <Button onClick={() => navigate('/suppliers/add')}>+ Add Supplier</Button>

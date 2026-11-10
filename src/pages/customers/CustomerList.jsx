@@ -87,8 +87,8 @@ const CustomerList = () => {
   return (
     <div>
       <PageHeader 
-        title="Customers" 
-        description="Manage customer profiles, purchase history, and loyalty points."
+        count={customers.length}
+        countLabel="customers"
         action={
           <PermissionGuard permission="customers.create">
             <Button onClick={() => navigate('/customers/add')}>+ Add Customer</Button>

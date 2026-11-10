@@ -1,6 +1,7 @@
 import localDb from './localDb';
 import { KEYS } from '../data/storageKeys';
 import { recordAuditEvent } from './auditApi';
+import { getPharmacySnapshot, getLegacyHistoricalFallback } from '../utils/documentBranding';
 
 export const getPayments = async () => {
   await new Promise(resolve => setTimeout(resolve, 300));
@@ -27,9 +28,46 @@ export const createPayment = async (data) => {
   let newPayment = null;
 
   await localDb.runLocalTransaction(async (tx) => {
-    // 1. Insert the new payment first so it is part of the cumulative total
+    // Determine payment branding snapshot:
+    // - For payments linked to an existing sale or purchase, inherit the linked transaction's snapshot.
+    // - If that linked transaction has no snapshot, use fixed legacy historical fallback.
+    // - For genuinely standalone payments, use current pharmacy snapshot.
+    let resolvedPharmacy = null;
+
+    if (data.pharmacy) {
+      resolvedPharmacy = data.pharmacy;
+    } else if (data.type === 'Purchase') {
+      const allPurchases = tx.get(KEYS.PURCHASES) || [];
+      const purchase = tx.getById(KEYS.PURCHASES, referenceId) ||
+        allPurchases.find(p => String(p.id) === String(referenceId) || p.purchaseOrderNumber === referenceId);
+
+      if (purchase) {
+        resolvedPharmacy = (purchase.pharmacy && typeof purchase.pharmacy === 'object')
+          ? purchase.pharmacy
+          : getLegacyHistoricalFallback();
+      } else {
+        resolvedPharmacy = getPharmacySnapshot();
+      }
+    } else if (data.type === 'Sale') {
+      const allSales = tx.get(KEYS.SALES) || [];
+      const sale = tx.getById(KEYS.SALES, referenceId) ||
+        allSales.find(s => String(s.id) === String(referenceId) || s.invoiceNumber === referenceId);
+
+      if (sale) {
+        resolvedPharmacy = (sale.pharmacy && typeof sale.pharmacy === 'object')
+          ? sale.pharmacy
+          : getLegacyHistoricalFallback();
+      } else {
+        resolvedPharmacy = getPharmacySnapshot();
+      }
+    } else {
+      resolvedPharmacy = getPharmacySnapshot();
+    }
+
+    // 1. Insert the new payment with immutable pharmacy branding snapshot
     newPayment = tx.insert(KEYS.PAYMENTS, {
       ...data,
+      pharmacy: resolvedPharmacy,
       referenceId: String(referenceId),
       supplierId: data.supplierId ? Number(data.supplierId) : null,
       customerId: data.customerId ? Number(data.customerId) : null,

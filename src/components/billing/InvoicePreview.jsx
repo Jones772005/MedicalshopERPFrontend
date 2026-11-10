@@ -1,7 +1,18 @@
 import { QrCode } from 'lucide-react';
+import { useSettings } from '../../context/SettingsContext';
+import { resolveDocumentBranding } from '../../utils/documentBranding';
 
 const InvoicePreview = ({ sale, medicines }) => {
+  const { settings } = useSettings();
   if (!sale) return null;
+
+  // Strict snapshot resolution: uses saved snapshot from sale; never overwrites from current settings
+  const docBranding = resolveDocumentBranding(sale);
+  const pharmacyName = docBranding.name;
+  const pharmacyLogo = docBranding.logo;
+  const showLogo = settings?.invoice?.showLogo !== false;
+  const fullAddress = docBranding.fullAddress;
+  const contactLine = docBranding.contactLine;
 
   const getMedicineName = (id) => {
     const med = medicines.find(m => m.id === id);
@@ -11,11 +22,27 @@ const InvoicePreview = ({ sale, medicines }) => {
   return (
     <div className="bg-white text-black p-8 max-w-3xl mx-auto border border-gray-300 shadow-sm invoice-print">
       {/* Header */}
-      <div className="text-center border-b border-gray-300 pb-4 mb-4">
-        <h1 className="text-2xl font-bold uppercase tracking-wider">Medical Shop ERP</h1>
-        <p className="text-sm">123 Pharmacy Lane, Healthcare City, IN 400001</p>
-        <p className="text-sm">Phone: +91 800 123 4567 | GSTIN: 27AADCP1234Q1Z5</p>
-        <h2 className="text-xl font-bold mt-4 uppercase">Tax Invoice</h2>
+      <div className="border-b border-gray-300 pb-4 mb-4">
+        <div className="flex items-center justify-between gap-4">
+          {showLogo && (pharmacyLogo || '/LOGO.jpeg') && (
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center overflow-hidden">
+              <img 
+                src={pharmacyLogo || '/LOGO.jpeg'} 
+                alt={`${pharmacyName} Logo`}
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+          )}
+          <div className="flex-1 text-center">
+            <h1 className="text-2xl font-bold uppercase tracking-wider">{pharmacyName}</h1>
+            {fullAddress && <p className="text-sm">{fullAddress}</p>}
+            {contactLine && <p className="text-sm">{contactLine}</p>}
+          </div>
+          {showLogo && (pharmacyLogo || '/LOGO.jpeg') && (
+            <div className="w-16 sm:w-20 flex-shrink-0 hidden sm:block" aria-hidden="true" />
+          )}
+        </div>
+        <h2 className="text-xl font-bold mt-4 uppercase text-center">Tax Invoice</h2>
       </div>
 
       {/* Meta */}

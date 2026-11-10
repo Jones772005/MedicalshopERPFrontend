@@ -64,8 +64,8 @@ const AuditLogs = () => {
   return (
     <div className="space-y-6 pb-12">
       <PageHeader 
-        title="Audit Logs" 
-        description="Track all system events and user actions."
+        count={logs.length}
+        countLabel="logs"
       />
 
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 rounded shadow-sm">

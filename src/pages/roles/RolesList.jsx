@@ -119,8 +119,8 @@ const RolesList = () => {
   return (
     <div className="space-y-6 pb-12">
       <PageHeader 
-        title="Roles & Permissions" 
-        description="Manage system access levels for different staff positions."
+        count={roles.length}
+        countLabel="roles"
         action={
           <PermissionGuard permission="staff.roles">
             <Button onClick={() => navigate('/roles/new')}>

@@ -9,6 +9,7 @@ import { getSuppliers } from '../../services/supplierApi';
 import { getMedicines } from '../../services/medicineApi';
 import { getPurchaseReturns } from '../../services/returnApi';
 import { getPayments } from '../../services/paymentApi';
+import { resolveDocumentBranding } from '../../utils/documentBranding';
 
 const PurchaseDetails = () => {
   const { id } = useParams();
@@ -88,30 +89,65 @@ const PurchaseDetails = () => {
   const outstanding = purchase.totalAmount - purchase.paidAmount;
   const totalSupplierRefunds = refundPayments.reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
   const netPurchaseCost = purchase.totalAmount - totalSupplierRefunds;
+  const docBranding = resolveDocumentBranding(purchase);
 
   return (
     <div className="space-y-6 pb-12">
-      <div className="flex items-center space-x-4 mb-4">
-        <Button variant="ghost" onClick={() => navigate('/purchases')} className="p-2">
-          <ArrowLeft className="w-5 h-5 text-gray-500" />
-        </Button>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Purchase Order: {purchase.purchaseOrderNumber || purchase.id}</h1>
+      {/* Printable PO Header */}
+      <div className="hidden print:flex items-center justify-between border-b-2 border-gray-800 pb-4 mb-6">
+        <div className="flex items-center gap-4">
+          {docBranding.displayLogo && (
+            <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center overflow-hidden">
+              <img
+                src={docBranding.displayLogo}
+                alt={`${docBranding.name} Logo`}
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+          )}
+          <div>
+            <h1 className="text-2xl font-bold uppercase text-gray-900">{docBranding.name}</h1>
+            {docBranding.fullAddress && (
+              <p className="text-xs text-gray-600">{docBranding.fullAddress}</p>
+            )}
+            {docBranding.contactLine && (
+              <p className="text-xs text-gray-600">{docBranding.contactLine}</p>
+            )}
+          </div>
+        </div>
+        <div className="text-right">
+          <h2 className="text-xl font-bold uppercase text-gray-800">Purchase Order</h2>
+          <p className="text-sm font-semibold">PO #: {purchase.purchaseOrderNumber || purchase.id}</p>
+          <p className="text-xs text-gray-500">Date: {new Date(purchase.orderDate).toLocaleDateString()}</p>
+        </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        {(purchase.status === 'Ordered' || purchase.status === 'Partially Received') && (
-          <Button onClick={() => navigate(`/purchases/${id}/receive`)} className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Truck className="w-4 h-4 mr-2" /> Receive Goods
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5 print:hidden">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" onClick={() => navigate('/purchases')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            <span className="text-xs font-semibold">Back to Purchases</span>
           </Button>
-        )}
-        {(purchase.paymentStatus === 'Pending' || purchase.paymentStatus === 'Partial') && (
-          <Button onClick={() => navigate(`/payments/new?purchaseId=${id}`)} className="bg-green-600 hover:bg-green-700 text-white">
-            <CreditCard className="w-4 h-4 mr-2" /> Record Payment
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
+            {purchase.purchaseOrderNumber || purchase.id}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5 self-end sm:self-auto">
+          {(purchase.status === 'Ordered' || purchase.status === 'Partially Received') && (
+            <Button size="sm" onClick={() => navigate(`/purchases/${id}/receive`)} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Truck className="w-3.5 h-3.5 mr-1.5" /> Receive Goods
+            </Button>
+          )}
+          {(purchase.paymentStatus === 'Pending' || purchase.paymentStatus === 'Partial') && (
+            <Button size="sm" onClick={() => navigate(`/payments/new?purchaseId=${id}`)} className="bg-green-600 hover:bg-green-700 text-white">
+              <CreditCard className="w-3.5 h-3.5 mr-1.5" /> Record Payment
+            </Button>
+          )}
+          <Button size="sm" variant="outline" onClick={() => window.print()}>
+            <Printer className="w-3.5 h-3.5 mr-1.5" /> Print PO
           </Button>
-        )}
-        <Button variant="outline" onClick={() => window.print()}>
-          <Printer className="w-4 h-4 mr-2" /> Print PO
-        </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -71,12 +71,11 @@ const SupplierDetails = () => {
   return (
     <div>
       <PageHeader
-        title={supplier.supplierName}
-        description="Supplier business details and financial summary."
+        info={<span className="font-bold text-sm text-[#162033] dark:text-white">{supplier.supplierName}</span>}
         action={
-          <div className="space-x-3">
-            <Button variant="secondary" onClick={() => navigate('/suppliers')}>Back to List</Button>
-            <Button onClick={() => navigate(`/suppliers/${id}/edit`)}>Edit Supplier</Button>
+          <div className="space-x-2">
+            <Button variant="secondary" size="sm" onClick={() => navigate('/suppliers')}>Back to List</Button>
+            <Button size="sm" onClick={() => navigate(`/suppliers/${id}/edit`)}>Edit Supplier</Button>
           </div>
         }
       />

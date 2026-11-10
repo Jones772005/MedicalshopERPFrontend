@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Save, Plus, Trash2, FileUp } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
+import { Save, Plus, Trash2, FileUp, ArrowLeft } from 'lucide-react';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
@@ -99,10 +98,11 @@ const CreatePrescription = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-12">
-      <PageHeader 
-        title="Upload Prescription" 
-        description="Enter prescription details and submit for verification."
-      />
+      <div className="flex items-center justify-between mb-4">
+        <Button variant="ghost" onClick={() => navigate('/prescriptions')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Prescriptions
+        </Button>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6">
         <Card>

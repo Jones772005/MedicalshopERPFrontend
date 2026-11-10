@@ -187,8 +187,8 @@ const DiscountList = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Discount Management" 
-        description="Create and manage promotional discounts for medicines."
+        count={discounts.length}
+        countLabel="discounts"
         action={
           <PermissionGuard permission="discounts.manage">
             <Button onClick={() => navigate('/discounts/new')}>

@@ -3,9 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Plus, Trash2, Save, Send } from 'lucide-react';
+import { Plus, Trash2, Save, Send, ArrowLeft } from 'lucide-react';
 
-import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
@@ -189,10 +188,11 @@ const CreatePurchase = () => {
 
   return (
     <div className="space-y-6 pb-12">
-      <PageHeader 
-        title="New Purchase" 
-        description="Create a new purchase order to restock inventory."
-      />
+      <div className="flex items-center justify-between">
+        <Button variant="ghost" onClick={() => navigate('/purchases')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Purchases
+        </Button>
+      </div>
 
       <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <Card>

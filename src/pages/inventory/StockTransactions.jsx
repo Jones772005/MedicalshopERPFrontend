@@ -68,8 +68,8 @@ const StockTransactions = () => {
   return (
     <div className="space-y-4">
       <PageHeader 
-        title="Stock Transactions" 
-        description="View complete history of all inventory movements."
+        count={transactions.length}
+        countLabel="transactions"
         action={<Button>Adjust Stock</Button>}
       />
       <DataTable 

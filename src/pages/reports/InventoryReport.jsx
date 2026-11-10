@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
@@ -61,8 +60,6 @@ const InventoryReport = () => {
 
   return (
     <div className="space-y-6 w-full pb-12">
-      <PageHeader title="Inventory Report" description="Current stock levels and valuation." />
-      
       <ReportFilterBar 
         showDateRange={false}
         showCategory={true}

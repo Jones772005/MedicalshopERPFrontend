@@ -69,12 +69,11 @@ const CustomerDetails = () => {
   return (
     <div>
       <PageHeader
-        title={customer.name}
-        description="Customer profile and purchase history."
+        info={<span className="font-bold text-sm text-[#162033] dark:text-white">{customer.name}</span>}
         action={
-          <div className="space-x-3">
-            <Button variant="secondary" onClick={() => navigate('/customers')}>Back to List</Button>
-            <Button onClick={() => navigate(`/customers/${id}/edit`)}>Edit Customer</Button>
+          <div className="space-x-2">
+            <Button variant="secondary" size="sm" onClick={() => navigate('/customers')}>Back to List</Button>
+            <Button size="sm" onClick={() => navigate(`/customers/${id}/edit`)}>Edit Customer</Button>
           </div>
         }
       />

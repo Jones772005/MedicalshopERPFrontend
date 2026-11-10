@@ -73,19 +73,19 @@ const RoleDetails = () => {
 
   return (
     <div className="space-y-6 w-full pb-12">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-4">
-          <button onClick={() => navigate('/roles')} className="p-2 bg-white dark:bg-slate-800 rounded-full shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-500 transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{role.name}</h1>
-            <p className="text-sm text-gray-500 dark:text-slate-400">{role.description}</p>
-          </div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" onClick={() => navigate('/roles')} className="p-1.5 h-auto text-[#64748B] hover:text-[#162033] dark:hover:text-white">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            <span className="text-xs font-semibold">Back to Roles</span>
+          </Button>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
+            {role.name}
+          </span>
         </div>
         <PermissionGuard permission="staff.roles">
-          <Button onClick={() => navigate(`/roles/${role.id}/edit`)}>
-            <Edit className="w-4 h-4 mr-2" /> Edit Role
+          <Button size="sm" onClick={() => navigate(`/roles/${role.id}/edit`)} className="self-end sm:self-auto">
+            <Edit className="w-3.5 h-3.5 mr-1.5" /> Edit Role
           </Button>
         </PermissionGuard>
       </div>

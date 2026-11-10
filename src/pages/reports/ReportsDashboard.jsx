@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { FileText, ShoppingCart, PackageOpen, PieChart, Landmark, Users, Truck } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
 
 const reportModules = [
   { id: 'sales', title: 'Sales Report', icon: <ShoppingCart className="w-6 h-6" />, desc: 'Detailed view of sales, invoices, and revenue.' },
@@ -17,10 +16,6 @@ const ReportsDashboard = () => {
 
   return (
     <div className="space-y-6 w-full pb-12">
-      <PageHeader 
-        title="Reports Dashboard" 
-        description="Access comprehensive reports for all modules."
-      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {reportModules.map(module => (

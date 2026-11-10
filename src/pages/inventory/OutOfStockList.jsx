@@ -79,8 +79,8 @@ const OutOfStockList = () => {
   return (
     <div className="space-y-4">
       <PageHeader 
-        title="Out of Stock" 
-        description="Medicines that are completely out of stock and require immediate reordering."
+        count={inventory.length}
+        countLabel="out of stock items"
       />
       <DataTable 
         columns={columns} 

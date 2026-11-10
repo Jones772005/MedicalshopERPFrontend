@@ -5,18 +5,20 @@ import NotificationDropdown from './NotificationDropdown';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useSidebar } from '../../context/SidebarContext';
+import { usePharmacyBranding } from '../../context/SettingsContext';
 import { resolvePageTitle } from '../../utils/pageTitles';
 
 const Header = () => {
   const { currentUser, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isCollapsed, toggle, openMobile } = useSidebar();
+  const { name: pharmacyName } = usePharmacyBranding();
   const navigate = useNavigate();
   const location = useLocation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
 
-  const { title: pageTitle, Icon } = resolvePageTitle(location.pathname);
+  const { title: pageTitle, Icon } = resolvePageTitle(location.pathname, pharmacyName);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

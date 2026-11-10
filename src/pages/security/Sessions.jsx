@@ -121,8 +121,8 @@ const Sessions = () => {
   return (
     <div className="space-y-6 pb-12">
       <PageHeader 
-        title="Active Sessions" 
-        description="Manage active logins and device sessions."
+        count={sessions.length}
+        countLabel="active sessions"
         action={
           <Button variant="outline" onClick={handleRevokeOthers} className="text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-900/20">
             <ShieldOff className="w-4 h-4 mr-2" /> Revoke All Other Sessions

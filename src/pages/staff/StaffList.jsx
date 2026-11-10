@@ -97,8 +97,8 @@ const StaffList = () => {
   return (
     <div className="space-y-6 pb-12">
       <PageHeader 
-        title="Staff Management" 
-        description="Manage employee records, roles, and system access."
+        count={staff.length}
+        countLabel="staff members"
         action={
           <PermissionGuard permission="staff.create">
             <Button onClick={() => navigate('/staff/add')}>

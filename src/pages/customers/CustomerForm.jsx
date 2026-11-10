@@ -3,9 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { ArrowLeft } from 'lucide-react';
 import { createCustomer, getCustomerById, updateCustomer } from "../../services/customerApi"; // Mocked creation/updating in a real app
 import { isValidIndianMobile, isValidEmail, normalizeIndianMobile, notifyValidationError } from '../../utils/validation';
-import PageHeader from '../../components/common/PageHeader';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/common/Card';
@@ -91,10 +91,11 @@ const CustomerForm = () => {
 
   return (
     <div className="w-full">
-      <PageHeader 
-        title={isEdit ? "Edit Customer" : "Add New Customer"} 
-        description="Enter customer contact information and details."
-      />
+      <div className="flex items-center justify-between mb-4">
+        <Button variant="ghost" onClick={() => navigate('/customers')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Customers
+        </Button>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit, (errs) => notifyValidationError(errs))} className="space-y-6 w-full">
         <Card>

@@ -1,30 +1,45 @@
 /**
- * PageHeader — page-level header block.
+ * PageHeader / PageToolbar — standardized compact toolbar across all ERP pages.
  *
- * The <h1> page title is now shown in the application Header bar
- * (via resolvePageTitle + useLocation), so we intentionally suppress
- * the duplicate h1 here.
- *
- * Props:
- *   title       — kept for backward-compat / document.title usage (not rendered)
- *   description — optional subtitle text below the title area
- *   action      — optional JSX for right-side action buttons
+ * Placed immediately below the application header:
+ * - Left: Useful contextual information (e.g. record counts, badges, filters) when available.
+ * - Right: Primary actions, buttons, and controls.
+ * - Redundant subtitles and duplicate page titles are suppressed.
+ * - Renders nothing if there is no contextual info and no action.
  */
-const PageHeader = ({ title: _title, description, action }) => {
-  // Nothing to render if there's no description and no action
-  if (!description && !action) return null;
+const PageHeader = ({ 
+  title: _title, 
+  description: _description, // Redundant subtitles suppressed globally
+  info,
+  count,
+  countLabel = 'records',
+  children,
+  action,
+  className = ''
+}) => {
+  const hasLeftContent = Boolean(children || info || (count !== undefined && count !== null));
+
+  // Nothing to render if there's no contextual info and no action
+  if (!hasLeftContent && !action) return null;
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-      <div>
-        {description && (
-          <p className="text-[13.5px] font-normal leading-relaxed text-[#627D98] dark:text-[#B8CCE0]">
-            {description}
-          </p>
+    <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-5 min-h-[36px] ${className}`}>
+      <div className="flex items-center gap-2.5 min-w-0 flex-wrap">
+        {count !== undefined && count !== null && (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2482ED]/10 text-[#2482ED] dark:bg-[#2482ED]/20 dark:text-blue-400 border border-[#2482ED]/20">
+            {typeof count === 'number' ? count.toLocaleString('en-IN') : count} {countLabel}
+          </span>
         )}
+        {info && (
+          <span className="text-xs text-[#64748B] dark:text-slate-400 font-medium">
+            {info}
+          </span>
+        )}
+        {children}
       </div>
+
       {action && (
-        <div className="mt-4 sm:mt-0">
+        <div className="flex items-center gap-2.5 self-end sm:self-auto flex-wrap">
           {action}
         </div>
       )}

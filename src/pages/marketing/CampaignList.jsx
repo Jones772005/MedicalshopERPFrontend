@@ -55,8 +55,8 @@ const CampaignList = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="SMS & Email Marketing" 
-        description="Manage promotional campaigns for your customers."
+        count={campaigns.length}
+        countLabel="campaigns"
         action={
           <Button onClick={() => navigate('/marketing/campaigns/new')}>
             <Plus className="w-4 h-4 mr-2" /> Create Campaign

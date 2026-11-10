@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import { getDiscountById, createDiscount, updateDiscount } from '../../services/discountApi';
@@ -169,16 +168,10 @@ const DiscountForm = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={() => navigate('/discounts')} className="p-2">
-            <ArrowLeft className="w-5 h-5 text-gray-500" />
-          </Button>
-          <PageHeader 
-            title={isEdit ? `Edit Discount: ${id}` : 'Create Discount'} 
-            description={isEdit ? 'Update existing discount parameters.' : 'Define a new promotional discount for a medicine.'}
-          />
-        </div>
+      <div className="flex items-center justify-between mb-4">
+        <Button variant="ghost" onClick={() => navigate('/discounts')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Discounts
+        </Button>
       </div>
 
       <form onSubmit={handleSubmit} className="w-full space-y-6">

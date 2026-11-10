@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import PageHeader from '../../components/common/PageHeader';
 import DataTable from '../../components/common/DataTable';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ReportFilterBar from '../../components/reports/ReportFilterBar';
@@ -64,8 +63,6 @@ const CustomersReport = () => {
 
   return (
     <div className="space-y-6 w-full pb-12">
-      <PageHeader title="Customers Report" description="Customer activity and purchasing metrics." />
-      
       <ReportFilterBar 
         showDateRange={false}
         onFilter={() => {}} 

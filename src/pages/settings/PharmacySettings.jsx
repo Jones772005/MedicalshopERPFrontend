@@ -44,9 +44,20 @@ const PharmacySettings = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate image format
-    if (!file.type.startsWith('image/')) {
-      setStatusMessage({ type: 'error', text: 'Please upload an image file (PNG, JPG, etc.)' });
+    // Validate image format (PNG, JPG, JPEG, WebP)
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    const isExtensionValid = /\.(png|jpe?g|webp)$/i.test(file.name);
+    if (!allowedTypes.includes(file.type.toLowerCase()) && !isExtensionValid) {
+      setStatusMessage({ type: 'error', text: 'Invalid file format. Please upload a PNG, JPG, JPEG, or WebP image.' });
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+    // Validate reasonable file size (max 2MB for persistent LocalStorage)
+    const MAX_FILE_SIZE = 2 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      setStatusMessage({ type: 'error', text: 'File size exceeds 2MB. Please upload an image smaller than 2MB.' });
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
@@ -54,13 +65,22 @@ const PharmacySettings = () => {
     reader.onload = (uploadEvent) => {
       const base64 = uploadEvent.target.result;
       setFormData(prev => ({ ...prev, logo: base64 }));
+      setStatusMessage(null);
     };
     reader.readAsDataURL(file);
   };
 
-  const handleRemoveLogo = () => {
+  const handleRemoveLogo = async () => {
     setFormData(prev => ({ ...prev, logo: null }));
     if (fileInputRef.current) fileInputRef.current.value = '';
+
+    // If logo was already persisted in saved settings, remove it immediately and restore default
+    if (settings.pharmacy?.logo) {
+      await updateCategorySettings('pharmacy', { ...settings.pharmacy, logo: null });
+      setStatusMessage({ type: 'success', text: 'Pharmacy logo removed. Default branding restored.' });
+    } else {
+      setStatusMessage({ type: 'info', text: 'Logo selection cleared.' });
+    }
   };
 
   const validate = () => {
@@ -140,6 +160,7 @@ const PharmacySettings = () => {
     const sanitized = {
       ...formData,
       name: formData.name.trim(),
+      logo: formData.logo || null,
       owner: formData.owner.trim(),
       registrationNo: formData.registrationNo.trim(),
       drugLicenseNo: formData.drugLicenseNo.trim(),
@@ -324,13 +345,13 @@ const PharmacySettings = () => {
 
               <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-2 space-y-0.5">
                 <p className="font-semibold text-[#162033] dark:text-slate-200">256 × 256px</p>
-                <p className="text-[10px] text-[#94A3B8] dark:text-slate-400">PNG, JPG</p>
+                <p className="text-[10px] text-[#94A3B8] dark:text-slate-400">PNG, JPG, WebP (Max 2MB)</p>
               </div>
 
               <input 
                 ref={fileInputRef}
                 type="file" 
-                accept="image/png,image/jpeg" 
+                accept="image/png,image/jpeg,image/webp" 
                 onChange={handleLogoUpload} 
                 className="hidden" 
               />

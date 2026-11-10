@@ -4,6 +4,7 @@ import {
   Pill, FileEdit, ClipboardList, TrendingUp, Key, Printer, Database,
   User, CheckSquare, History
 } from 'lucide-react';
+import { KEYS } from '../data/storageKeys';
 
 /**
  * Resolves a human-readable page title from a React Router pathname.
@@ -121,14 +122,23 @@ const ROUTE_TITLES = [
  * Returns the page title for a given pathname.
  * Falls back to a capitalised version of the last path segment.
  */
-export function resolvePageTitle(pathname) {
+export function resolvePageTitle(pathname, defaultTitle) {
   for (const { pattern, title, icon } of ROUTE_TITLES) {
     if (pattern.test(pathname)) return { title, Icon: icon };
   }
   // Fallback: capitalise last segment
   const last = pathname.split('/').filter(Boolean).pop() ?? '';
+  let fallbackName = defaultTitle;
+  if (!fallbackName && typeof localStorage !== 'undefined') {
+    try {
+      const stored = JSON.parse(localStorage.getItem(KEYS.SETTINGS) || '{}');
+      fallbackName = stored?.pharmacy?.name?.trim() || 'MediShop ERP';
+    } catch {
+      fallbackName = 'MediShop ERP';
+    }
+  }
   const title = last
     ? last.charAt(0).toUpperCase() + last.slice(1).replace(/-/g, ' ')
-    : 'MediShop ERP';
+    : (fallbackName || 'MediShop ERP');
   return { title, Icon: LayoutDashboard };
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit, Trash2, PowerOff, Power } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import StatusBadge from '../../components/common/StatusBadge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
@@ -84,11 +83,10 @@ const DiscountDetails = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-4 mb-4">
-        <Button variant="ghost" onClick={() => navigate('/discounts')} className="p-2">
-          <ArrowLeft className="w-5 h-5 text-gray-500" />
+      <div className="flex items-center justify-between mb-4">
+        <Button variant="ghost" onClick={() => navigate('/discounts')} className="inline-flex items-center text-xs text-[#64748B] hover:text-[#162033] dark:hover:text-white p-0 h-auto">
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Discounts
         </Button>
-        <PageHeader title={`Discount: ${discount.id}`} description="View promotional discount details." />
       </div>
 
       <div className="max-w-5xl bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">

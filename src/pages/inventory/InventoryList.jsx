@@ -79,23 +79,25 @@ const InventoryList = () => {
   return (
     <div>
       <PageHeader 
-        title="Inventory" 
-        description="Monitor real-time stock levels and batch expirations."
+        count={filteredData.length}
+        countLabel="items in stock"
+        action={
+          <div className="flex space-x-2">
+            <button 
+              onClick={() => setFilterMode('ALL')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'ALL' ? 'bg-[#F5F8FC] dark:bg-slate-800 text-[#2482ED] border-[#2482ED]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#162033] dark:hover:text-white hover:bg-[#F5F8FC] dark:hover:bg-slate-800'}`}
+            >All Stock</button>
+            <button 
+              onClick={() => setFilterMode('LOW')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'LOW' ? 'bg-[#FFFBEB] dark:bg-amber-900/20 text-[#D97706] border-[#D97706]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#D97706] hover:bg-[#FFFBEB] dark:hover:bg-amber-900/20'}`}
+            >Low Stock</button>
+            <button 
+              onClick={() => setFilterMode('EXPIRY')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'EXPIRY' ? 'bg-[#FFFBEB] dark:bg-amber-900/20 text-[#D97706] border-[#D97706]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#D97706] hover:bg-[#FFFBEB] dark:hover:bg-amber-900/20'}`}
+            >Near Expiry</button>
+          </div>
+        }
       />
-      <div className="flex mb-4 space-x-2">
-        <button 
-          onClick={() => setFilterMode('ALL')}
-          className={`px-4 py-2 text-[13px] font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'ALL' ? 'bg-[#F5F8FC] dark:bg-slate-800 text-[#2482ED] border-[#2482ED]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#162033] dark:hover:text-white hover:bg-[#F5F8FC] dark:hover:bg-slate-800'}`}
-        >All Stock</button>
-        <button 
-          onClick={() => setFilterMode('LOW')}
-          className={`px-4 py-2 text-[13px] font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'LOW' ? 'bg-[#FFFBEB] dark:bg-amber-900/20 text-[#D97706] border-[#D97706]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#D97706] hover:bg-[#FFFBEB] dark:hover:bg-amber-900/20'}`}
-        >Low Stock</button>
-        <button 
-          onClick={() => setFilterMode('EXPIRY')}
-          className={`px-4 py-2 text-[13px] font-semibold rounded-lg border cursor-pointer transition-colors ${filterMode === 'EXPIRY' ? 'bg-[#FFFBEB] dark:bg-amber-900/20 text-[#D97706] border-[#D97706]' : 'bg-white dark:bg-[#102A43] border-[#DDE6F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:text-[#D97706] hover:bg-[#FFFBEB] dark:hover:bg-amber-900/20'}`}
-        >Near Expiry</button>
-      </div>
       <DataTable 
         columns={columns} 
         data={filteredData} 

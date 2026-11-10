@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { User, Shield, Lock, Save } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import { notifyValidationError } from '../../utils/validation';
@@ -70,7 +69,6 @@ const Profile = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-12">
-      <PageHeader title="My Profile" description="Manage your personal information and security settings." />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         

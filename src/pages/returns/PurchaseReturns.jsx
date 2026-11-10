@@ -220,12 +220,15 @@ const PurchaseReturns = () => {
 
   return (
     <div className="space-y-6 w-full pb-12">
-      <div className="flex justify-between items-center">
-        <PageHeader title="Purchase Returns" description="Manage supplier returns and debit notes." />
-        <Button onClick={() => { setShowReturnForm(true); setOriginalPurchase(null); setReturnItems([]); setSearchPurchaseId(''); setFormError(''); }}>
-          Create Return
-        </Button>
-      </div>
+      <PageHeader 
+        count={returns.length}
+        countLabel="returns"
+        action={
+          <Button onClick={() => { setShowReturnForm(true); setOriginalPurchase(null); setReturnItems([]); setSearchPurchaseId(''); setFormError(''); }}>
+            Create Return
+          </Button>
+        }
+      />
 
       {!showReturnForm && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

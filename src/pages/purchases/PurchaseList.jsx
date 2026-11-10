@@ -118,8 +118,8 @@ const PurchaseList = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Purchases" 
-        description="Manage supplier orders, received medicines and purchase invoices."
+        count={purchases.length}
+        countLabel="orders"
         action={
           <PermissionGuard permission="purchases.create">
             <Button onClick={() => navigate('/purchases/new')}>

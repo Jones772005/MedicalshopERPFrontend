@@ -172,12 +172,15 @@ const SalesReturns = () => {
 
   return (
     <div className="space-y-6 w-full pb-12">
-      <div className="flex justify-between items-center">
-        <PageHeader title="Sales Returns" description="Manage customer returns and refunds." />
-        <Button onClick={() => { setShowReturnForm(true); setOriginalSale(null); setReturnItems([]); setSearchInvoiceId(''); setFormError(''); }}>
-          Create Return
-        </Button>
-      </div>
+      <PageHeader 
+        count={returns.length}
+        countLabel="returns"
+        action={
+          <Button onClick={() => { setShowReturnForm(true); setOriginalSale(null); setReturnItems([]); setSearchInvoiceId(''); setFormError(''); }}>
+            Create Return
+          </Button>
+        }
+      />
 
       {!showReturnForm && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

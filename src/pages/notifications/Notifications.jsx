@@ -103,8 +103,8 @@ const Notifications = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
       <PageHeader 
-        title="Notification Center" 
-        description="View and manage alerts for stock, prescriptions, and system events."
+        count={unreadCount}
+        countLabel="unread"
         action={
           <Button 
             variant="outline" 

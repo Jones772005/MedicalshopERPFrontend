@@ -4,7 +4,7 @@ import { Save } from 'lucide-react';
 const SettingsHeader = ({
   icon: Icon,
   title,
-  description,
+  description: _description,
   onSave,
   saving = false,
   saveDisabled = false,
@@ -20,14 +20,9 @@ const SettingsHeader = ({
           </div>
         )}
         <div className="min-w-0">
-          <h2 className="text-lg font-bold text-[#162033] dark:text-white leading-tight truncate">
+          <h2 className="text-base sm:text-lg font-bold text-[#162033] dark:text-white leading-tight truncate">
             {title}
           </h2>
-          {description && (
-            <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
-              {description}
-            </p>
-          )}
         </div>
       </div>
 

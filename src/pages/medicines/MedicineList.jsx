@@ -132,12 +132,21 @@ const MedicineList = () => {
   return (
     <div className="space-y-4">
       <PageHeader 
-        title="Medicines" 
-        description="Manage medicines, batches, pricing and stock information."
+        count={medicines.length}
+        countLabel="medicines"
         action={
-          <PermissionGuard permission="medicines.create">
-            <Button onClick={() => navigate('/medicines/add')}>+ Add Medicine</Button>
-          </PermissionGuard>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="secondary" 
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center"
+            >
+              <Filter className="w-4 h-4 mr-1.5" /> Filters
+            </Button>
+            <PermissionGuard permission="medicines.create">
+              <Button onClick={() => navigate('/medicines/add')}>+ Add Medicine</Button>
+            </PermissionGuard>
+          </div>
         }
       />
 

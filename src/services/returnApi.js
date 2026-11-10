@@ -2,6 +2,7 @@ import localDb from './localDb';
 import { KEYS } from '../data/storageKeys';
 import { deductStock, returnStock } from './inventoryApi';
 import { recordAuditEvent } from './auditApi';
+import { getLegacyHistoricalFallback } from '../utils/documentBranding';
 
 export const getSalesReturns = async () => {
   await new Promise(resolve => setTimeout(resolve, 300));
@@ -26,7 +27,10 @@ export const createSalesReturn = async (returnData) => {
   let finalReturn = null;
   await localDb.runLocalTransaction(async (tx) => {
     // Validate quantities against original sale
-    const sale = tx.getById(KEYS.SALES, returnData.saleId);
+    const allSales = tx.get(KEYS.SALES) || [];
+    const sale = tx.getById(KEYS.SALES, returnData.saleId) ||
+      allSales.find(s => String(s.id) === String(returnData.saleId) || s.invoiceNumber === returnData.saleId);
+
     if (sale) {
       for (const item of returnData.items) {
         const qty = Number(item.quantity);
@@ -49,8 +53,24 @@ export const createSalesReturn = async (returnData) => {
       }
     }
 
+    // Resolve pharmacy branding for this sales return:
+    // - Inherit original sale's snapshot if present.
+    // - If original sale exists but has no snapshot, use fixed legacy historical fallback (not current settings).
+    // - If no original transaction found, safely use null (avoid inventing branding).
+    let pharmacySnapshot = null;
+    if (returnData.pharmacy) {
+      pharmacySnapshot = returnData.pharmacy;
+    } else if (sale) {
+      pharmacySnapshot = (sale.pharmacy && typeof sale.pharmacy === 'object')
+        ? sale.pharmacy
+        : getLegacyHistoricalFallback();
+    } else {
+      pharmacySnapshot = null;
+    }
+
     finalReturn = tx.insert(KEYS.SALES_RETURNS, {
       ...returnData,
+      pharmacy: pharmacySnapshot,
       type: 'Sale',
       status: 'Pending Refund',
       date: new Date().toISOString()
@@ -82,41 +102,61 @@ export const createPurchaseReturn = async (returnData) => {
   }
   let finalReturn = null;
   await localDb.runLocalTransaction(async (tx) => {
-    
+    let purchase = null;
     if (returnData.purchaseId) {
-      const purchase = tx.getById(KEYS.PURCHASES, returnData.purchaseId);
-      if (purchase) {
-        for (const item of returnData.items) {
-          const qty = Number(item.quantity);
-          if (!Number.isInteger(qty) || qty <= 0) {
-            throw new Error('Return quantity must be a positive whole number');
-          }
-          // The source of truth for batches is receivedItems. Fallback to items only if receivedItems doesn't exist.
-          const sourceItems = (purchase.receivedItems && purchase.receivedItems.length > 0) ? purchase.receivedItems : (purchase.items || []);
-          const originalItem = sourceItems.find(i => String(i.medicineId) === String(item.medicineId) && (i.batchNumber === item.batchNumber || i.batch === item.batchNumber));
-          
-          if (!originalItem) {
-            throw new Error(`Item ${item.medicineId} batch ${item.batchNumber} was not found in the received batches for this purchase.`);
-          }
-          
-          const pastReturns = tx.get(KEYS.PURCHASE_RETURNS).filter(r => String(r.purchaseId) === String(purchase.id));
-          const pastReturnedQty = pastReturns.reduce((acc, r) => {
-            const rItem = r.items?.find(i => String(i.medicineId) === String(item.medicineId) && (i.batchNumber === item.batchNumber || i.batch === item.batchNumber));
-            return acc + (rItem ? Number(rItem.quantity || 0) : 0);
-          }, 0);
+      purchase = tx.getById(KEYS.PURCHASES, returnData.purchaseId);
+    } else if (returnData.purchaseOrderNumber) {
+      const allPurchases = tx.get(KEYS.PURCHASES) || [];
+      purchase = allPurchases.find(p => p.purchaseOrderNumber === returnData.purchaseOrderNumber || String(p.id) === String(returnData.purchaseOrderNumber));
+    }
 
-          // Available to return is the received quantity, or ordered quantity if received is not populated
-          const availableToReturn = Number(originalItem.receivedQuantity ?? originalItem.quantity ?? 0);
+    if (purchase) {
+      for (const item of returnData.items) {
+        const qty = Number(item.quantity);
+        if (!Number.isInteger(qty) || qty <= 0) {
+          throw new Error('Return quantity must be a positive whole number');
+        }
+        // The source of truth for batches is receivedItems. Fallback to items only if receivedItems doesn't exist.
+        const sourceItems = (purchase.receivedItems && purchase.receivedItems.length > 0) ? purchase.receivedItems : (purchase.items || []);
+        const originalItem = sourceItems.find(i => String(i.medicineId) === String(item.medicineId) && (i.batchNumber === item.batchNumber || i.batch === item.batchNumber));
+        
+        if (!originalItem) {
+          throw new Error(`Item ${item.medicineId} batch ${item.batchNumber} was not found in the received batches for this purchase.`);
+        }
+        
+        const pastReturns = tx.get(KEYS.PURCHASE_RETURNS).filter(r => String(r.purchaseId) === String(purchase.id));
+        const pastReturnedQty = pastReturns.reduce((acc, r) => {
+          const rItem = r.items?.find(i => String(i.medicineId) === String(item.medicineId) && (i.batchNumber === item.batchNumber || i.batch === item.batchNumber));
+          return acc + (rItem ? Number(rItem.quantity || 0) : 0);
+        }, 0);
 
-          if (pastReturnedQty + qty > availableToReturn) {
-            throw new Error(`Cannot return more than originally received. Received: ${availableToReturn}, Previously returned: ${pastReturnedQty}, Trying to return: ${qty}`);
-          }
+        // Available to return is the received quantity, or ordered quantity if received is not populated
+        const availableToReturn = Number(originalItem.receivedQuantity ?? originalItem.quantity ?? 0);
+
+        if (pastReturnedQty + qty > availableToReturn) {
+          throw new Error(`Cannot return more than originally received. Received: ${availableToReturn}, Previously returned: ${pastReturnedQty}, Trying to return: ${qty}`);
         }
       }
     }
 
+    // Resolve pharmacy branding for this purchase return:
+    // - Inherit original purchase's snapshot if present.
+    // - If original purchase exists but has no snapshot, use fixed legacy historical fallback (not current settings).
+    // - If no original transaction found, safely use null (avoid inventing branding).
+    let pharmacySnapshot = null;
+    if (returnData.pharmacy) {
+      pharmacySnapshot = returnData.pharmacy;
+    } else if (purchase) {
+      pharmacySnapshot = (purchase.pharmacy && typeof purchase.pharmacy === 'object')
+        ? purchase.pharmacy
+        : getLegacyHistoricalFallback();
+    } else {
+      pharmacySnapshot = null;
+    }
+
     finalReturn = tx.insert(KEYS.PURCHASE_RETURNS, {
       ...returnData,
+      pharmacy: pharmacySnapshot,
       type: 'Purchase',
       status: 'Processed',
       date: new Date().toISOString()
@@ -133,7 +173,8 @@ export const createPurchaseReturn = async (returnData) => {
         amount: returnData.refundAmount,
         paymentMethod: returnData.paymentMethod || 'Bank Transfer',
         status: 'Completed',
-        notes: `Refund for Purchase Return ${finalReturn.id}`
+        notes: `Refund for Purchase Return ${finalReturn.id}`,
+        pharmacy: pharmacySnapshot
       });
     }
   });
@@ -178,6 +219,12 @@ export const recordSalesReturnRefund = async (returnId, refundData) => {
       throw new Error('A refund payment already exists for this return.');
     }
 
+    // Resolve pharmacy snapshot for the refund payment:
+    // Inherit from the sales return snapshot, or if none, use legacy historical fallback
+    const refundPharmacy = (sReturn.pharmacy && typeof sReturn.pharmacy === 'object')
+      ? sReturn.pharmacy
+      : getLegacyHistoricalFallback();
+
     paymentRecord = tx.insert(KEYS.PAYMENTS, {
       date: new Date().toISOString(),
       type: 'Refund',
@@ -188,7 +235,8 @@ export const recordSalesReturnRefund = async (returnId, refundData) => {
       amount: refundData.amount,
       paymentMethod: refundData.paymentMethod || 'Cash',
       status: 'Completed',
-      notes: refundData.notes || `Refund for Sales Return ${sReturn.id}`
+      notes: refundData.notes || `Refund for Sales Return ${sReturn.id}`,
+      pharmacy: refundPharmacy
     });
 
     // Update return status

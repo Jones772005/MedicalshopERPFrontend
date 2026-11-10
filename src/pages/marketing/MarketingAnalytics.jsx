@@ -4,7 +4,6 @@ import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip 
 } from 'recharts';
 import { ArrowLeft, Users, MousePointerClick, MessageCircle, RefreshCw, Megaphone } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { getCampaigns } from '../../services/marketingApi';
 
@@ -62,14 +61,14 @@ const MarketingAnalytics = () => {
 
   return (
     <div className="space-y-6 pb-12">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center justify-between">
         <button 
           onClick={() => navigate('/marketing/campaigns')} 
-          className="p-2 bg-white dark:bg-slate-800 rounded-full shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-500 transition-colors"
+          className="inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-[#102A43] rounded-lg shadow-xs border border-[#DDE6F0] dark:border-slate-700/60 hover:bg-[#F5F8FC] dark:hover:bg-slate-800 text-xs font-medium text-[#64748B] dark:text-slate-300 hover:text-[#162033] dark:hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Campaigns</span>
         </button>
-        <PageHeader title="Marketing Analytics" description="Track the performance of your campaigns." />
       </div>
 
       {campaigns.length === 0 ? (
